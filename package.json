@@ -1,0 +1,22 @@
+{
+  "name": "movie-streaming-mern",
+  "version": "1.0.0",
+  "description": "A simple Movie Streaming website",
+  "main": "index.js",
+  "scripts": {
+    "client": "npm start --prefix client",
+    "server": "npm start --prefix api",
+    "deploy": "npm run build-deploy --prefix client && npm run deploy --prefix api"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LanChuHoang/movie.streaming.mern.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LanChuHoang/movie.streaming.mern/issues"
+  },
+  "homepage": "https://github.com/LanChuHoang/movie.streaming.mern#readme"
+}
