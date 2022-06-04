@@ -14,7 +14,7 @@ mongoose.connection.on("disconnected", (err) => {
 });
 
 async function connect() {
-  const MONGO_URL = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@netflixclonecluster.qzffp.mongodb.net/?retryWrites=true&w=majority`;
+  const MONGO_URL = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.4smxb.mongodb.net/?retryWrites=true&w=majority`;
   await mongoose.connect(MONGO_URL);
 }
 

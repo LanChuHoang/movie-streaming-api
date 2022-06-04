@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const idvalidator = require("mongoose-id-validator");
 const { SHOW_GENRES, COUNTRIES } = require("../enum");
 
 const episodeSchema = new mongoose.Schema(
@@ -37,7 +38,7 @@ const showSchema = new mongoose.Schema(
     imdbID: { type: String },
     genres: { type: [String], enum: SHOW_GENRES },
     countries: { type: [String], enum: COUNTRIES },
-    people: { type: [Schema.Types.ObjectId], ref: "Person" },
+    people: { type: [mongoose.Schema.Types.ObjectId], ref: "Person" },
     trailers: { type: [String] },
     posterUrl: { type: String },
     thumbnailUrl: { type: String },
@@ -50,5 +51,7 @@ const showSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+showSchema.plugin(idvalidator);
 
 module.exports = mongoose.model("Show", showSchema);
