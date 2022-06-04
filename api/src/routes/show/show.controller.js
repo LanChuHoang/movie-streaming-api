@@ -3,12 +3,12 @@ const {
   errorResponse,
   DEFAULT_PAGE_SIZE,
 } = require("../../configs/route.config");
-const movieService = require("../../models/movie/movie.service");
+const showService = require("../../models/show/show.service");
 
-function updateMovieErrorHandler(error, req, res) {
+function updateShowErrorHandler(error, req, res) {
   console.log(error);
   if (error.code === 11000) {
-    return res.status(400).json({ error: "Movie is already exist" });
+    return res.status(400).json({ error: "Show is already exist" });
   }
   if (error.errors?.title?.kind === "required") {
     return res.status(400).json({ error: "Missing title field" });
@@ -32,19 +32,19 @@ function updateMovieErrorHandler(error, req, res) {
   return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
 }
 
-// POST /movie - post new movie
+// POST /Show - post new Show
 // input: {title: required, optionals}
-async function postNewMovie(req, res) {
+async function postNewShow(req, res) {
   try {
-    const createdMovie = await movieService.addMovie(req.body);
-    return res.status(201).json(createdMovie);
+    const createdShow = await showService.addShow(req.body);
+    return res.status(201).json(createdShow);
   } catch (error) {
-    updateMovieErrorHandler(error, req, res);
+    updateShowErrorHandler(error, req, res);
   }
 }
 
-// GET /movie?genre & country & year & sort & page
-async function getMovies(req, res) {
+// GET /Show?genre & country & year & sort & page
+async function getShows(req, res) {
   try {
     if (req.query.page) {
       req.query.page = Number(req.query.page);
@@ -58,7 +58,7 @@ async function getMovies(req, res) {
         return res.status(400).json(errorResponse.INVALID_QUERY);
     }
 
-    const movies = await movieService.getMovies({
+    const shows = await showService.getShows({
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
@@ -66,10 +66,10 @@ async function getMovies(req, res) {
       page: req.query.page,
     });
     const response = {
-      docs: movies,
+      docs: shows,
       page: req.query.page || 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      total_number_of_pages: await movieService.getNumPages(),
+      total_number_of_pages: await showService.getNumPages(),
     };
     return res.status(200).json(response);
   } catch (error) {
@@ -78,53 +78,50 @@ async function getMovies(req, res) {
   }
 }
 
-// GET /movie/random - get random movie
-async function getRandomMovie(req, res) {
+// GET /Show/random - get random Show
+async function getRandomShow(req, res) {
   try {
-    const randomMovie = await movieService.getRandomMovie();
-    if (!randomMovie)
+    const randomShow = await showService.getRandomShow();
+    if (!randomShow)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(randomMovie);
+    return res.status(200).json(randomShow);
   } catch (error) {
     console.log(error);
     return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
   }
 }
 
-// GET /movie/:id/ - get movie detail
-async function getMovie(req, res) {
+// GET /Show/:id/ - get Show detail
+async function getShow(req, res) {
   try {
-    const movie = await movieService.getMovieByID(req.params.id);
-    if (!movie) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(movie);
+    const show = await showService.getShowByID(req.params.id);
+    if (!show) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).json(show);
   } catch (error) {
     console.log(error);
     return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
   }
 }
 
-// PATCH /movie/:id - update movie
-async function updateMovie(req, res) {
+// PATCH /Show/:id - update Show
+async function updateShow(req, res) {
   try {
-    const updatedMovie = await movieService.updateMovie(
-      req.params.id,
-      req.body
-    );
-    if (!updatedMovie)
+    const updatedShow = await showService.updateShow(req.params.id, req.body);
+    if (!updatedShow)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(updatedMovie);
+    return res.status(200).json(updatedShow);
   } catch (error) {
-    updateMovieErrorHandler(error, req, res);
+    updateShowErrorHandler(error, req, res);
   }
 }
 
-// DELETE /movie/:id - delete movie
-async function deleteMovie(req, res) {
+// DELETE /Show/:id - delete Show
+async function deleteShow(req, res) {
   try {
-    const deletedMovie = await movieService.getMovieByID(req.params.id);
-    if (!deletedMovie)
+    const deletedShow = await showService.getShowByID(req.params.id);
+    if (!deletedShow)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(deletedMovie);
+    return res.status(200).json(deletedShow);
   } catch (error) {
     console.log(error);
     return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
@@ -132,10 +129,10 @@ async function deleteMovie(req, res) {
 }
 
 module.exports = {
-  postNewMovie,
-  getMovies,
-  getMovie,
-  getRandomMovie,
-  updateMovie,
-  deleteMovie,
+  postNewShow,
+  getShows,
+  getShow,
+  getRandomShow,
+  updateShow,
+  deleteShow,
 };

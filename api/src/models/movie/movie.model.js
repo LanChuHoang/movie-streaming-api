@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const idvalidator = require("mongoose-id-validator");
 const { MOVIE_GENRES, COUNTRIES } = require("../enum");
-require("../person/person.model");
 
 const movieSchema = new mongoose.Schema(
   {

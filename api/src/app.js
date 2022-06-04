@@ -1,5 +1,7 @@
 const express = require("express");
 const movieRouter = require("./routes/movie/movie.route");
+const showRouter = require("./routes/show/show.route");
+require("./models/person/person.model");
 
 const app = express();
 
@@ -10,5 +12,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/movie", movieRouter);
+app.use("/api/show", showRouter);
 
 module.exports = app;
