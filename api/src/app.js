@@ -2,6 +2,7 @@ const express = require("express");
 const authRouter = require("./routes/auth/auth.route");
 const movieRouter = require("./routes/movie/movie.route");
 const showRouter = require("./routes/show/show.route");
+const personRouter = require("./routes/person/person.route");
 require("./models/person/person.model");
 
 const app = express();
@@ -13,8 +14,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-
 app.use("/api/movie", movieRouter);
 app.use("/api/show", showRouter);
+app.use("/api/person", personRouter);
 
 module.exports = app;

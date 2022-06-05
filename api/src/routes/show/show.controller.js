@@ -118,7 +118,7 @@ async function updateShow(req, res) {
 // DELETE /Show/:id - delete Show
 async function deleteShow(req, res) {
   try {
-    const deletedShow = await showService.getShowByID(req.params.id);
+    const deletedShow = await showService.deleteShowByID(req.params.id);
     if (!deletedShow)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(deletedShow);

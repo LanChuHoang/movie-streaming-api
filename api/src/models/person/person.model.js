@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { GENDERS } = require("../enum");
+const { GENDERS, JOBS } = require("../enum");
 
 const personSchema = new mongoose.Schema(
   {
@@ -7,7 +7,7 @@ const personSchema = new mongoose.Schema(
     gender: { type: String, enum: GENDERS },
     dob: { type: Date },
     pob: { type: String },
-    job: { type: String },
+    job: { type: String, enum: JOBS },
     biography: { type: String },
     avatarUrl: { type: String },
     images: { type: [String] },

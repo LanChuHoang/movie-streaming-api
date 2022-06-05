@@ -290,4 +290,5 @@ module.exports = {
     "ZM",
     "ZW",
   ],
+  JOBS: ["Actor", "Director"],
 };

@@ -121,7 +121,7 @@ async function updateMovie(req, res) {
 // DELETE /movie/:id - delete movie
 async function deleteMovie(req, res) {
   try {
-    const deletedMovie = await movieService.getMovieByID(req.params.id);
+    const deletedMovie = await movieService.deleteMovieByID(req.params.id);
     if (!deletedMovie)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(deletedMovie);
