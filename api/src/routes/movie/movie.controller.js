@@ -69,7 +69,7 @@ async function getMovies(req, res) {
       docs: movies,
       page: req.query.page || 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      total_number_of_pages: await movieService.getNumPages(),
+      total_pages: await movieService.getNumPages(),
     };
     return res.status(200).json(response);
   } catch (error) {

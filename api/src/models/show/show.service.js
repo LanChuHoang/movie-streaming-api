@@ -1,10 +1,22 @@
 const { DEFAULT_PAGE_SIZE } = require("../../configs/route.config");
 const showModel = require("./show.model");
 
+async function exists(title) {
+  return (await showModel.exists({ title: title })) !== null;
+}
+
 async function addShow(show) {
   try {
     const createdShow = await showModel.create(show);
     return createdShow;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAllShows() {
+  try {
+    return await showModel.find();
   } catch (error) {
     throw error;
   }
@@ -86,7 +98,9 @@ async function deleteShowByID(id) {
 }
 
 module.exports = {
+  exists,
   addShow,
+  getAllShows,
   getShows,
   getShowByID,
   getShowByTitle,

@@ -1,10 +1,22 @@
 const { DEFAULT_PAGE_SIZE } = require("../../configs/route.config");
 const movieModel = require("./movie.model");
 
+async function exists(title) {
+  return (await movieModel.exists({ title: title })) !== null;
+}
+
 async function addMovie(movie) {
   try {
     const createdMovie = await movieModel.create(movie);
     return createdMovie;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAllMovies() {
+  try {
+    return await movieModel.find();
   } catch (error) {
     throw error;
   }
@@ -86,7 +98,9 @@ async function deleteMovieByID(id) {
 }
 
 module.exports = {
+  exists,
   addMovie,
+  getAllMovies,
   getMovies,
   getMovieByID,
   getMovieByTitle,

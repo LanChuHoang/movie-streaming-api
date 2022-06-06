@@ -5,7 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "watch": "nodemon src/server.js"
+    "watch": "nodemon src/server.js",
+    "update-data": "nodemon src/data/tmdb/tmdb.service.js"
   },
   "keywords": [],
   "author": "",

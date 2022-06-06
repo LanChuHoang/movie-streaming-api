@@ -5,7 +5,7 @@ const { MOVIE_GENRES, COUNTRIES } = require("../enum");
 const movieSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
-    tagLine: { type: String },
+    tagline: { type: String },
     overview: { type: String },
     adult: { type: Boolean },
     runtime: { type: Number },
@@ -13,7 +13,8 @@ const movieSchema = new mongoose.Schema(
     imdbID: { type: String },
     genres: { type: [String], enum: MOVIE_GENRES },
     countries: { type: [String], enum: COUNTRIES },
-    people: [{ type: mongoose.Schema.Types.ObjectId, ref: "Person" }],
+    cast: [{ type: mongoose.Schema.Types.ObjectId, ref: "Person" }],
+    directors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Person" }],
     trailers: { type: [String] },
     posterUrl: { type: String },
     thumbnailUrl: { type: String },
@@ -23,6 +24,6 @@ const movieSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-movieSchema.plugin(idvalidator);
+// movieSchema.plugin(idvalidator);
 
 module.exports = mongoose.model("Movie", movieSchema);

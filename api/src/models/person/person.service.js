@@ -1,5 +1,9 @@
 const personModel = require("./person.model");
 
+async function exists(name) {
+  return (await personModel.exists({ name: name })) != null;
+}
+
 async function addPerson(person) {
   try {
     const createdPerson = await personModel.create(person);
@@ -12,6 +16,14 @@ async function addPerson(person) {
 async function getPersonByID(id) {
   try {
     return await personModel.findById(id);
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getPersonByName(name) {
+  try {
+    return await personModel.findOne({ name: name });
   } catch (error) {
     throw error;
   }
@@ -37,8 +49,10 @@ async function deletePersonByID(id) {
 }
 
 module.exports = {
+  exists,
   addPerson,
   getPersonByID,
+  getPersonByName,
   updatePerson,
   deletePersonByID,
 };
