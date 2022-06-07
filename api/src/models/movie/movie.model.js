@@ -20,6 +20,7 @@ const movieSchema = new mongoose.Schema(
     thumbnailUrl: { type: String },
     backdropUrl: { type: String },
     videoUrl: { type: String },
+    isUpcoming: { type: Boolean, required: true, default: false },
   },
   { timestamps: true }
 );

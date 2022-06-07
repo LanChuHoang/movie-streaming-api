@@ -3,6 +3,7 @@ const {
   errorResponse,
   DEFAULT_PAGE_SIZE,
   movieSortOptions,
+  createPaginationResponse,
 } = require("../../configs/route.config");
 const movieService = require("../../models/movie/movie.service");
 
@@ -46,23 +47,23 @@ async function postNewMovie(req, res) {
 
 // GET /movie?genre & country & year & sort & page
 async function getMovies(req, res) {
-  try {
-    if (req.query.page) {
-      req.query.page = Number(req.query.page);
-      if (isNaN(req.query.page))
-        return res.status(400).json(errorResponse.INVALID_QUERY);
-    }
-
-    if (req.query.year) {
-      req.query.year = Number(req.query.year);
-      if (isNaN(req.query.page))
-        return res.status(400).json(errorResponse.INVALID_QUERY);
-    }
-
-    if (req.query.sort && !movieSortOptions[req.query.sort]) {
+  if (req.query.page) {
+    req.query.page = Number(req.query.page);
+    if (isNaN(req.query.page))
       return res.status(400).json(errorResponse.INVALID_QUERY);
-    }
+  }
 
+  if (req.query.year) {
+    req.query.year = Number(req.query.year);
+    if (isNaN(req.query.page))
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.sort && !movieSortOptions[req.query.sort]) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  try {
     const movies = await movieService.getMovies({
       genre: req.query.genre,
       country: req.query.country,
@@ -75,6 +76,29 @@ async function getMovies(req, res) {
       page: req.query.page || 1,
       pageSize: DEFAULT_PAGE_SIZE,
       total_pages: await movieService.getNumPages(),
+    };
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
+  }
+}
+
+// GET /movie/upcoming?page - get upcoming movies
+async function getUpcomingMovies(req, res) {
+  if (req.query.page) {
+    req.query.page = Number(req.query.page);
+    if (isNaN(req.query.page))
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  try {
+    const movies = await movieService.getUpcomingMovies(req.query.page);
+    const response = {
+      docs: movies,
+      page: req.query.page || 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      total_pages: await movieService.getUpcomingNumPages(),
     };
     return res.status(200).json(response);
   } catch (error) {
@@ -139,6 +163,7 @@ async function deleteMovie(req, res) {
 module.exports = {
   postNewMovie,
   getMovies,
+  getUpcomingMovies,
   getMovie,
   getRandomMovie,
   updateMovie,

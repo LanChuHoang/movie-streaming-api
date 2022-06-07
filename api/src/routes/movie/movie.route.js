@@ -10,6 +10,9 @@ router.post("/", movieController.postNewMovie);
 // GET /movie?genres & country & year  & sort & page
 router.get("/", movieController.getMovies);
 
+// GET /movie/upcoming?page - get upcoming movies
+router.get("/upcoming", movieController.getUpcomingMovies);
+
 // GET /movie/random - get random movie
 router.get("/random", movieController.getRandomMovie);
 

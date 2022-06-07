@@ -33,7 +33,7 @@ async function getMovies({
   page = 1,
 }) {
   try {
-    const filter = {};
+    const filter = { isUpcoming: false };
     if (genre) filter.genres = { $all: [genre] };
     if (country) filter.countries = { $all: [country] };
     if (year)
@@ -47,6 +47,17 @@ async function getMovies({
   } catch (error) {
     throw error;
   }
+}
+
+async function getUpcomingMovies(page = 1) {
+  try {
+    const movies = await movieModel
+      .find({ isUpcoming: true })
+      .sort("releaseDate")
+      .skip(DEFAULT_PAGE_SIZE * (page - 1))
+      .limit(DEFAULT_PAGE_SIZE);
+    return movies;
+  } catch (error) {}
 }
 
 async function getMovieByID(id) {
@@ -84,6 +95,12 @@ async function getNumPages() {
   );
 }
 
+async function getUpcomingNumPages() {
+  return Math.ceil(
+    (await movieModel.find({ isUpcoming: true }).count()) / DEFAULT_PAGE_SIZE
+  );
+}
+
 async function updateMovie(id, updateData) {
   try {
     return await movieModel.findByIdAndUpdate(id, updateData, {
@@ -108,10 +125,12 @@ module.exports = {
   addMovie,
   getAllMovies,
   getMovies,
+  getUpcomingMovies,
   getMovieByID,
   getMovieByTitle,
   getRandomMovie,
   getNumPages,
+  getUpcomingNumPages,
   updateMovie,
   deleteMovieByID,
 };
