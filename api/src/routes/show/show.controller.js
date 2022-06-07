@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const {
   errorResponse,
   DEFAULT_PAGE_SIZE,
+  showSortOptions,
 } = require("../../configs/route.config");
 const showService = require("../../models/show/show.service");
 
@@ -58,18 +59,22 @@ async function getShows(req, res) {
         return res.status(400).json(errorResponse.INVALID_QUERY);
     }
 
+    if (req.query.sort && !showSortOptions[req.query.sort]) {
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+    }
+
     const shows = await showService.getShows({
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
-      sort: req.query.sort,
+      sort: showSortOptions[req.query.sort],
       page: req.query.page,
     });
     const response = {
       docs: shows,
       page: req.query.page || 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      total_number_of_pages: await showService.getNumPages(),
+      total_pages: await showService.getNumPages(),
     };
     return res.status(200).json(response);
   } catch (error) {

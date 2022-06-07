@@ -1,4 +1,7 @@
-const { DEFAULT_PAGE_SIZE } = require("../../configs/route.config");
+const {
+  DEFAULT_PAGE_SIZE,
+  showSortOptions,
+} = require("../../configs/route.config");
 const showModel = require("./show.model");
 
 async function exists(title) {
@@ -26,7 +29,7 @@ async function getShows({
   genre = null,
   country = null,
   year = null,
-  sort = "releaseDate",
+  sort = showSortOptions.lastAirDate,
   page = 1,
 }) {
   try {
@@ -38,7 +41,7 @@ async function getShows({
 
     return await showModel
       .find(filter)
-      .sort(`-${sort}`)
+      .sort(sort)
       .skip(DEFAULT_PAGE_SIZE * (page - 1))
       .limit(DEFAULT_PAGE_SIZE);
   } catch (error) {

@@ -5,4 +5,11 @@ module.exports = {
     INVALID_QUERY: { error: "Invalid query" },
   },
   DEFAULT_PAGE_SIZE: 30,
+  movieSortOptions: {
+    releaseDate: "-releaseDate",
+    popular: "",
+  },
+  showSortOptions: {
+    lastAirDate: "-lastAirDate",
+  },
 };

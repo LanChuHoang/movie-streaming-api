@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const {
   errorResponse,
   DEFAULT_PAGE_SIZE,
+  movieSortOptions,
 } = require("../../configs/route.config");
 const movieService = require("../../models/movie/movie.service");
 
@@ -58,11 +59,15 @@ async function getMovies(req, res) {
         return res.status(400).json(errorResponse.INVALID_QUERY);
     }
 
+    if (req.query.sort && !movieSortOptions[req.query.sort]) {
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+    }
+
     const movies = await movieService.getMovies({
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
-      sort: req.query.sort,
+      sort: movieSortOptions[req.query.sort],
       page: req.query.page,
     });
     const response = {

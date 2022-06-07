@@ -1,4 +1,7 @@
-const { DEFAULT_PAGE_SIZE } = require("../../configs/route.config");
+const {
+  DEFAULT_PAGE_SIZE,
+  movieSortOptions,
+} = require("../../configs/route.config");
 const movieModel = require("./movie.model");
 
 async function exists(title) {
@@ -26,7 +29,7 @@ async function getMovies({
   genre = null,
   country = null,
   year = null,
-  sort = "releaseDate",
+  sort = movieSortOptions.releaseDate,
   page = 1,
 }) {
   try {
@@ -38,7 +41,7 @@ async function getMovies({
 
     return await movieModel
       .find(filter)
-      .sort(`-${sort}`)
+      .sort(sort)
       .skip(DEFAULT_PAGE_SIZE * (page - 1))
       .limit(DEFAULT_PAGE_SIZE);
   } catch (error) {
@@ -48,7 +51,10 @@ async function getMovies({
 
 async function getMovieByID(id) {
   try {
-    return await movieModel.findById(id);
+    return await movieModel
+      .findById(id)
+      .populate("cast", "_id name avatarUrl")
+      .populate("directors", "_id name avatarUrl");
   } catch (error) {
     throw error;
   }
