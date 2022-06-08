@@ -107,6 +107,31 @@ async function getUpcomingMovies(req, res) {
   }
 }
 
+// GET /movie/search?query&page
+async function searchMovies(req, res) {
+  if (!req.query.query || req.query.query.trim().length === 0) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.page) {
+    req.query.page = Number(req.query.page);
+    if (isNaN(req.query.page))
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  try {
+    req.query.query = req.query.query.trim();
+    const movies = await movieService.getMoviesByTitle(
+      req.query.query,
+      req.query.page
+    );
+    return res.status(200).json(movies);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
+  }
+}
+
 // GET /movie/random - get random movie
 async function getRandomMovie(req, res) {
   try {
@@ -163,6 +188,7 @@ async function deleteMovie(req, res) {
 module.exports = {
   postNewMovie,
   getMovies,
+  searchMovies,
   getUpcomingMovies,
   getMovie,
   getRandomMovie,

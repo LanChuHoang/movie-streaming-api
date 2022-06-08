@@ -83,6 +83,31 @@ async function getShows(req, res) {
   }
 }
 
+// GET /show/search?query&page
+async function searchShows(req, res) {
+  if (!req.query.query || req.query.query.trim().length === 0) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.page) {
+    req.query.page = Number(req.query.page);
+    if (isNaN(req.query.page))
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  try {
+    req.query.query = req.query.query.trim();
+    const shows = await showService.getShowsByTitle(
+      req.query.query,
+      req.query.page
+    );
+    return res.status(200).json(shows);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
+  }
+}
+
 // GET /Show/random - get random Show
 async function getRandomShow(req, res) {
   try {
@@ -136,6 +161,7 @@ async function deleteShow(req, res) {
 module.exports = {
   postNewShow,
   getShows,
+  searchShows,
   getShow,
   getRandomShow,
   updateShow,

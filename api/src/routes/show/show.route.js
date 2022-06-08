@@ -10,6 +10,9 @@ router.post("/", showController.postNewShow);
 // GET /show?genres & country & year  & sort & page
 router.get("/", showController.getShows);
 
+// GET /show?query&page
+router.get("/search", showController.searchShows);
+
 // GET /show/random - get random show
 router.get("/random", showController.getRandomShow);
 

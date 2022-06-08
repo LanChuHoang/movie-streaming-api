@@ -49,6 +49,53 @@ async function getShows({
   }
 }
 
+async function getShowsByTitle(query, page = 1) {
+  try {
+    const [
+      {
+        meta: { total_documents },
+        docs,
+      },
+    ] = await showModel.aggregate([
+      {
+        $match: { $text: { $search: query } },
+      },
+      {
+        $facet: {
+          docs: [
+            {
+              $sort: { score: { $meta: "textScore" } },
+            },
+            {
+              $skip: DEFAULT_PAGE_SIZE * (page - 1),
+            },
+            {
+              $limit: DEFAULT_PAGE_SIZE,
+            },
+          ],
+          meta: [
+            {
+              $count: "total_documents",
+            },
+          ],
+        },
+      },
+      {
+        $unwind: "$meta",
+      },
+    ]);
+    return {
+      docs: docs,
+      page: page,
+      page_size: DEFAULT_PAGE_SIZE,
+      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
+      total_documents: total_documents,
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getShowByID(id) {
   try {
     return await showModel.findById(id);
@@ -105,6 +152,7 @@ module.exports = {
   addShow,
   getAllShows,
   getShows,
+  getShowsByTitle,
   getShowByID,
   getShowByTitle,
   getRandomShow,

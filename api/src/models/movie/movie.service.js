@@ -60,6 +60,53 @@ async function getUpcomingMovies(page = 1) {
   } catch (error) {}
 }
 
+async function getMoviesByTitle(query, page = 1) {
+  try {
+    const [
+      {
+        meta: { total_documents },
+        docs,
+      },
+    ] = await movieModel.aggregate([
+      {
+        $match: { $text: { $search: query } },
+      },
+      {
+        $facet: {
+          docs: [
+            {
+              $sort: { score: { $meta: "textScore" } },
+            },
+            {
+              $skip: DEFAULT_PAGE_SIZE * (page - 1),
+            },
+            {
+              $limit: DEFAULT_PAGE_SIZE,
+            },
+          ],
+          meta: [
+            {
+              $count: "total_documents",
+            },
+          ],
+        },
+      },
+      {
+        $unwind: "$meta",
+      },
+    ]);
+    return {
+      docs: docs,
+      page: page,
+      page_size: DEFAULT_PAGE_SIZE,
+      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
+      total_documents: total_documents,
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getMovieByID(id) {
   try {
     return await movieModel
@@ -126,6 +173,7 @@ module.exports = {
   getAllMovies,
   getMovies,
   getUpcomingMovies,
+  getMoviesByTitle,
   getMovieByID,
   getMovieByTitle,
   getRandomMovie,
