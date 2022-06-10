@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
 const {
   errorResponse,
-  DEFAULT_PAGE_SIZE,
   movieSortOptions,
-  createPaginationResponse,
 } = require("../../configs/route.config");
 const movieService = require("../../models/movie/movie.service");
 
@@ -64,20 +62,14 @@ async function getMovies(req, res) {
   }
 
   try {
-    const { docs, total_documents } = await movieService.getMovies({
+    const options = {
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
       sort: movieSortOptions[req.query.sort],
       page: req.query.page,
-    });
-    const response = {
-      docs: docs,
-      page: req.query.page || 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
-      total_documents: total_documents,
     };
+    const response = await movieService.getMovies(options);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -94,13 +86,7 @@ async function getUpcomingMovies(req, res) {
   }
 
   try {
-    const movies = await movieService.getUpcomingMovies(req.query.page);
-    const response = {
-      docs: movies,
-      page: req.query.page || 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      total_pages: await movieService.getUpcomingNumPages(),
-    };
+    const response = await movieService.getUpcomingMovies(req.query.page);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -122,17 +108,10 @@ async function searchMovies(req, res) {
 
   try {
     req.query.query = req.query.query.trim();
-    const { docs, total_documents } = await movieService.getMoviesByTitle(
+    const response = await movieService.getMoviesByTitle(
       req.query.query,
       req.query.page
     );
-    const response = {
-      docs: docs,
-      page: req.query.page || 1,
-      page_size: DEFAULT_PAGE_SIZE,
-      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
-      total_documents: total_documents,
-    };
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

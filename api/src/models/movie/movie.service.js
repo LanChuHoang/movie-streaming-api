@@ -1,6 +1,7 @@
 const {
   DEFAULT_PAGE_SIZE,
   movieSortOptions,
+  customProjection,
 } = require("../../configs/route.config");
 const movieModel = require("./movie.model");
 
@@ -8,6 +9,7 @@ async function exists(title) {
   return (await movieModel.exists({ title: title })) !== null;
 }
 
+// Add // TODO
 async function addMovie(movie) {
   try {
     const createdMovie = await movieModel.create(movie);
@@ -17,9 +19,47 @@ async function addMovie(movie) {
   }
 }
 
+// Get Movies
 async function getAllMovies() {
   try {
     return await movieModel.find();
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getPaginatedMovies(
+  filter = null,
+  sort = null,
+  page = 1,
+  project = customProjection.ITEM_BASE_INFO
+) {
+  try {
+    const [result] = await movieModel.aggregate([
+      { $match: filter },
+      {
+        $facet: {
+          docs: [
+            { $sort: sort },
+            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
+            { $limit: DEFAULT_PAGE_SIZE },
+            { $project: project },
+          ],
+          meta: [{ $count: "total_documents" }],
+        },
+      },
+      { $unwind: "$meta" },
+    ]);
+
+    const output = {
+      docs: result.docs,
+      page: page,
+      pageSize: DEFAULT_PAGE_SIZE,
+      total_pages: Math.ceil(result.meta.total_documents / DEFAULT_PAGE_SIZE),
+      total_documents: result.meta.total_documents,
+    };
+
+    return output;
   } catch (error) {
     throw error;
   }
@@ -42,26 +82,7 @@ async function getMovies({
     };
 
   try {
-    const [
-      {
-        meta: { total_documents },
-        docs,
-      },
-    ] = await movieModel.aggregate([
-      { $match: filter },
-      {
-        $facet: {
-          docs: [
-            { $sort: sort },
-            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
-            { $limit: DEFAULT_PAGE_SIZE },
-          ],
-          meta: [{ $count: "total_documents" }],
-        },
-      },
-      { $unwind: "$meta" },
-    ]);
-    return { docs, total_documents };
+    return await getPaginatedMovies(filter, sort, page);
   } catch (error) {
     throw error;
   }
@@ -69,48 +90,31 @@ async function getMovies({
 
 async function getUpcomingMovies(page = 1) {
   try {
-    const movies = await movieModel
-      .find({ isUpcoming: true })
-      .sort("releaseDate")
-      .skip(DEFAULT_PAGE_SIZE * (page - 1))
-      .limit(DEFAULT_PAGE_SIZE);
-    return movies;
-  } catch (error) {}
-}
-
-async function getMoviesByTitle(query, page = 1) {
-  try {
-    const [
-      {
-        meta: { total_documents },
-        docs,
-      },
-    ] = await movieModel.aggregate([
-      { $match: { $text: { $search: query } } },
-      {
-        $facet: {
-          docs: [
-            { $sort: { score: { $meta: "textScore" } } },
-            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
-            { $limit: DEFAULT_PAGE_SIZE },
-          ],
-          meta: [{ $count: "total_documents" }],
-        },
-      },
-      { $unwind: "$meta" },
-    ]);
-    return { docs, total_documents };
+    const filter = { isUpcoming: true };
+    const sort = { releaseDate: 1 };
+    return await getPaginatedMovies(filter, sort, page);
   } catch (error) {
     throw error;
   }
 }
 
+async function getMoviesByTitle(query, page = 1) {
+  try {
+    const filter = { $text: { $search: query } };
+    const sort = { score: { $meta: "textScore" } };
+    return await getPaginatedMovies(filter, sort, page);
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Get Single Movie
 async function getMovieByID(id) {
   try {
     return await movieModel
-      .findById(id)
-      .populate("cast", "_id name avatarUrl")
-      .populate("directors", "_id name avatarUrl");
+      .findById(id, customProjection.ITEM_FULL_INFO)
+      .populate("cast", customProjection.PERSON_BRIEF_INFO)
+      .populate("directors", customProjection.PERSON_BRIEF_INFO);
   } catch (error) {
     throw error;
   }
@@ -127,39 +131,34 @@ async function getMovieByTitle(title) {
 async function getRandomMovie() {
   try {
     return await movieModel.aggregate([
-      {
-        $sample: { size: 1 },
-      },
+      { $match: { isUpcoming: false } },
+      { $sample: { size: 1 } },
+      { $project: customProjection.ITEM_BASE_INFO },
     ]);
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 }
 
-async function getNumPages() {
-  return Math.ceil(
-    (await movieModel.estimatedDocumentCount()) / DEFAULT_PAGE_SIZE
-  );
-}
-
-async function getUpcomingNumPages() {
-  return Math.ceil(
-    (await movieModel.find({ isUpcoming: true }).count()) / DEFAULT_PAGE_SIZE
-  );
-}
-
+// Update //TODO
 async function updateMovie(id, updateData) {
   try {
     return await movieModel.findByIdAndUpdate(id, updateData, {
       returnDocument: "after",
       runValidators: true,
+      projection: customProjection.ITEM_FULL_INFO,
     });
   } catch (error) {
     throw error;
   }
 }
 
+// Delete //TODO
 async function deleteMovieByID(id) {
   try {
-    return await movieModel.findByIdAndDelete(id);
+    return await movieModel.findByIdAndDelete(id, {
+      projection: customProjection.ITEM_FULL_INFO,
+    });
   } catch (error) {
     throw error;
   }
@@ -175,8 +174,6 @@ module.exports = {
   getMovieByID,
   getMovieByTitle,
   getRandomMovie,
-  getNumPages,
-  getUpcomingNumPages,
   updateMovie,
   deleteMovieByID,
 };

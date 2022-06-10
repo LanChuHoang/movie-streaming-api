@@ -1,6 +1,7 @@
 const {
   DEFAULT_PAGE_SIZE,
   showSortOptions,
+  customProjection,
 } = require("../../configs/route.config");
 const showModel = require("./show.model");
 
@@ -8,6 +9,7 @@ async function exists(title) {
   return (await showModel.exists({ title: title })) !== null;
 }
 
+// Add
 async function addShow(show) {
   try {
     const createdShow = await showModel.create(show);
@@ -17,9 +19,47 @@ async function addShow(show) {
   }
 }
 
+// Get Shows
 async function getAllShows() {
   try {
     return await showModel.find();
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getPaginatedShows(
+  filter = null,
+  sort = null,
+  page = 1,
+  project = customProjection.ITEM_BASE_INFO
+) {
+  try {
+    const [result] = await showModel.aggregate([
+      { $match: filter },
+      {
+        $facet: {
+          docs: [
+            { $sort: sort },
+            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
+            { $limit: DEFAULT_PAGE_SIZE },
+            { $project: project },
+          ],
+          meta: [{ $count: "total_documents" }],
+        },
+      },
+      { $unwind: "$meta" },
+    ]);
+
+    const output = {
+      docs: result.docs,
+      page: page,
+      pageSize: DEFAULT_PAGE_SIZE,
+      total_pages: Math.ceil(result.meta.total_documents / DEFAULT_PAGE_SIZE),
+      total_documents: result.meta.total_documents,
+    };
+
+    return output;
   } catch (error) {
     throw error;
   }
@@ -42,26 +82,7 @@ async function getShows({
     };
 
   try {
-    const [
-      {
-        meta: { total_documents },
-        docs,
-      },
-    ] = await showModel.aggregate([
-      { $match: filter },
-      {
-        $facet: {
-          docs: [
-            { $sort: sort },
-            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
-            { $limit: DEFAULT_PAGE_SIZE },
-          ],
-          meta: [{ $count: "total_documents" }],
-        },
-      },
-      { $unwind: "$meta" },
-    ]);
-    return { docs, total_documents };
+    return await getPaginatedShows(filter, sort, page);
   } catch (error) {
     throw error;
   }
@@ -69,34 +90,18 @@ async function getShows({
 
 async function getShowsByTitle(query, page = 1) {
   try {
-    const [
-      {
-        meta: { total_documents },
-        docs,
-      },
-    ] = await showModel.aggregate([
-      { $match: { $text: { $search: query } } },
-      {
-        $facet: {
-          docs: [
-            { $sort: { score: { $meta: "textScore" } } },
-            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
-            { $limit: DEFAULT_PAGE_SIZE },
-          ],
-          meta: [{ $count: "total_documents" }],
-        },
-      },
-      { $unwind: "$meta" },
-    ]);
-    return { docs, total_documents };
+    const filter = { $text: { $search: query } };
+    const sort = { score: { $meta: "textScore" } };
+    return await getPaginatedShows(filter, sort, page);
   } catch (error) {
     throw error;
   }
 }
 
+// Get Single Shows
 async function getShowByID(id) {
   try {
-    return await showModel.findById(id);
+    return await showModel.findById(id, customProjection.ITEM_FULL_INFO);
   } catch (error) {
     throw error;
   }
@@ -113,33 +118,33 @@ async function getShowByTitle(title) {
 async function getRandomShow() {
   try {
     return await showModel.aggregate([
-      {
-        $sample: { size: 1 },
-      },
+      { $sample: { size: 1 } },
+      { $project: customProjection.ITEM_BASE_INFO },
     ]);
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 }
 
-async function getNumPages() {
-  return Math.ceil(
-    (await showModel.estimatedDocumentCount()) / DEFAULT_PAGE_SIZE
-  );
-}
-
+// Update
 async function updateShow(id, updateData) {
   try {
     return await showModel.findByIdAndUpdate(id, updateData, {
       returnDocument: "after",
       runValidators: true,
+      projection: customProjection.ITEM_FULL_INFO,
     });
   } catch (error) {
     throw error;
   }
 }
 
+// Delete
 async function deleteShowByID(id) {
   try {
-    return await showModel.findByIdAndDelete(id);
+    return await showModel.findByIdAndDelete(id, {
+      projection: customProjection.ITEM_FULL_INFO,
+    });
   } catch (error) {
     throw error;
   }
@@ -154,7 +159,6 @@ module.exports = {
   getShowByID,
   getShowByTitle,
   getRandomShow,
-  getNumPages,
   updateShow,
   deleteShowByID,
 };

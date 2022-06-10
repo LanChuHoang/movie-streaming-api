@@ -63,20 +63,14 @@ async function getShows(req, res) {
   }
 
   try {
-    const { docs, total_documents } = await showService.getShows({
+    const options = {
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
       sort: showSortOptions[req.query.sort],
       page: req.query.page,
-    });
-    const response = {
-      docs: docs,
-      page: req.query.page || 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
-      total_documents: total_documents,
     };
+    const response = await showService.getShows(options);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -98,17 +92,10 @@ async function searchShows(req, res) {
 
   try {
     req.query.query = req.query.query.trim();
-    const { docs, total_documents } = await showService.getShowsByTitle(
+    const response = await showService.getShowsByTitle(
       req.query.query,
       req.query.page
     );
-    const response = {
-      docs: docs,
-      page: req.query.page || 1,
-      page_size: DEFAULT_PAGE_SIZE,
-      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
-      total_documents: total_documents,
-    };
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
