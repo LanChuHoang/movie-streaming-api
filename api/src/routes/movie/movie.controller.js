@@ -119,6 +119,17 @@ async function searchMovies(req, res) {
   }
 }
 
+// GET /movie/similar - get similar movies
+async function getSimilarMovies(req, res) {
+  try {
+    const response = await movieService.getSimilarMovies(req.params.id);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
+  }
+}
+
 // GET /movie/random - get random movie
 async function getRandomMovie(req, res) {
   try {
@@ -175,8 +186,9 @@ async function deleteMovie(req, res) {
 module.exports = {
   postNewMovie,
   getMovies,
-  searchMovies,
   getUpcomingMovies,
+  searchMovies,
+  getSimilarMovies,
   getMovie,
   getRandomMovie,
   updateMovie,

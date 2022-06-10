@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const {
   DEFAULT_PAGE_SIZE,
   showSortOptions,
@@ -98,6 +99,31 @@ async function getShowsByTitle(query, page = 1) {
   }
 }
 
+async function getSimilarShows(id) {
+  try {
+    const { genres } = await showModel.findById(id, { genres: 1 });
+    const projection = customProjection.ITEM_BASE_INFO;
+    projection.numSimilar = {
+      $size: { $setIntersection: [genres, "$genres"] },
+    };
+    const similarShows = await showModel.aggregate([
+      {
+        $match: {
+          _id: { $ne: new mongoose.Types.ObjectId(id) },
+          genres: { $in: genres },
+        },
+      },
+      { $project: projection },
+      { $sort: { numSimilar: -1, lastAirDate: -1 } },
+      { $limit: DEFAULT_PAGE_SIZE },
+      { $project: { numSimilar: 0 } },
+    ]);
+    return similarShows;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // Get Single Shows
 async function getShowByID(id) {
   try {
@@ -156,6 +182,7 @@ module.exports = {
   getAllShows,
   getShows,
   getShowsByTitle,
+  getSimilarShows,
   getShowByID,
   getShowByTitle,
   getRandomShow,

@@ -13,6 +13,9 @@ router.get("/", showController.getShows);
 // GET /show?query&page
 router.get("/search", showController.searchShows);
 
+// GET /show/similar
+router.get("/similar/:id", showController.getSimilarShows);
+
 // GET /show/random - get random show
 router.get("/random", showController.getRandomShow);
 

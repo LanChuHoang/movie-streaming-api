@@ -103,6 +103,17 @@ async function searchShows(req, res) {
   }
 }
 
+// GET /show/similar - get similar shows
+async function getSimilarShows(req, res) {
+  try {
+    const response = await showService.getSimilarShows(req.params.id);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
+  }
+}
+
 // GET /Show/random - get random Show
 async function getRandomShow(req, res) {
   try {
@@ -157,6 +168,7 @@ module.exports = {
   postNewShow,
   getShows,
   searchShows,
+  getSimilarShows,
   getShow,
   getRandomShow,
   updateShow,

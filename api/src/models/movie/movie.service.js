@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const {
   DEFAULT_PAGE_SIZE,
   movieSortOptions,
@@ -108,6 +109,32 @@ async function getMoviesByTitle(query, page = 1) {
   }
 }
 
+async function getSimilarMovies(id) {
+  try {
+    const { genres } = await movieModel.findById(id, { genres: 1 });
+    const projection = customProjection.ITEM_BASE_INFO;
+    projection.numSimilar = {
+      $size: { $setIntersection: [genres, "$genres"] },
+    };
+    const similarMovies = await movieModel.aggregate([
+      {
+        $match: {
+          _id: { $ne: new mongoose.Types.ObjectId(id) },
+          isUpcoming: false,
+          genres: { $in: genres },
+        },
+      },
+      { $project: projection },
+      { $sort: { numSimilar: -1, releaseDate: -1 } },
+      { $limit: DEFAULT_PAGE_SIZE },
+      { $project: { numSimilar: 0 } },
+    ]);
+    return similarMovies;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // Get Single Movie
 async function getMovieByID(id) {
   try {
@@ -171,6 +198,7 @@ module.exports = {
   getMovies,
   getUpcomingMovies,
   getMoviesByTitle,
+  getSimilarMovies,
   getMovieByID,
   getMovieByTitle,
   getRandomMovie,

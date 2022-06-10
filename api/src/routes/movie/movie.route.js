@@ -16,6 +16,9 @@ router.get("/upcoming", movieController.getUpcomingMovies);
 // GET /movie/search?query&page
 router.get("/search", movieController.searchMovies);
 
+// GET /movie/similar
+router.get("/similar/:id", movieController.getSimilarMovies);
+
 // GET /movie/random - get random movie
 router.get("/random", movieController.getRandomMovie);
 
