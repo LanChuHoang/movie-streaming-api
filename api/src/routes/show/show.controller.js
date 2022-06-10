@@ -46,24 +46,24 @@ async function postNewShow(req, res) {
 
 // GET /Show?genre & country & year & sort & page
 async function getShows(req, res) {
-  try {
-    if (req.query.page) {
-      req.query.page = Number(req.query.page);
-      if (isNaN(req.query.page))
-        return res.status(400).json(errorResponse.INVALID_QUERY);
-    }
-
-    if (req.query.year) {
-      req.query.year = Number(req.query.year);
-      if (isNaN(req.query.page))
-        return res.status(400).json(errorResponse.INVALID_QUERY);
-    }
-
-    if (req.query.sort && !showSortOptions[req.query.sort]) {
+  if (req.query.page) {
+    req.query.page = Number(req.query.page);
+    if (isNaN(req.query.page))
       return res.status(400).json(errorResponse.INVALID_QUERY);
-    }
+  }
 
-    const shows = await showService.getShows({
+  if (req.query.year) {
+    req.query.year = Number(req.query.year);
+    if (isNaN(req.query.year))
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.sort && !showSortOptions[req.query.sort]) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  try {
+    const { docs, total_documents } = await showService.getShows({
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
@@ -71,10 +71,11 @@ async function getShows(req, res) {
       page: req.query.page,
     });
     const response = {
-      docs: shows,
+      docs: docs,
       page: req.query.page || 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      total_pages: await showService.getNumPages(),
+      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
+      total_documents: total_documents,
     };
     return res.status(200).json(response);
   } catch (error) {
@@ -97,11 +98,18 @@ async function searchShows(req, res) {
 
   try {
     req.query.query = req.query.query.trim();
-    const shows = await showService.getShowsByTitle(
+    const { docs, total_documents } = await showService.getShowsByTitle(
       req.query.query,
       req.query.page
     );
-    return res.status(200).json(shows);
+    const response = {
+      docs: docs,
+      page: req.query.page || 1,
+      page_size: DEFAULT_PAGE_SIZE,
+      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
+      total_documents: total_documents,
+    };
+    return res.status(200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json(errorResponse.DEFAULT_500_ERROR);

@@ -32,18 +32,36 @@ async function getMovies({
   sort = movieSortOptions.releaseDate,
   page = 1,
 }) {
-  try {
-    const filter = { isUpcoming: false };
-    if (genre) filter.genres = { $all: [genre] };
-    if (country) filter.countries = { $all: [country] };
-    if (year)
-      filter.releaseDate = { $gte: `${year}-1-1`, $lte: `${year}-12-31` };
+  const filter = { isUpcoming: false };
+  if (genre) filter.genres = { $all: [genre] };
+  if (country) filter.countries = { $all: [country] };
+  if (year)
+    filter.releaseDate = {
+      $gte: new Date("2021-01-01"),
+      $lte: new Date("2021-12-31"),
+    };
 
-    return await movieModel
-      .find(filter)
-      .sort(sort)
-      .skip(DEFAULT_PAGE_SIZE * (page - 1))
-      .limit(DEFAULT_PAGE_SIZE);
+  try {
+    const [
+      {
+        meta: { total_documents },
+        docs,
+      },
+    ] = await movieModel.aggregate([
+      { $match: filter },
+      {
+        $facet: {
+          docs: [
+            { $sort: sort },
+            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
+            { $limit: DEFAULT_PAGE_SIZE },
+          ],
+          meta: [{ $count: "total_documents" }],
+        },
+      },
+      { $unwind: "$meta" },
+    ]);
+    return { docs, total_documents };
   } catch (error) {
     throw error;
   }
@@ -68,40 +86,20 @@ async function getMoviesByTitle(query, page = 1) {
         docs,
       },
     ] = await movieModel.aggregate([
-      {
-        $match: { $text: { $search: query } },
-      },
+      { $match: { $text: { $search: query } } },
       {
         $facet: {
           docs: [
-            {
-              $sort: { score: { $meta: "textScore" } },
-            },
-            {
-              $skip: DEFAULT_PAGE_SIZE * (page - 1),
-            },
-            {
-              $limit: DEFAULT_PAGE_SIZE,
-            },
+            { $sort: { score: { $meta: "textScore" } } },
+            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
+            { $limit: DEFAULT_PAGE_SIZE },
           ],
-          meta: [
-            {
-              $count: "total_documents",
-            },
-          ],
+          meta: [{ $count: "total_documents" }],
         },
       },
-      {
-        $unwind: "$meta",
-      },
+      { $unwind: "$meta" },
     ]);
-    return {
-      docs: docs,
-      page: page,
-      page_size: DEFAULT_PAGE_SIZE,
-      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
-      total_documents: total_documents,
-    };
+    return { docs, total_documents };
   } catch (error) {
     throw error;
   }

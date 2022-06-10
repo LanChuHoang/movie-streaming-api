@@ -55,7 +55,7 @@ async function getMovies(req, res) {
 
   if (req.query.year) {
     req.query.year = Number(req.query.year);
-    if (isNaN(req.query.page))
+    if (isNaN(req.query.year))
       return res.status(400).json(errorResponse.INVALID_QUERY);
   }
 
@@ -64,7 +64,7 @@ async function getMovies(req, res) {
   }
 
   try {
-    const movies = await movieService.getMovies({
+    const { docs, total_documents } = await movieService.getMovies({
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
@@ -72,10 +72,11 @@ async function getMovies(req, res) {
       page: req.query.page,
     });
     const response = {
-      docs: movies,
+      docs: docs,
       page: req.query.page || 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      total_pages: await movieService.getNumPages(),
+      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
+      total_documents: total_documents,
     };
     return res.status(200).json(response);
   } catch (error) {
@@ -121,11 +122,18 @@ async function searchMovies(req, res) {
 
   try {
     req.query.query = req.query.query.trim();
-    const movies = await movieService.getMoviesByTitle(
+    const { docs, total_documents } = await movieService.getMoviesByTitle(
       req.query.query,
       req.query.page
     );
-    return res.status(200).json(movies);
+    const response = {
+      docs: docs,
+      page: req.query.page || 1,
+      page_size: DEFAULT_PAGE_SIZE,
+      total_pages: Math.ceil(total_documents / DEFAULT_PAGE_SIZE),
+      total_documents: total_documents,
+    };
+    return res.status(200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json(errorResponse.DEFAULT_500_ERROR);

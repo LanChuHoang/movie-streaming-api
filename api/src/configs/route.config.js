@@ -6,10 +6,10 @@ module.exports = {
   },
   DEFAULT_PAGE_SIZE: 30,
   movieSortOptions: {
-    releaseDate: "-releaseDate",
+    releaseDate: { releaseDate: 1 },
     popular: "",
   },
   showSortOptions: {
-    lastAirDate: "-lastAirDate",
+    lastAirDate: { lastAirDate: 1 },
   },
 };
