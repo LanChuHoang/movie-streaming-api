@@ -1,4 +1,5 @@
 const express = require("express");
+const routeValidator = require("../../validators/route.validator");
 const showController = require("./show.controller");
 
 const router = express.Router();
@@ -8,10 +9,19 @@ const router = express.Router();
 router.post("/", showController.postNewShow);
 
 // GET /show?genres & country & year  & sort & page
-router.get("/", showController.getShows);
+router.get(
+  "/",
+  routeValidator.validatePageParam,
+  showController.validateGetShowParams,
+  showController.getShows
+);
 
-// GET /show?query&page
-router.get("/search", showController.searchShows);
+// GET /show/search?query&page
+router.get(
+  "/search",
+  routeValidator.validateSearchParams,
+  showController.searchShows
+);
 
 // GET /show/similar
 router.get("/similar/:id", showController.getSimilarShows);
@@ -20,12 +30,16 @@ router.get("/similar/:id", showController.getSimilarShows);
 router.get("/random", showController.getRandomShow);
 
 // GET /show/:id/ - get show detail
-router.get("/:id", showController.getShow);
+router.get("/:id", routeValidator.validateIDParam, showController.getShow);
 
 // PATCH /show/:id - update show
-router.patch("/:id", showController.updateShow);
+router.patch("/:id", routeValidator.validateIDParam, showController.updateShow);
 
 // DELETE /show/:id - delete show
-router.delete("/:id", showController.deleteShow);
+router.delete(
+  "/:id",
+  routeValidator.validateIDParam,
+  showController.deleteShow
+);
 
 module.exports = router;

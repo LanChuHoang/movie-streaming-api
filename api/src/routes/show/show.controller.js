@@ -5,6 +5,7 @@ const {
   showSortOptions,
 } = require("../../configs/route.config");
 const showService = require("../../models/show/show.service");
+const { SHOW_GENRES, COUNTRIES } = require("../../models/enum");
 
 function updateShowErrorHandler(error, req, res) {
   console.log(error);
@@ -33,6 +34,28 @@ function updateShowErrorHandler(error, req, res) {
   return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
 }
 
+function validateGetShowParams(req, res, next) {
+  if (req.query.genre && !SHOW_GENRES.includes(req.query.genre)) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.country && !COUNTRIES.includes(req.query.country)) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.year) {
+    req.query.year = Number(req.query.year);
+    if (isNaN(req.query.year))
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.sort && !showSortOptions[req.query.sort]) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  next();
+}
+
 // POST /Show - post new Show
 // input: {title: required, optionals}
 async function postNewShow(req, res) {
@@ -46,22 +69,6 @@ async function postNewShow(req, res) {
 
 // GET /Show?genre & country & year & sort & page
 async function getShows(req, res) {
-  if (req.query.page) {
-    req.query.page = Number(req.query.page);
-    if (isNaN(req.query.page))
-      return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.year) {
-    req.query.year = Number(req.query.year);
-    if (isNaN(req.query.year))
-      return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.sort && !showSortOptions[req.query.sort]) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
   try {
     const options = {
       genre: req.query.genre,
@@ -80,18 +87,7 @@ async function getShows(req, res) {
 
 // GET /show/search?query&page
 async function searchShows(req, res) {
-  if (!req.query.query || req.query.query.trim().length === 0) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.page) {
-    req.query.page = Number(req.query.page);
-    if (isNaN(req.query.page))
-      return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
   try {
-    req.query.query = req.query.query.trim();
     const response = await showService.getShowsByTitle(
       req.query.query,
       req.query.page
@@ -165,6 +161,7 @@ async function deleteShow(req, res) {
 }
 
 module.exports = {
+  validateGetShowParams,
   postNewShow,
   getShows,
   searchShows,

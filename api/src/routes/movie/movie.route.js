@@ -1,4 +1,5 @@
 const express = require("express");
+const routeValidator = require("../../validators/route.validator");
 const movieController = require("./movie.controller");
 
 const router = express.Router();
@@ -8,13 +9,26 @@ const router = express.Router();
 router.post("/", movieController.postNewMovie);
 
 // GET /movie?genres & country & year  & sort & page
-router.get("/", movieController.getMovies);
+router.get(
+  "/",
+  routeValidator.validatePageParam,
+  movieController.validateGetMovieParams,
+  movieController.getMovies
+);
 
 // GET /movie/upcoming?page - get upcoming movies
-router.get("/upcoming", movieController.getUpcomingMovies);
+router.get(
+  "/upcoming",
+  routeValidator.validatePageParam,
+  movieController.getUpcomingMovies
+);
 
 // GET /movie/search?query&page
-router.get("/search", movieController.searchMovies);
+router.get(
+  "/search",
+  routeValidator.validateSearchParams,
+  movieController.searchMovies
+);
 
 // GET /movie/similar
 router.get("/similar/:id", movieController.getSimilarMovies);
@@ -23,12 +37,20 @@ router.get("/similar/:id", movieController.getSimilarMovies);
 router.get("/random", movieController.getRandomMovie);
 
 // GET /movie/:id/ - get movie detail
-router.get("/:id", movieController.getMovie);
+router.get("/:id", routeValidator.validateIDParam, movieController.getMovie);
 
 // PATCH /movie/:id - update movie
-router.patch("/:id", movieController.updateMovie);
+router.patch(
+  "/:id",
+  routeValidator.validateIDParam,
+  movieController.updateMovie
+);
 
 // DELETE /movie/:id - delete movie
-router.delete("/:id", movieController.deleteMovie);
+router.delete(
+  "/:id",
+  routeValidator.validateIDParam,
+  movieController.deleteMovie
+);
 
 module.exports = router;

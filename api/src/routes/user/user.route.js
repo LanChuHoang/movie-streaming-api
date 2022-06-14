@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require("./user.controller");
 const authorizerService = require("../../services/authorizer.service");
+const routeValidator = require("../../validators/route.validator");
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.get(
 // Output user infor except password, __v, createdAt, updateAt
 router.get(
   "/:id",
+  routeValidator.validateIDParam,
   // authorizerService.authorizeUserOrAdmin,
   userController.getUser
 );
@@ -29,6 +31,7 @@ router.get(
 // Output updated user infor except password, __v, createdAt, updateAt
 router.patch(
   "/:id",
+  routeValidator.validateIDParam,
   // authorizerService.authorizeUserOrAdmin,
   userController.updateUser
 );
@@ -38,6 +41,7 @@ router.patch(
 // Output deleted user infor except password, __v, createdAt, updateAt
 router.delete(
   "/:id",
+  routeValidator.validateIDParam,
   // authorizerService.authorizeUserOrAdmin,
   userController.deleteUser
 );
