@@ -127,7 +127,10 @@ async function getSimilarShows(id) {
 // Get Single Shows
 async function getShowByID(id) {
   try {
-    return await showModel.findById(id, customProjection.ITEM_FULL_INFO);
+    return await showModel
+      .findById(id, customProjection.ITEM_FULL_INFO)
+      .populate("cast", customProjection.PERSON_BRIEF_INFO)
+      .populate("directors", customProjection.PERSON_BRIEF_INFO);
   } catch (error) {
     throw error;
   }

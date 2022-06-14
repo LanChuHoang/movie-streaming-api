@@ -23,11 +23,15 @@ router.get(
   showController.searchShows
 );
 
-// GET /show/similar
-router.get("/similar/:id", showController.getSimilarShows);
-
 // GET /show/random - get random show
 router.get("/random", showController.getRandomShow);
+
+// GET /show/similar
+router.get(
+  "/:id/similar",
+  routeValidator.validateIDParam,
+  showController.getSimilarShows
+);
 
 // GET /show/:id/ - get show detail
 router.get("/:id", routeValidator.validateIDParam, showController.getShow);

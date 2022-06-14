@@ -30,11 +30,15 @@ router.get(
   movieController.searchMovies
 );
 
-// GET /movie/similar
-router.get("/similar/:id", movieController.getSimilarMovies);
-
 // GET /movie/random - get random movie
 router.get("/random", movieController.getRandomMovie);
+
+// GET /movie/similar
+router.get(
+  "/:id/similar",
+  routeValidator.validateIDParam,
+  movieController.getSimilarMovies
+);
 
 // GET /movie/:id/ - get movie detail
 router.get("/:id", routeValidator.validateIDParam, movieController.getMovie);

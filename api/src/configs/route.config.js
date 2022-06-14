@@ -20,6 +20,7 @@ module.exports = {
       runtime: 1,
       releaseDate: 1,
       genres: 1,
+      trailers: 1,
       posterUrl: 1,
       thumbnailUrl: 1,
       backdropUrl: 1,
