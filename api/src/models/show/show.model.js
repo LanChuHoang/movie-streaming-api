@@ -52,6 +52,4 @@ const showSchema = new mongoose.Schema(
   }
 );
 
-showSchema.plugin(idvalidator);
-
 module.exports = mongoose.model("Show", showSchema);

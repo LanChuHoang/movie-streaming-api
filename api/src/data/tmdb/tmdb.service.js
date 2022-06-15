@@ -50,7 +50,7 @@ async function getTrailers(type, id) {
   }
 }
 
-const loadPerson = async (id) => {
+const loadPerson = async (id, job) => {
   try {
     const url = `${config.BASE_URL}/person/${id}?api_key=${config.API_KEY}`;
     const tmdbModel = await (await axios.get(url)).data;
@@ -59,7 +59,7 @@ const loadPerson = async (id) => {
       gender: tmdbModel.gender === "1" ? "female" : "male",
       dob: tmdbModel.birthday,
       pob: tmdbModel.place_of_birth,
-      job: "Actor",
+      job: job,
       biography: tmdbModel.biography,
       avatarUrl: config.getProfileImageURL(tmdbModel.profile_path),
       images: undefined,
@@ -81,7 +81,7 @@ async function loadCastAndDirectors(type, id) {
       const storedPerson = await personService.getPersonByName(c.name);
       if (!storedPerson) {
         // Download person data and store that person to db
-        const person = await loadPerson(c.id);
+        const person = await loadPerson(c.id, "Actor");
         castIDs.push(person._id);
         console.log(`+ Loadded cast ${person.name}`);
       } else {
@@ -99,7 +99,7 @@ async function loadCastAndDirectors(type, id) {
       const storedPerson = await personService.getPersonByName(d.name);
       if (!storedPerson) {
         // Download person data and store that person to db
-        const person = await loadPerson(d.id);
+        const person = await loadPerson(d.id, "Director");
         directorIDs.push(person._id);
         console.log(`+ Loadded director ${person.name}`);
       } else {
@@ -151,7 +151,8 @@ async function loadMovie(id) {
       imdbID: tmdbModel.imdb_id,
       genres: tmdbModel.genres.map((g) => g.name),
       countries: tmdbModel.production_countries.map((c) => c.iso_3166_1),
-      people: undefined, // update later
+      cast: undefined, // update later
+      directors: undefined, // update later
       trailers: undefined, // update later
       posterUrl: config.getPosterImageURL(tmdbModel.poster_path),
       thumbnailUrl: config.getThumbnailImageURL(tmdbModel.backdrop_path),
@@ -217,7 +218,8 @@ async function loadShow(id) {
       imdbID: tmdbModel.imdb_id,
       genres: tmdbModel.genres.map((g) => g.name),
       countries: tmdbModel.production_countries.map((c) => c.iso_3166_1),
-      people: undefined, // update later
+      cast: undefined, // update later
+      directors: undefined, // update later
       trailers: undefined, // update later
       posterUrl: config.getPosterImageURL(tmdbModel.poster_path),
       thumbnailUrl: config.getThumbnailImageURL(tmdbModel.backdrop_path),
@@ -283,9 +285,9 @@ async function loadShows(path, numPages = 1) {
 
 async function test() {
   await mongoService.connect();
-  await loadMovies("/movie/popular", 5);
-  await loadMovies("/movie/upcoming", 5);
-  await loadShows("/tv/popular", 5);
+  // await loadMovies("/movie/popular", 3);
+  // await loadMovies("/movie/upcoming", 5);
+  await loadShows("/tv/popular", 3);
 
   // console.log(await loadMovie(634649));
   // console.log(await loadShow(76479));
