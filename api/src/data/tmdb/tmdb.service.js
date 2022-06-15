@@ -5,6 +5,8 @@ const showService = require("../../models/show/show.service");
 const personService = require("../../models/person/person.service");
 const personModel = require("../../models/person/person.model");
 const mongoService = require("../../services/mongo.service");
+const movieModel = require("../../models/movie/movie.model");
+const showModel = require("../../models/show/show.model");
 
 async function getPage(path, page) {
   try {
@@ -283,11 +285,23 @@ async function loadShows(path, numPages = 1) {
   }
 }
 
+async function updateDirectors() {
+  const movies = await showModel.find({}, { directors: 1 });
+  for (const movie of movies) {
+    for (const id of movie.directors) {
+      const p = await personService.updatePerson(id, { job: "Director" });
+      console.log(p.name, p.job);
+    }
+  }
+}
+
 async function test() {
   await mongoService.connect();
   // await loadMovies("/movie/popular", 3);
   // await loadMovies("/movie/upcoming", 5);
-  await loadShows("/tv/popular", 3);
+  // await loadShows("/tv/popular", 3);
+
+  // await updateDirectors();
 
   // console.log(await loadMovie(634649));
   // console.log(await loadShow(76479));
