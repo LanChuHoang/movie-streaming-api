@@ -10,13 +10,13 @@
 
 ### Client
 
-1. Open terminal from the root project folders
+1. Open terminal from the root project folder
 2. Run "cd client"
 3. Run "npm start"
 
 ### Server
 
-1. Open terminal from the root project folders
+1. Open terminal from the root project folder
 2. Run "cd api"
 3. Run "npm run watch"
 
