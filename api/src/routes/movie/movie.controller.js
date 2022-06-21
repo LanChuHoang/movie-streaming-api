@@ -9,19 +9,19 @@ const { MOVIE_GENRES, COUNTRIES } = require("../../models/enum");
 function updateMovieErrorHandler(error, req, res) {
   console.log(error);
   if (error.code === 11000) {
-    return res.status(400).json({ error: "Movie is already exist" });
+    return res.status(400).json(errorResponse.MOVIE_EXISTED);
   }
   if (error.errors?.title?.kind === "required") {
-    return res.status(400).json({ error: "Missing title field" });
+    return res.status(400).json(errorResponse.MISSING_TITLE);
   }
   if (error.errors?.["genres.0"]?.kind === "enum") {
-    return res.status(400).json({ error: "Invalid genres" });
+    return res.status(400).json(errorResponse.INVALID_GENRES);
   }
   if (error.errors?.["countries.0"]?.kind === "enum") {
-    return res.status(400).json({ error: "Invalid countries" });
+    return res.status(400).json(errorResponse.INVALID_COUNTRIES);
   }
   if (error.errors?.people) {
-    return res.status(400).json({ error: "Invalid people" });
+    return res.status(400).json(errorResponse.INVALID_PEOPLE);
   }
   if (
     error instanceof mongoose.Error.CastError ||
@@ -111,6 +111,8 @@ async function searchMovies(req, res) {
 
 // GET /movie/similar - get similar movies
 async function getSimilarMovies(req, res) {
+  if (!(await movieService.getMovieByID(req.params.id)))
+    return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
   try {
     const response = await movieService.getSimilarMovies(req.params.id);
     return res.status(200).json(response);

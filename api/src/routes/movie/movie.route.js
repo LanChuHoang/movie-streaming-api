@@ -16,13 +16,6 @@ router.get(
   movieController.getMovies
 );
 
-// GET /movie/upcoming?page - get upcoming movies
-router.get(
-  "/upcoming",
-  routeValidator.validatePageParam,
-  movieController.getUpcomingMovies
-);
-
 // GET /movie/search?query&page
 router.get(
   "/search",
@@ -30,8 +23,12 @@ router.get(
   movieController.searchMovies
 );
 
-// GET /movie/random - get random movie
-router.get("/random", movieController.getRandomMovie);
+// GET /movie/upcoming?page - get upcoming movies
+router.get(
+  "/upcoming",
+  routeValidator.validatePageParam,
+  movieController.getUpcomingMovies
+);
 
 // GET /movie/similar
 router.get(
@@ -39,6 +36,9 @@ router.get(
   routeValidator.validateIDParam,
   movieController.getSimilarMovies
 );
+
+// GET /movie/random - get random movie
+router.get("/random", movieController.getRandomMovie);
 
 // GET /movie/:id/ - get movie detail
 router.get("/:id", routeValidator.validateIDParam, movieController.getMovie);

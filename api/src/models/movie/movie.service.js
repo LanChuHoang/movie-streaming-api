@@ -52,12 +52,13 @@ async function getPaginatedMovies(
       { $unwind: "$meta" },
     ]);
 
+    const totalDocs = result?.meta.total_documents || 0;
     const output = {
-      docs: result.docs,
+      docs: result?.docs || [],
       page: page,
       pageSize: DEFAULT_PAGE_SIZE,
-      total_pages: Math.ceil(result.meta.total_documents / DEFAULT_PAGE_SIZE),
-      total_documents: result.meta.total_documents,
+      total_pages: Math.ceil(totalDocs / DEFAULT_PAGE_SIZE),
+      total_documents: totalDocs,
     };
 
     return output;
@@ -78,8 +79,8 @@ async function getMovies({
   if (country) filter.countries = { $all: [country] };
   if (year)
     filter.releaseDate = {
-      $gte: new Date("2021-01-01"),
-      $lte: new Date("2021-12-31"),
+      $gte: new Date(`${year}-01-01`),
+      $lte: new Date(`${year}-12-31`),
     };
 
   try {

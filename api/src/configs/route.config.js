@@ -3,6 +3,11 @@ module.exports = {
     DEFAULT_500_ERROR: { error: "Something went wrong" },
     DEFAULT_404_ERROR: { error: "Requested resource not found" },
     INVALID_QUERY: { error: "Invalid query" },
+    MISSING_TITLE: { error: "Missing title field" },
+    INVALID_GENRES: { error: "Invalid genres" },
+    INVALID_COUNTRIES: { error: "Invalid countries" },
+    INVALID_PEOPLE: { error: "Invalid people" },
+    MOVIE_EXISTED: { error: "Movie is already exist" },
   },
   DEFAULT_PAGE_SIZE: 30,
   movieSortOptions: {

@@ -297,9 +297,9 @@ async function updateDirectors() {
 
 async function test() {
   await mongoService.connect();
-  // await loadMovies("/movie/popular", 3);
-  // await loadMovies("/movie/upcoming", 5);
-  // await loadShows("/tv/popular", 3);
+  await loadMovies("/movie/popular", 10);
+  // await loadMovies("/movie/upcoming", 2);
+  await loadShows("/tv/popular", 10);
 
   // await updateDirectors();
 
