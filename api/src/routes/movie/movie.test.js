@@ -216,6 +216,8 @@ describe("GET Movies", () => {
       const expected = [m1.title, m2.title, m3.title];
       expect(response.body.map((m) => m.title)).toEqual(expected);
     });
+
+    testHelper.testNotFoundIDCase("/api/movie", "/similar");
   });
 });
 

@@ -32,11 +32,11 @@ async function testInvalidParamsRequest(endpoint, params = {}) {
   expect(response.body).toEqual(errorResponse.INVALID_QUERY);
 }
 
-function testNotFoundIDCase(endpoint) {
+function testNotFoundIDCase(endpoint, path = "") {
   test("case: Not found ID", async () => {
     const id = "62ad818184ccfdf2964ba774";
     const response = await agent
-      .get(`${endpoint}/${id}`)
+      .get(`${endpoint}/${id}${path}`)
       .expect("Content-Type", /json/)
       .expect(404);
     expect(response.body).toEqual(errorResponse.DEFAULT_404_ERROR);
