@@ -113,10 +113,10 @@ async function getMoviesByTitle(query, page = 1) {
 async function getSimilarMovies(id) {
   try {
     const { genres } = await movieModel.findById(id, { genres: 1 });
-    const projection = customProjection.ITEM_BASE_INFO;
-    projection.numSimilar = {
-      $size: { $setIntersection: [genres, "$genres"] },
-    };
+    // const projection = customProjection.ITEM_BASE_INFO;
+    // projection.numSimilar = {
+    //   $size: { $setIntersection: [genres, "$genres"] },
+    // };
     const similarMovies = await movieModel.aggregate([
       {
         $match: {
@@ -125,10 +125,16 @@ async function getSimilarMovies(id) {
           genres: { $in: genres },
         },
       },
-      { $project: projection },
+      {
+        $addFields: {
+          numSimilar: {
+            $size: { $setIntersection: [genres, "$genres"] },
+          },
+        },
+      },
       { $sort: { numSimilar: -1, releaseDate: -1 } },
       { $limit: DEFAULT_PAGE_SIZE },
-      { $project: { numSimilar: 0 } },
+      { $project: customProjection.ITEM_BASE_INFO },
     ]);
     return similarMovies;
   } catch (error) {

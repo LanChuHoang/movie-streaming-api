@@ -194,31 +194,29 @@ describe("GET Movies", () => {
     testHelper.testInvalidPageParam(endpoint);
   });
 
-  // describe("GET /movie/:id/similar - get similar movies", () => {
-  //   test("case: Success", async () => {
-  //     const [a, b, c, d] = ["Action", "Adventure", "Animation", "Comedy"];
-  //     await movieModel.insertMany([
-  //       { title: "ABC", genres: [a, b, c] },
-  //       { title: "AB", genres: [a, b] },
-  //       { title: "A", genres: [a] },
-  //       { title: "D", genres: [d] },
-  //     ]);
-  //     const mockMovie = await movieService.addMovie({
-  //       title: "similar",
-  //       genres: [a, b, c],
-  //     });
+  describe("GET /movie/:id/similar - get similar movies", () => {
+    test("case: Success", async () => {
+      const [a, b, c, d] = ["Action", "Adventure", "Animation", "Comedy"];
+      const [m1, m2, m3] = await movieModel.insertMany([
+        { title: "ABC", genres: [a, b, c] },
+        { title: "AB", genres: [a, b] },
+        { title: "A", genres: [a] },
+        { title: "D", genres: [d] },
+      ]);
+      const mockMovie = await movieService.addMovie({
+        title: "similar",
+        genres: [a, b, c],
+      });
 
-  //     const response = await agent
-  //       .get(`/api/movie/${mockMovie._id}/similar`)
-  //       .expect("Content-Type", /json/)
-  //       .expect(200);
+      const response = await agent
+        .get(`/api/movie/${mockMovie._id}/similar`)
+        .expect("Content-Type", /json/)
+        .expect(200);
 
-  //     console.log(response.body);
-
-  //     // expect(response.body).toContain({});
-  //     expect(1 + 1).toBe(2);
-  //   });
-  // });
+      const expected = [m1.title, m2.title, m3.title];
+      expect(response.body.map((m) => m.title)).toEqual(expected);
+    });
+  });
 });
 
 describe("GET Single Movie", () => {
