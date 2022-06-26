@@ -3,16 +3,32 @@ const userService = require("../../models/user/user.service");
 const aesService = require("../../services/aes.service");
 const authorizerService = require("../../services/authorizer.service");
 
-async function validateRegisterInput(req, res) {
-  if (await userService.isExists(req.body)) {
-    return res.status(400).json({
-      error: "User already registered",
-    });
+const USERNAME_REGEX = /^[a-zA-Z0-9]{6,14}$/;
+const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const PASSWORD_REGEX = /^[^\s]{8,}$/;
+
+async function validateRegisterInput(req, res, next) {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password)
+    return res.status(400).json(errorResponse.MISSING_USER_REGISTER_FIELDS);
+
+  if (await userService.exists(username, email)) {
+    return res.status(409).json(errorResponse.USER_EXISTS);
   }
+
+  if (!USERNAME_REGEX.test(username))
+    return res.status(400).json(errorResponse.INVALID_USERNAME);
+
+  if (!EMAIL_REGEX.test(email))
+    return res.status(400).json(errorResponse.INVALID_EMAIL);
+
+  if (!PASSWORD_REGEX.test(password))
+    return res.status(400).json(errorResponse.INVALID_PASSWORD);
+
+  next();
 }
 
 async function registerUser(req, res) {
-  await validateRegisterInput(req, res);
   try {
     const userData = {
       username: req.body.username,
@@ -20,6 +36,7 @@ async function registerUser(req, res) {
       password: aesService.encrypt(req.body.password),
     };
     const user = await userService.addUser(userData);
+    user.accessToken = authorizerService.generateAccessToken(user);
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);
@@ -43,6 +60,7 @@ async function authenticateUser(req, res) {
 }
 
 module.exports = {
+  validateRegisterInput,
   registerUser,
   authenticateUser,
 };

@@ -4,7 +4,11 @@ const authorizerService = require("../../services/authorizer.service");
 
 const router = express.Router();
 
-router.post("/register", authController.registerUser);
+router.post(
+  "/register",
+  authController.validateRegisterInput,
+  authController.registerUser
+);
 
 router.post("/login", authController.authenticateUser);
 

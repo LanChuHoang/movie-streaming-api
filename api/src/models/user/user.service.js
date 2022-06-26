@@ -7,10 +7,10 @@ const DEFAULT_PROJECTION = {
   password: 0,
 };
 
-async function isExists(user) {
+async function exists(username, email) {
   return (
     (await userModel.exists({
-      $or: [{ username: user.username }, { email: user.email }],
+      $or: [{ username: username }, { email: email }],
     })) !== null
   );
 }
@@ -113,7 +113,7 @@ async function getNumUserPerMonth() {
 }
 
 module.exports = {
-  isExists,
+  exists,
   addUser,
   findUserByID,
   findUserByEmail,
