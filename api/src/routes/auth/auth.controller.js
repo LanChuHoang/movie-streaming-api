@@ -105,10 +105,21 @@ async function handleRefreshToken(req, res) {
   return res.status(200).send({ accessToken });
 }
 
+async function handleLogout(req, res) {
+  try {
+    await userService.updateUser(req.user.id, { refreshToken: "" });
+    return res.status(200).send({ message: "User has been logged out" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+  }
+}
+
 module.exports = {
   validateRegisterInput,
   registerUser,
   authenticateUser,
   handleLoginUser,
   handleRefreshToken,
+  handleLogout,
 };

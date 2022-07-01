@@ -25,6 +25,12 @@ router.get(
   authController.handleRefreshToken
 );
 
+router.get(
+  "/logout",
+  authorizerService.verifyRefreshToken,
+  authController.handleLogout
+);
+
 router.get("/authorize", authorizerService.verifyAccessToken, (req, res) => {
   res.send("Authorize success");
 });
