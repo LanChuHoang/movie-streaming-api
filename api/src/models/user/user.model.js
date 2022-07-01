@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     profileImage: { type: String },
     isAdmin: { type: Boolean, default: false },
+    refreshToken: { type: String },
   },
   { timestamps: true }
 );
