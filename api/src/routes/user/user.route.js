@@ -5,7 +5,7 @@ const routeValidator = require("../../validators/route.validator");
 
 const router = express.Router();
 
-// router.use(authorizerService.verifyAccessToken);
+router.use(authorizerService.verifyAccessToken);
 
 // GET All Users: GET /user
 // by Admin

@@ -108,6 +108,7 @@ async function handleRefreshToken(req, res) {
 async function handleLogout(req, res) {
   try {
     await userService.updateUser(req.user.id, { refreshToken: "" });
+    res.clearCookie("refresh_token", tokenCookieOptions);
     return res.status(200).send({ message: "User has been logged out" });
   } catch (error) {
     console.log(error);

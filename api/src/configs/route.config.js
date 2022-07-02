@@ -20,7 +20,7 @@ module.exports = {
     INVALID_PEOPLE: { error: "Invalid people" },
     MOVIE_EXISTED: { error: "Movie already exists" },
   },
-  ACCESS_TOKEN_EXPIRE_TIME: 10, // 10s
+  ACCESS_TOKEN_EXPIRE_TIME: 15 * 60, // 15 mins
   REFRESH_TOKEN_EXPIRE_TIME: 24 * 60 * 60, // 1d
   DEFAULT_PAGE_SIZE: 30,
   movieSortOptions: {

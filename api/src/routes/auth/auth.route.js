@@ -25,7 +25,7 @@ router.get(
   authController.handleRefreshToken
 );
 
-router.get(
+router.post(
   "/logout",
   authorizerService.verifyRefreshToken,
   authController.handleLogout
