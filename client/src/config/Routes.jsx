@@ -5,14 +5,14 @@ import Catalog from "../pages/Catalog";
 import Detail from "../pages/detail/Detail";
 
 const Routes = () => {
-  return (
-    <Switch>
-      <Route path="/:itemType/search/:query" component={Catalog} />
-      <Route path="/:itemType/:id" component={Detail} />
-      <Route path="/:itemType" component={Catalog} />
-      <Route path="/" exact component={Home} />
-    </Switch>
-  );
+  // return (
+  //   <Switch>
+  //     <Route path="/:itemType/search/:query" component={Catalog} />
+  //     <Route path="/:itemType/:id" component={Detail} />
+  //     <Route path="/:itemType" component={Catalog} />
+  //     <Route path="/" exact component={Home} />
+  //   </Switch>
+  // );
 };
 
 export default Routes;

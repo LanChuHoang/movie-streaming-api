@@ -5,7 +5,7 @@ import Button, { OutlineButton } from "../button/Button";
 import Modal, { ModalContent } from "../modal/Modal";
 import tmdbApi from "../../api/tmdbApi";
 import "./hero-slide.scss";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 const HeroSlide = () => {
   SwiperCore.use([Autoplay]);
@@ -52,7 +52,7 @@ const HeroSlide = () => {
 };
 
 const HeroSlideItem = (props) => {
-  let hisrory = useHistory();
+  const navigate = useNavigate();
   const item = props.item;
 
   const setModalActive = async () => {
@@ -80,7 +80,7 @@ const HeroSlideItem = (props) => {
           <h2 className="title">{item.title}</h2>
           <div className="overview">{item.overview}</div>
           <div className="btns">
-            <Button onClick={() => hisrory.push("/movie/" + item._id)}>
+            <Button onClick={() => navigate("/movie/" + item._id)}>
               Watch now
             </Button>
             <OutlineButton onClick={setModalActive}>

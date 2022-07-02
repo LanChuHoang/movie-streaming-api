@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useHistory, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import "./movie-grid.scss";
 import MovieCard from "../movie-card/MovieCard";
 import Button, { OutlineButton } from "../button/Button";
@@ -61,14 +61,14 @@ const MovieGrid = (props) => {
 };
 
 const MovieSearch = (props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [query, setquery] = useState(props.query ? props.query : "");
 
   const goToSearch = useCallback(() => {
     if (query.trim().length > 0) {
-      history.push(`/${props.itemType}/search/${query}`);
+      navigate(`/${props.itemType}/search/${query}`);
     }
-  }, [query, props.itemType, history]);
+  }, [query, props.itemType, navigate]);
 
   useEffect(() => {
     const enterEvent = (e) => {

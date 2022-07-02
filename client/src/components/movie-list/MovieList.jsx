@@ -22,7 +22,7 @@ const MovieList = (props) => {
       }
     };
     getList();
-  }, []);
+  }, [props.itemType, props.category, props?.id]);
 
   return (
     <div className="movie-list">
