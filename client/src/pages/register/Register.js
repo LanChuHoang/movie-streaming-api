@@ -7,7 +7,7 @@ import {
 import "./Register.scss";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import backendApi from "../../api/backendApi";
 
 function Register() {
@@ -187,7 +187,9 @@ function Register() {
 
           <p>
             Already have an account?
-            <a href="#">Sign In</a>
+            <Link className=".signin-link" to="/login">
+              Sign In
+            </Link>
           </p>
         </form>
       </div>
