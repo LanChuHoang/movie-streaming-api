@@ -5,12 +5,23 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-regular-svg-icons";
 import "./Register.scss";
+import AuthHeader from "../../components/auth-header/AuthHeader";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
 import backendApi from "../../api/backendApi";
 
 function Register() {
+  const [username, setUsername] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [isValidName, setIsValidName] = useState(false);
+  const [isValidEmail, setIsValidEmail] = useState(false);
+  const [isValidPassword, setIsValidPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+
   const USERNAME_REGEX = /^[a-zA-Z0-9]{6,14}$/;
   const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
   const PASSWORD_REGEX = /^[^\s]{8,}$/;
@@ -27,16 +38,6 @@ function Register() {
     email: "your-email@domain.com",
     password: "at least 8 characters, no spaces",
   };
-
-  const [username, setUsername] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [isValidName, setIsValidName] = useState(false);
-  const [isValidEmail, setIsValidEmail] = useState(false);
-  const [isValidPassword, setIsValidPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const { setAuth } = useAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,13 +106,7 @@ function Register() {
 
   return (
     <div className="register-container">
-      <div className="top-container">
-        <img
-          className="logo"
-          src="https://download.logo.wine/logo/CuriosityStream/CuriosityStream-Logo.wine.png"
-          alt=""
-        />
-      </div>
+      <AuthHeader />
       <div className="body-container">
         <form onSubmit={handleSubmit}>
           <h1>Create your account</h1>
@@ -187,7 +182,7 @@ function Register() {
 
           <p>
             Already have an account?
-            <Link className=".signin-link" to="/login">
+            <Link className="signin-link" to="/login">
               Sign In
             </Link>
           </p>

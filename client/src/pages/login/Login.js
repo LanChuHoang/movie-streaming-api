@@ -5,6 +5,7 @@ import backendApi from "../../api/backendApi";
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Login.scss";
+import AuthHeader from "../../components/auth-header/AuthHeader";
 
 export default function Login() {
   const { setAuth } = useAuth();
@@ -15,6 +16,7 @@ export default function Login() {
   const buttonRef = useRef();
   const navigate = useNavigate();
   const location = useLocation();
+
   const lastPagePath = location.state?.from?.pathname || "/";
   const message = {
     MISSING_EMAIL_PASSWORD: "Missing email or password",
@@ -86,13 +88,7 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <div className="top-container">
-        <img
-          className="logo"
-          src="https://download.logo.wine/logo/CuriosityStream/CuriosityStream-Logo.wine.png"
-          alt=""
-        />
-      </div>
+      <AuthHeader />
       <div className="body-container">
         <form onSubmit={handleSubmit}>
           <h1>Sign In</h1>
