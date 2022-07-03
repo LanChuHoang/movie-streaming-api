@@ -48,8 +48,9 @@ async function registerUser(req, res) {
     };
     const user = await userService.addUser(userData);
 
-    const accessToken = authorizerService.generateAccessToken(user);
-    const refreshToken = authorizerService.generateRefreshToken(user);
+    const { _id, isAdmin } = user.toObject();
+    const accessToken = authorizerService.generateAccessToken(_id, isAdmin);
+    const refreshToken = authorizerService.generateRefreshToken(_id, isAdmin);
     await userService.updateUser(user._id, { refreshToken });
 
     const response = { ...user, accessToken };
@@ -83,8 +84,14 @@ async function authenticateUser(req, res, next) {
 async function handleLoginUser(req, res) {
   try {
     const user = req.user; // Get this from autheticateUser middlewares
-    const accessToken = authorizerService.generateAccessToken(user);
-    const refreshToken = authorizerService.generateRefreshToken(user);
+    const accessToken = authorizerService.generateAccessToken(
+      user._id,
+      user.isAdmin
+    );
+    const refreshToken = authorizerService.generateRefreshToken(
+      user._id,
+      user.isAdmin
+    );
 
     const updatedUser = await userService.updateUser(user._id, {
       refreshToken,
@@ -101,7 +108,8 @@ async function handleLoginUser(req, res) {
 }
 
 async function handleRefreshToken(req, res) {
-  const accessToken = authorizerService.generateAccessToken(req.user);
+  const { id, isAdmin } = req.payload; // from verifyRefreshToken() middleware
+  const accessToken = authorizerService.generateAccessToken(id, isAdmin);
   return res.status(200).send({ accessToken });
 }
 

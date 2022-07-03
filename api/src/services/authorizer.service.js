@@ -7,18 +7,16 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 
-function generateAccessToken(user) {
-  const token = jwt.sign(
-    { id: user._id, isAdmin: user.isAdmin },
-    process.env.ACCESS_TOKEN_SECRET_KEY,
-    { expiresIn: ACCESS_TOKEN_EXPIRE_TIME }
-  );
+function generateAccessToken(id, isAdmin) {
+  const token = jwt.sign({ id, isAdmin }, process.env.ACCESS_TOKEN_SECRET_KEY, {
+    expiresIn: ACCESS_TOKEN_EXPIRE_TIME,
+  });
   return token;
 }
 
-function generateRefreshToken(user) {
+function generateRefreshToken(id, isAdmin) {
   const token = jwt.sign(
-    { id: user._id, isAdmin: user.isAdmin },
+    { id, isAdmin },
     process.env.REFRESH_TOKEN_SECRET_KEY,
     { expiresIn: REFRESH_TOKEN_EXPIRE_TIME }
   );
@@ -51,7 +49,7 @@ async function verifyRefreshToken(req, res, next) {
     const user = await userService.findUserByID(payload.id);
     if (user.refreshToken !== token)
       return res.status(403).send({ error: "Invalid token" });
-    req.user = payload;
+    req.payload = payload;
     next();
   } catch (error) {
     console.log(error);
