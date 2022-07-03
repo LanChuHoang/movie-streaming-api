@@ -16,7 +16,6 @@ const HeroSlide = () => {
       try {
         const response = await tmdbApi.getRandomMovies();
         setMovieItems(response);
-        console.log(`Random movies: ${response.map((r) => r.title)}`);
       } catch (error) {
         console.log(error);
       }

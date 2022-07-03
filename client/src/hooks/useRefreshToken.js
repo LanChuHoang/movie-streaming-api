@@ -4,13 +4,23 @@ import useAuth from "./useAuth";
 const useRefreshToken = () => {
   const { setAuth } = useAuth();
 
-  const refresh = async () => {
+  const refresh = async (withUserInfo = false) => {
     const { accessToken } = (await backendApi.refreshToken()).data;
-    setAuth((prevAuth) => {
-      console.log("Prev access token ", prevAuth.accessToken);
-      console.log("New access token ", accessToken);
-      return { ...prevAuth, accessToken };
-    });
+    if (withUserInfo) {
+      const { data } = await backendApi.refetchUserDetail(accessToken);
+      setAuth((prevAuth) => {
+        console.log("Prev access token ", prevAuth.accessToken);
+        console.log("New access token ", accessToken);
+        return { ...data, accessToken };
+      });
+    } else {
+      setAuth((prevAuth) => {
+        console.log("Prev access token ", prevAuth.accessToken);
+        console.log("New access token ", accessToken);
+        return { ...prevAuth, accessToken };
+      });
+    }
+
     return accessToken;
   };
 

@@ -1,5 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import useBackendApi from "../../hooks/useBackendApi";
 import "./header.scss";
 import logo from "../../assets/tmovie.png";
 
@@ -21,6 +23,9 @@ const headerNav = [
 const Header = () => {
   const { pathname } = useLocation();
   const headerRef = useRef(null);
+  const { auth } = useAuth();
+  const [user, setUser] = useState();
+  // const backendApi = useBackendApi();
 
   const active = headerNav.findIndex((e) => e.path === pathname);
 
@@ -41,6 +46,11 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const { accessToken, ...user } = auth;
+    setUser(user);
+  }, [auth]);
+
   return (
     <div ref={headerRef} className="header">
       <div className="header__wrap container">
@@ -54,6 +64,7 @@ const Header = () => {
               <Link to={e.path}>{e.display}</Link>
             </li>
           ))}
+          <li key={3}>{user?.username}</li>
         </ul>
       </div>
     </div>

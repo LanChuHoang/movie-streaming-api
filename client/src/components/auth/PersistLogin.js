@@ -13,7 +13,7 @@ const PersistLogin = () => {
     const reLogin = async () => {
       console.log("Relogin");
       try {
-        await refresh();
+        await refresh(true);
       } catch (error) {
         console.log(error);
       } finally {
