@@ -9,17 +9,20 @@ import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
 import Detail from "./pages/detail/Detail";
 import RequireAuth from "./components/auth/RequireAuth";
+import PersistLogin from "./components/auth/PersistLogin";
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Layout />}>
-        <Route element={<RequireAuth />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/:itemType" element={<Catalog />} />
-          <Route path="/:itemType/search/:query" element={<Catalog />} />
-          <Route path="/:itemType/:id" element={<Detail />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/:itemType" element={<Catalog />} />
+            <Route path="/:itemType/search/:query" element={<Catalog />} />
+            <Route path="/:itemType/:id" element={<Detail />} />
+          </Route>
         </Route>
       </Route>
     </Routes>
