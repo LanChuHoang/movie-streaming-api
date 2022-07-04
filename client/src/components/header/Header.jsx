@@ -1,9 +1,16 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import useBackendApi from "../../hooks/useBackendApi";
 import "./header.scss";
 import logo from "../../assets/tmovie.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCaretDown,
+  faArrowRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
+import useLogout from "../../hooks/useLogout";
+import { useNavigate } from "react-router-dom";
+// import { faarrowright } from "@fortawesome/free-regular-svg-icons";
 
 const headerNav = [
   {
@@ -25,7 +32,8 @@ const Header = () => {
   const headerRef = useRef(null);
   const { auth } = useAuth();
   const [user, setUser] = useState();
-  // const backendApi = useBackendApi();
+  const logout = useLogout();
+  const navigator = useNavigate();
 
   const active = headerNav.findIndex((e) => e.path === pathname);
 
@@ -51,6 +59,12 @@ const Header = () => {
     setUser(user);
   }, [auth]);
 
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await logout();
+    navigator("/");
+  };
+
   return (
     <div ref={headerRef} className="header">
       <div className="header__wrap container">
@@ -64,7 +78,18 @@ const Header = () => {
               <Link to={e.path}>{e.display}</Link>
             </li>
           ))}
-          <li key={3}>{user?.username}</li>
+          <li key={3} className="profile">
+            {user?.username}
+            <FontAwesomeIcon icon={faCaretDown} />
+            <ul className="dropdown-menu">
+              <li>
+                <Link to="/logout" onClick={handleLogout}>
+                  <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                  Logout
+                </Link>
+              </li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
