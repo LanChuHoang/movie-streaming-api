@@ -5,7 +5,11 @@ const routeValidator = require("../../validators/route.validator");
 const router = express.Router();
 
 // POST /person - post new person
-router.post("/", personController.postNewPerson);
+router.post(
+  "/",
+  personController.postNewPerson,
+  personController.updatePersonErrorHandler
+);
 
 // GET /person/:id/ - get person detail
 router.get("/:id", routeValidator.validateIDParam, personController.getPerson);
@@ -14,7 +18,8 @@ router.get("/:id", routeValidator.validateIDParam, personController.getPerson);
 router.patch(
   "/:id",
   routeValidator.validateIDParam,
-  personController.updatePerson
+  personController.updatePerson,
+  personController.updatePersonErrorHandler
 );
 
 // DELETE /person/:id - delete person

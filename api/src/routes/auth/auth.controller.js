@@ -39,7 +39,7 @@ async function validateRegisterInput(req, res, next) {
   next();
 }
 
-async function registerUser(req, res) {
+async function registerUser(req, res, next) {
   try {
     const userData = {
       username: req.body.username,
@@ -57,8 +57,7 @@ async function registerUser(req, res) {
     res.cookie("refresh_token", refreshToken, tokenCookieOptions);
     return res.status(201).send(response);
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+    next(error);
   }
 }
 
@@ -81,7 +80,7 @@ async function authenticateUser(req, res, next) {
   next();
 }
 
-async function handleLoginUser(req, res) {
+async function handleLoginUser(req, res, next) {
   try {
     const user = req.user; // Get this from autheticateUser middlewares
     const accessToken = authorizerService.generateAccessToken(
@@ -102,8 +101,7 @@ async function handleLoginUser(req, res) {
     res.cookie("refresh_token", refreshToken, tokenCookieOptions);
     return res.status(200).send(response);
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+    next(error);
   }
 }
 
@@ -113,14 +111,13 @@ async function handleRefreshToken(req, res) {
   return res.status(200).send({ accessToken });
 }
 
-async function handleLogout(req, res) {
+async function handleLogout(req, res, next) {
   try {
     await userService.updateUser(req.payload.id, { refreshToken: "" });
     res.clearCookie("refresh_token", tokenCookieOptions);
     return res.status(200).send({ message: "User has been logged out" });
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+    next(error);
   }
 }
 

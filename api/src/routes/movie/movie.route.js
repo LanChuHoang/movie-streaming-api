@@ -6,7 +6,11 @@ const router = express.Router();
 
 // POST /movie - post new movie
 // input: {title: required, optionals}
-router.post("/", movieController.postNewMovie);
+router.post(
+  "/",
+  movieController.postNewMovie,
+  movieController.updateMovieErrorHandler
+);
 
 // GET /movie?genres & country & year  & sort & page
 router.get(
@@ -47,7 +51,8 @@ router.get("/:id", routeValidator.validateIDParam, movieController.getMovie);
 router.patch(
   "/:id",
   routeValidator.validateIDParam,
-  movieController.updateMovie
+  movieController.updateMovie,
+  movieController.updateMovieErrorHandler
 );
 
 // DELETE /movie/:id - delete movie

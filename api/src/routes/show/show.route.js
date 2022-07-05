@@ -6,7 +6,11 @@ const router = express.Router();
 
 // POST /show - post new show
 // input: {title: required, optionals}
-router.post("/", showController.postNewShow);
+router.post(
+  "/",
+  showController.postNewShow,
+  showController.updateShowErrorHandler
+);
 
 // GET /show?genres & country & year  & sort & page
 router.get(
@@ -37,7 +41,12 @@ router.get(
 router.get("/:id", routeValidator.validateIDParam, showController.getShow);
 
 // PATCH /show/:id - update show
-router.patch("/:id", routeValidator.validateIDParam, showController.updateShow);
+router.patch(
+  "/:id",
+  routeValidator.validateIDParam,
+  showController.updateShow,
+  showController.updateShowErrorHandler
+);
 
 // DELETE /show/:id - delete show
 router.delete(

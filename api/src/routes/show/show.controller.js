@@ -7,7 +7,127 @@ const {
 const showService = require("../../models/show/show.service");
 const { SHOW_GENRES, COUNTRIES } = require("../../models/enum");
 
-function updateShowErrorHandler(error, req, res) {
+function validateGetShowParams(req, res, next) {
+  if (req.query.genre && !SHOW_GENRES.includes(req.query.genre)) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.country && !COUNTRIES.includes(req.query.country)) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.year) {
+    req.query.year = Number(req.query.year);
+    if (isNaN(req.query.year))
+      return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  if (req.query.sort && !showSortOptions[req.query.sort]) {
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  }
+
+  next();
+}
+
+// POST /Show - post new Show
+// input: {title: required, optionals}
+async function postNewShow(req, res, next) {
+  try {
+    const createdShow = await showService.addShow(req.body);
+    return res.status(201).json(createdShow);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// GET /Show?genre & country & year & sort & page
+async function getShows(req, res, next) {
+  try {
+    const options = {
+      genre: req.query.genre,
+      country: req.query.country,
+      year: req.query.year,
+      sort: showSortOptions[req.query.sort],
+      page: req.query.page,
+    };
+    const response = await showService.getShows(options);
+    return res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// GET /show/search?query&page
+async function searchShows(req, res, next) {
+  try {
+    const response = await showService.getShowsByTitle(
+      req.query.query,
+      req.query.page
+    );
+    return res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// GET /show/similar - get similar shows
+async function getSimilarShows(req, res, next) {
+  try {
+    const response = await showService.getSimilarShows(req.params.id);
+    return res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// GET /Show/random - get random Show
+async function getRandomShow(req, res, next) {
+  try {
+    const randomShow = await showService.getRandomShow();
+    if (!randomShow)
+      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).json(randomShow);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// GET /Show/:id/ - get Show detail
+async function getShow(req, res, next) {
+  try {
+    const show = await showService.getShowByID(req.params.id);
+    if (!show) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).json(show);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// PATCH /Show/:id - update Show
+async function updateShow(req, res, next) {
+  try {
+    const updatedShow = await showService.updateShow(req.params.id, req.body);
+    if (!updatedShow)
+      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).json(updatedShow);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// DELETE /Show/:id - delete Show
+async function deleteShow(req, res, next) {
+  try {
+    const deletedShow = await showService.deleteShowByID(req.params.id);
+    if (!deletedShow)
+      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).json(deletedShow);
+  } catch (error) {
+    next(error);
+  }
+}
+
+function updateShowErrorHandler(error, req, res, next) {
   console.log(error);
   if (error.code === 11000) {
     return res.status(400).json({ error: "Show is already exist" });
@@ -34,132 +154,6 @@ function updateShowErrorHandler(error, req, res) {
   return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
 }
 
-function validateGetShowParams(req, res, next) {
-  if (req.query.genre && !SHOW_GENRES.includes(req.query.genre)) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.country && !COUNTRIES.includes(req.query.country)) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.year) {
-    req.query.year = Number(req.query.year);
-    if (isNaN(req.query.year))
-      return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.sort && !showSortOptions[req.query.sort]) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  next();
-}
-
-// POST /Show - post new Show
-// input: {title: required, optionals}
-async function postNewShow(req, res) {
-  try {
-    const createdShow = await showService.addShow(req.body);
-    return res.status(201).json(createdShow);
-  } catch (error) {
-    updateShowErrorHandler(error, req, res);
-  }
-}
-
-// GET /Show?genre & country & year & sort & page
-async function getShows(req, res) {
-  try {
-    const options = {
-      genre: req.query.genre,
-      country: req.query.country,
-      year: req.query.year,
-      sort: showSortOptions[req.query.sort],
-      page: req.query.page,
-    };
-    const response = await showService.getShows(options);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
-  }
-}
-
-// GET /show/search?query&page
-async function searchShows(req, res) {
-  try {
-    const response = await showService.getShowsByTitle(
-      req.query.query,
-      req.query.page
-    );
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
-  }
-}
-
-// GET /show/similar - get similar shows
-async function getSimilarShows(req, res) {
-  try {
-    const response = await showService.getSimilarShows(req.params.id);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
-  }
-}
-
-// GET /Show/random - get random Show
-async function getRandomShow(req, res) {
-  try {
-    const randomShow = await showService.getRandomShow();
-    if (!randomShow)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(randomShow);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
-  }
-}
-
-// GET /Show/:id/ - get Show detail
-async function getShow(req, res) {
-  try {
-    const show = await showService.getShowByID(req.params.id);
-    if (!show) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(show);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
-  }
-}
-
-// PATCH /Show/:id - update Show
-async function updateShow(req, res) {
-  try {
-    const updatedShow = await showService.updateShow(req.params.id, req.body);
-    if (!updatedShow)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(updatedShow);
-  } catch (error) {
-    updateShowErrorHandler(error, req, res);
-  }
-}
-
-// DELETE /Show/:id - delete Show
-async function deleteShow(req, res) {
-  try {
-    const deletedShow = await showService.deleteShowByID(req.params.id);
-    if (!deletedShow)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(deletedShow);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
-  }
-}
-
 module.exports = {
   validateGetShowParams,
   postNewShow,
@@ -170,4 +164,5 @@ module.exports = {
   getRandomShow,
   updateShow,
   deleteShow,
+  updateShowErrorHandler,
 };

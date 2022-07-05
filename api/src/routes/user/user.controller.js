@@ -33,7 +33,7 @@ async function getAllUsers(req, res) {
   }
 }
 
-async function getUser(req, res) {
+async function getUser(req, res, next) {
   try {
     const user = await userService.findUserByID(req.params.id);
     if (!user) {
@@ -41,12 +41,11 @@ async function getUser(req, res) {
     }
     return res.status(200).json(user);
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+    next(error);
   }
 }
 
-async function updateUser(req, res) {
+async function updateUser(req, res, next) {
   try {
     if (req.body.password) {
       req.body.password = aesService.encrypt(req.body.password);
@@ -57,12 +56,11 @@ async function updateUser(req, res) {
     }
     return res.status(200).json(updatedUser);
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+    next(error);
   }
 }
 
-async function deleteUser(req, res) {
+async function deleteUser(req, res, next) {
   try {
     const deletedUser = await userService.deleteUserByID(req.params.id);
     if (!deletedUser) {
@@ -70,18 +68,16 @@ async function deleteUser(req, res) {
     }
     return res.status(200).json(deletedUser);
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+    next(error);
   }
 }
 
-async function getNumUserPerMonth(req, res) {
+async function getNumUserPerMonth(req, res, next) {
   try {
     const data = await userService.getNumUserPerMonth();
     return res.status(200).json(data);
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+    next(error);
   }
 }
 
