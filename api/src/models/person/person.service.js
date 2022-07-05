@@ -4,48 +4,27 @@ async function exists(name) {
   return (await personModel.exists({ name: name })) != null;
 }
 
-async function addPerson(person) {
-  try {
-    const createdPerson = await personModel.create(person);
-    return createdPerson;
-  } catch (error) {
-    throw error;
-  }
+function addPerson(person) {
+  return personModel.create(person);
 }
 
-async function getPersonByID(id) {
-  try {
-    return await personModel.findById(id);
-  } catch (error) {
-    throw error;
-  }
+function getPersonByID(id) {
+  return personModel.findById(id);
 }
 
-async function getPersonByName(name) {
-  try {
-    return await personModel.findOne({ name: name });
-  } catch (error) {
-    throw error;
-  }
+function getPersonByName(name) {
+  return personModel.findOne({ name: name });
 }
 
-async function updatePerson(id, updateData) {
-  try {
-    return await personModel.findByIdAndUpdate(id, updateData, {
-      returnDocument: "after",
-      runValidators: true,
-    });
-  } catch (error) {
-    throw error;
-  }
+function updatePerson(id, updateData) {
+  return personModel.findByIdAndUpdate(id, updateData, {
+    returnDocument: "after",
+    runValidators: true,
+  });
 }
 
-async function deletePersonByID(id) {
-  try {
-    return await personModel.findByIdAndDelete(id);
-  } catch (error) {
-    throw error;
-  }
+function deletePersonByID(id) {
+  return personModel.findByIdAndDelete(id);
 }
 
 module.exports = {

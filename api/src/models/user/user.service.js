@@ -26,20 +26,12 @@ async function addUser(user) {
   }
 }
 
-async function findUserByID(id, projection = DEFAULT_PROJECTION) {
-  try {
-    return await userModel.findById(id, projection);
-  } catch (error) {
-    throw error;
-  }
+function findUserByID(id, projection = DEFAULT_PROJECTION) {
+  return userModel.findById(id, projection);
 }
 
-async function findUserByEmail(email, projection = DEFAULT_PROJECTION) {
-  try {
-    return await userModel.findOne({ email: email }, projection);
-  } catch (error) {
-    throw error;
-  }
+function findUserByEmail(email, projection = DEFAULT_PROJECTION) {
+  return userModel.findOne({ email: email }, projection);
 }
 
 async function getAllUsers(
@@ -63,53 +55,37 @@ async function getAllUsers(
   }
 }
 
-async function getNewUsers(amount, projection = DEFAULT_PROJECTION) {
-  try {
-    return await userModel.find({}, projection).sort({ _id: -1 }).limit(amount);
-  } catch (error) {
-    throw error;
-  }
+function getNewUsers(amount, projection = DEFAULT_PROJECTION) {
+  return userModel.find({}, projection).sort({ _id: -1 }).limit(amount);
 }
 
-async function updateUser(id, updateData, projection = DEFAULT_PROJECTION) {
-  try {
-    return await userModel.findByIdAndUpdate(id, updateData, {
-      returnDocument: "after",
-      projection: projection,
-    });
-  } catch (error) {
-    throw error;
-  }
+function updateUser(id, updateData, projection = DEFAULT_PROJECTION) {
+  return userModel.findByIdAndUpdate(id, updateData, {
+    returnDocument: "after",
+    projection: projection,
+  });
 }
 
-async function deleteUserByID(id, projection = DEFAULT_PROJECTION) {
-  try {
-    return await userModel.findByIdAndDelete(id, { projection: projection });
-  } catch (error) {
-    throw error;
-  }
+function deleteUserByID(id, projection = DEFAULT_PROJECTION) {
+  return userModel.findByIdAndDelete(id, { projection: projection });
 }
 
-async function getNumUserPerMonth() {
-  try {
-    return userModel.aggregate([
-      {
-        $group: {
-          _id: { $month: "$createdAt" },
-          numUsers: { $sum: 1 },
-        },
+function getNumUserPerMonth() {
+  return userModel.aggregate([
+    {
+      $group: {
+        _id: { $month: "$createdAt" },
+        numUsers: { $sum: 1 },
       },
-      {
-        $project: {
-          month: "$_id",
-          numUsers: 1,
-          _id: 0,
-        },
+    },
+    {
+      $project: {
+        month: "$_id",
+        numUsers: 1,
+        _id: 0,
       },
-    ]);
-  } catch (error) {
-    throw error;
-  }
+    },
+  ]);
 }
 
 module.exports = {

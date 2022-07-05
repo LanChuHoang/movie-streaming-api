@@ -11,22 +11,13 @@ async function exists(title) {
 }
 
 // Add
-async function addShow(show) {
-  try {
-    const createdShow = await showModel.create(show);
-    return createdShow;
-  } catch (error) {
-    throw error;
-  }
+function addShow(show) {
+  return showModel.create(show);
 }
 
 // Get Shows
-async function getAllShows() {
-  try {
-    return await showModel.find();
-  } catch (error) {
-    throw error;
-  }
+function getAllShows() {
+  return showModel.find();
 }
 
 async function getPaginatedShows(
@@ -125,58 +116,38 @@ async function getSimilarShows(id) {
 }
 
 // Get Single Shows
-async function getShowByID(id) {
-  try {
-    return await showModel
-      .findById(id, customProjection.ITEM_FULL_INFO)
-      .populate("cast", customProjection.PERSON_BRIEF_INFO)
-      .populate("directors", customProjection.PERSON_BRIEF_INFO);
-  } catch (error) {
-    throw error;
-  }
+function getShowByID(id) {
+  return showModel
+    .findById(id, customProjection.ITEM_FULL_INFO)
+    .populate("cast", customProjection.PERSON_BRIEF_INFO)
+    .populate("directors", customProjection.PERSON_BRIEF_INFO);
 }
 
-async function getShowByTitle(title) {
-  try {
-    return await showModel.findOne({ title: title });
-  } catch (error) {
-    throw error;
-  }
+function getShowByTitle(title) {
+  return showModel.findOne({ title: title });
 }
 
-async function getRandomShow() {
-  try {
-    return await showModel.aggregate([
-      { $sample: { size: 1 } },
-      { $project: customProjection.ITEM_BASE_INFO },
-    ]);
-  } catch (error) {
-    throw error;
-  }
+function getRandomShow() {
+  return showModel.aggregate([
+    { $sample: { size: 1 } },
+    { $project: customProjection.ITEM_BASE_INFO },
+  ]);
 }
 
 // Update
-async function updateShow(id, updateData) {
-  try {
-    return await showModel.findByIdAndUpdate(id, updateData, {
-      returnDocument: "after",
-      runValidators: true,
-      projection: customProjection.ITEM_FULL_INFO,
-    });
-  } catch (error) {
-    throw error;
-  }
+function updateShow(id, updateData) {
+  return showModel.findByIdAndUpdate(id, updateData, {
+    returnDocument: "after",
+    runValidators: true,
+    projection: customProjection.ITEM_FULL_INFO,
+  });
 }
 
 // Delete
-async function deleteShowByID(id) {
-  try {
-    return await showModel.findByIdAndDelete(id, {
-      projection: customProjection.ITEM_FULL_INFO,
-    });
-  } catch (error) {
-    throw error;
-  }
+function deleteShowByID(id) {
+  return showModel.findByIdAndDelete(id, {
+    projection: customProjection.ITEM_FULL_INFO,
+  });
 }
 
 module.exports = {
