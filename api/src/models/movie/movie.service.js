@@ -10,23 +10,14 @@ async function exists(title) {
   return (await movieModel.exists({ title: title })) !== null;
 }
 
-// Add // TODO
-async function addMovie(movie) {
-  try {
-    const createdMovie = await movieModel.create(movie);
-    return createdMovie;
-  } catch (error) {
-    throw error;
-  }
+// Add
+function addMovie(movie) {
+  return movieModel.create(movie);
 }
 
 // Get Movies
-async function getAllMovies() {
-  try {
-    return await movieModel.find();
-  } catch (error) {
-    throw error;
-  }
+function getAllMovies() {
+  return movieModel.find();
 }
 
 async function getPaginatedMovies(
@@ -113,10 +104,6 @@ async function getMoviesByTitle(query, page = 1) {
 async function getSimilarMovies(id) {
   try {
     const { genres } = await movieModel.findById(id, { genres: 1 });
-    // const projection = customProjection.ITEM_BASE_INFO;
-    // projection.numSimilar = {
-    //   $size: { $setIntersection: [genres, "$genres"] },
-    // };
     const similarMovies = await movieModel.aggregate([
       {
         $match: {
@@ -143,59 +130,39 @@ async function getSimilarMovies(id) {
 }
 
 // Get Single Movie
-async function getMovieByID(id) {
-  try {
-    return await movieModel
-      .findById(id, customProjection.ITEM_FULL_INFO)
-      .populate("cast", customProjection.PERSON_BRIEF_INFO)
-      .populate("directors", customProjection.PERSON_BRIEF_INFO);
-  } catch (error) {
-    throw error;
-  }
+function getMovieByID(id) {
+  return movieModel
+    .findById(id, customProjection.ITEM_FULL_INFO)
+    .populate("cast", customProjection.PERSON_BRIEF_INFO)
+    .populate("directors", customProjection.PERSON_BRIEF_INFO);
 }
 
-async function getMovieByTitle(title) {
-  try {
-    return await movieModel.findOne({ title: title });
-  } catch (error) {
-    throw error;
-  }
+function getMovieByTitle(title) {
+  return movieModel.findOne({ title: title });
 }
 
-async function getRandomMovie() {
-  try {
-    return await movieModel.aggregate([
-      { $match: { isUpcoming: false } },
-      { $sample: { size: 1 } },
-      { $project: customProjection.ITEM_BASE_INFO },
-    ]);
-  } catch (error) {
-    throw error;
-  }
+function getRandomMovie() {
+  return movieModel.aggregate([
+    { $match: { isUpcoming: false } },
+    { $sample: { size: 1 } },
+    { $project: customProjection.ITEM_BASE_INFO },
+  ]);
 }
 
-// Update //TODO
-async function updateMovie(id, updateData) {
-  try {
-    return await movieModel.findByIdAndUpdate(id, updateData, {
-      returnDocument: "after",
-      runValidators: true,
-      projection: customProjection.ITEM_FULL_INFO,
-    });
-  } catch (error) {
-    throw error;
-  }
+// Update
+function updateMovie(id, updateData) {
+  return movieModel.findByIdAndUpdate(id, updateData, {
+    returnDocument: "after",
+    runValidators: true,
+    projection: customProjection.ITEM_FULL_INFO,
+  });
 }
 
-// Delete //TODO
-async function deleteMovieByID(id) {
-  try {
-    return await movieModel.findByIdAndDelete(id, {
-      projection: customProjection.ITEM_FULL_INFO,
-    });
-  } catch (error) {
-    throw error;
-  }
+// Delete
+function deleteMovieByID(id) {
+  return movieModel.findByIdAndDelete(id, {
+    projection: customProjection.ITEM_FULL_INFO,
+  });
 }
 
 module.exports = {
