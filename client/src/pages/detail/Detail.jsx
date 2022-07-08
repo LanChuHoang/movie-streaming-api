@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
 import tmdbApi from "../../api/tmdbApi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import "./detail.scss";
+import Button, { OutlineButton } from "../../components/button/Button";
 import CastList from "./CastList";
 import VideoList from "./VideoList";
 import MovieList from "../../components/movie-list/MovieList";
@@ -9,6 +12,7 @@ import MovieList from "../../components/movie-list/MovieList";
 const Detail = () => {
   const { itemType, id } = useParams();
   const [item, setItem] = useState(null);
+  const trailersRef = useRef();
 
   useEffect(() => {
     const getDetail = async () => {
@@ -20,6 +24,15 @@ const Detail = () => {
     };
     getDetail();
   }, [itemType, id]);
+
+  const scrollToRef = (ref) => {
+    ref.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handlePlay = (e) => {
+    e.preventDefault();
+    console.log(item.videoUrl);
+  };
 
   return (
     <>
@@ -60,10 +73,23 @@ const Detail = () => {
                 </div>
                 <CastList cast={item.cast} />
               </div>
+              <div className="buttons">
+                <Button className="play-button" onClick={handlePlay}>
+                  <FontAwesomeIcon icon={faPlay} />
+                  Play
+                </Button>
+
+                <OutlineButton
+                  className="trailer-button"
+                  onClick={() => scrollToRef(trailersRef)}
+                >
+                  Trailers
+                </OutlineButton>
+              </div>
             </div>
           </div>
           <div className="container">
-            <div className="section mb-3">
+            <div className="section mb-3" ref={trailersRef}>
               <VideoList videos={item.trailers} />
             </div>
             <div className="section mb-3">
