@@ -43,9 +43,9 @@ const Header = () => {
         document.body.scrollTop > 100 ||
         document.documentElement.scrollTop > 100
       ) {
-        headerRef.current.classList.add("shrink");
+        headerRef?.current.classList.add("shrink");
       } else {
-        headerRef.current.classList.remove("shrink");
+        headerRef?.current.classList.remove("shrink");
       }
     };
     window.addEventListener("scroll", shrinkHeader);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router";
 import tmdbApi from "../../api/tmdbApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
@@ -8,11 +9,14 @@ import Button, { OutlineButton } from "../../components/button/Button";
 import CastList from "./CastList";
 import VideoList from "./VideoList";
 import MovieList from "../../components/movie-list/MovieList";
+import SeasonList from "../../components/season-list/SeasonList";
 
 const Detail = () => {
   const { itemType, id } = useParams();
   const [item, setItem] = useState(null);
   const trailersRef = useRef();
+  const seasonsRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getDetail = async () => {
@@ -21,6 +25,7 @@ const Detail = () => {
       console.log(response);
       setItem(response);
       window.scrollTo(0, 0);
+      console.log(item);
     };
     getDetail();
   }, [itemType, id]);
@@ -29,9 +34,10 @@ const Detail = () => {
     ref.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handlePlay = (e) => {
-    e.preventDefault();
-    console.log(item.videoUrl);
+  const handlePlay = () => {
+    itemType === "movie"
+      ? (window.location.href = item.videoUrl)
+      : scrollToRef(seasonsRef);
   };
 
   return (
@@ -78,7 +84,6 @@ const Detail = () => {
                   <FontAwesomeIcon icon={faPlay} />
                   Play
                 </Button>
-
                 <OutlineButton
                   className="trailer-button"
                   onClick={() => scrollToRef(trailersRef)}
@@ -88,7 +93,8 @@ const Detail = () => {
               </div>
             </div>
           </div>
-          <div className="container">
+          <div className="container" ref={seasonsRef}>
+            {itemType === "show" && <SeasonList seasons={item.seasons} />}
             <div className="section mb-3" ref={trailersRef}>
               <VideoList videos={item.trailers} />
             </div>

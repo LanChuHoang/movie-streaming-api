@@ -8,7 +8,8 @@ const MovieCard = (props) => {
   const link = `/${props.itemType}/${item._id}`;
   const bg =
     item.posterUrl?.replace("w185", "w500") ||
-    item.backdropUrl?.replace("original", "w500");
+    item.backdropUrl?.replace("original", "w500") ||
+    item.thumbnailUrl;
 
   return (
     <Link to={link}>
