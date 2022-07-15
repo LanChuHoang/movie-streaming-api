@@ -5,7 +5,7 @@ import Button from "../button/Button";
 
 const MovieCard = (props) => {
   const item = props.item;
-  const link = `/${props.itemType}/${item._id}`;
+  const link = `/${props.itemType}/${item._id}/detail`;
   const bg =
     item.posterUrl?.replace("w185", "w500") ||
     item.backdropUrl?.replace("original", "w500") ||

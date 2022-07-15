@@ -22,16 +22,17 @@ export const showCategory = {
 
 const tmdbApi = {
   getItemList: (itemType, category, params = {}) => {
+    console.log(params.toString());
     const path = `${itemType}${category ? `/${category}` : ""}`;
-    return axiosClient.get(path, params);
+    return axiosClient.get(path, { params });
   },
   search: (itemType, params) => {
     const path = `${itemType}/search`;
-    return axiosClient.get(path, params);
+    return axiosClient.get(path, { params });
   },
   getItemDetail: (itemType, id, params = {}) => {
     const path = `${itemType}/${id}`;
-    return axiosClient.get(path, params);
+    return axiosClient.get(path, { params });
   },
   getSimilarItem: (itemType, id) => {
     const path = `${itemType}/${id}/similar`;

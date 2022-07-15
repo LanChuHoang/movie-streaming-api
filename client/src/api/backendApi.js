@@ -64,6 +64,16 @@ const backendApi = {
     });
   },
 
+  getItems: (itemType, params = {}) => {
+    const path = `/${itemType}`;
+    return axiosClient.get(path, { params });
+  },
+
+  searchItems: (itemType, params) => {
+    const path = `${itemType}/search`;
+    return axiosClient.get(path, { params });
+  },
+
   interceptors: axiosClient.interceptors,
 
   axiosPrivateClient: axiosPrivateClient,

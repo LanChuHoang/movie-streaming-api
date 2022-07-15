@@ -4,45 +4,66 @@ import "./movie-grid.scss";
 import MovieCard from "../movie-card/MovieCard";
 import Button, { OutlineButton } from "../button/Button";
 import Input from "../input/Input";
-import tmdbApi from "../../api/tmdbApi";
+import backendApi from "../../api/backendApi";
+import filterOptions from "../../api/filterOptions";
+import { createSearchParams, useSearchParams } from "react-router-dom";
 
 const MovieGrid = (props) => {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const { query } = useParams();
+  const { browseType } = useParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const getList = async () => {
-      const response = query
-        ? await tmdbApi.search(props.itemType, { params: { query: query } })
-        : await tmdbApi.getItemList(props.itemType, props.category);
-      console.log(`Movie grid response:`);
-      console.log(response);
-      setItems(response.docs);
-      setTotalPage(response.total_pages);
+    const getItems = async () => {
+      try {
+        let data;
+        if (browseType === "search") {
+          console.log("Search for query " + searchParams.toString());
+          data = (await backendApi.searchItems(props.itemType, searchParams))
+            .data;
+        } else if (browseType === "browse") {
+          console.log("Filter for query " + searchParams.toString());
+          data = (await backendApi.getItems(props.itemType, searchParams)).data;
+        }
+        console.log(data);
+        setItems(data.docs);
+        setTotalPage(data.total_pages);
+      } catch (error) {
+        console.log(error);
+      }
     };
-    getList();
-  }, [props.category, props.itemType, query]);
+    browseType && getItems();
+  }, [props.itemType, browseType, searchParams]);
 
   const loadMore = async () => {
-    const response = query
-      ? await tmdbApi.search(props.itemType, {
-          params: { page: page + 1, query },
-        })
-      : await tmdbApi.getItemList(props.itemType, props.category, {
-          params: { page: page + 1 },
-        });
-    console.log(`Movie grid loadmore:`);
-    console.log(response);
-    setItems([...items, ...response.docs]);
-    setPage(page + 1);
+    try {
+      let data;
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page + 1);
+      if (browseType === "search") {
+        data = (await backendApi.searchItems(props.itemType, params)).data;
+      } else if (browseType === "browse") {
+        data = (await backendApi.getItems(props.itemType, params)).data;
+      }
+      console.log(`Loadmore:`);
+      console.log(data);
+      setItems([...items, ...data.docs]);
+      setPage(page + 1);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
-      <div className="section mb-3">
-        <MovieSearch itemType={props.itemType} query={query} />
+      <div className="search-filter-bar section mb-3">
+        <FilterBar itemType={props.itemType} />
+        <MovieSearch
+          itemType={props.itemType}
+          query={searchParams.get("query")}
+        />
       </div>
       <div className="movie-grid">
         {items.map((item, i) => (
@@ -60,13 +81,100 @@ const MovieGrid = (props) => {
   );
 };
 
+const FilterField = (props) => {
+  return (
+    <div className="filter-field">
+      <label>{props.label}</label>
+      <select
+        onChange={(e) => {
+          props.onChange(props.paramName, e.target.value);
+        }}
+        value={props.value}
+      >
+        {props.options?.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.display}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+const FilterBar = (props) => {
+  const { browseType } = useParams();
+  const [params, setParams] = useState(
+    new URLSearchParams(browseType === "browse" ? window.location.search : "")
+  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const currentParams = new URLSearchParams(
+      browseType === "browse" ? window.location.search : ""
+    );
+    setParams(currentParams);
+  }, [props.itemType]);
+
+  const handleFilter = (key, value) => {
+    const newParams = new URLSearchParams(
+      browseType === "browse" ? window.location.search : ""
+    );
+    value ? newParams.set(key, value) : newParams.delete(key);
+    setParams(newParams);
+    navigate({
+      pathname: `/${props.itemType}/browse`,
+      search: `?${createSearchParams(newParams)}`,
+    });
+  };
+
+  return (
+    <div className="filter-bar">
+      <FilterField
+        label="Genre"
+        options={
+          props.itemType === "movie"
+            ? filterOptions.movieGenres
+            : filterOptions.showGenres
+        }
+        paramName="genre"
+        onChange={handleFilter}
+        value={params.get("genre") || ""}
+      />
+      <FilterField
+        label="Country"
+        options={filterOptions.countries}
+        paramName="country"
+        onChange={handleFilter}
+        value={params.get("country") || ""}
+      />
+      <FilterField
+        label="Year"
+        options={filterOptions.years}
+        paramName="year"
+        onChange={handleFilter}
+        value={params.get("year") || ""}
+      />
+      <FilterField
+        label="Sort By"
+        options={filterOptions.sorts}
+        paramName="sort"
+        onChange={handleFilter}
+        value={params.get("sort") || ""}
+      />
+    </div>
+  );
+};
+
 const MovieSearch = (props) => {
   const navigate = useNavigate();
   const [query, setquery] = useState(props.query ? props.query : "");
 
   const goToSearch = useCallback(() => {
     if (query.trim().length > 0) {
-      navigate(`/${props.itemType}/search/${query}`);
+      navigate({
+        pathname: `/${props.itemType}/search`,
+        search: `?query=${query}`,
+      });
     }
   }, [query, props.itemType, navigate]);
 

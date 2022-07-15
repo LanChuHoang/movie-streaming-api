@@ -1,38 +1,101 @@
 @use "../../scss/" as *;
 
 .movie-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 3rem;
 
-    @include tablet {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
+  @include tablet {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
 
-    &__loadmore {
-        text-align: center;
-    }
+  &__loadmore {
+    text-align: center;
+  }
 }
 
-.movie-search {
+.search-filter-bar {
+  width: 100%;
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+
+  .filter-bar {
+    width: 70%;
+
+    .filter-field {
+      display: inline-block;
+      margin-right: 0.8rem;
+
+      label {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      select {
+        margin-top: 5px;
+        display: block;
+
+        // Size
+        width: 12em;
+        padding: 12px 10px;
+
+        // Background
+        background-color: #212121;
+
+        // Border
+        border: none;
+        border-radius: 0.3rem;
+
+        // Text
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: whitesmoke;
+
+        // Arrow icon
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='25' viewBox='0 0 24 24' width='35' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+
+        background-repeat: no-repeat;
+        background-position-x: 100%;
+        background-position-y: 50%;
+      }
+    }
+  }
+
+  .movie-search {
     position: relative;
-    width: 100%;
     max-width: 500px;
+    margin-left: auto;
+    margin-right: 0;
+
+    // align items to the bottom
+    display: flex;
+    align-items: flex-end;
 
     input {
-        width: 100%;
-        padding-right: 8rem;
+      width: 100%;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      padding-right: 8rem;
+
+      background-color: #212121;
     }
 
     button {
-        position: absolute;
-        right: 0;
-        top: 2px;
+      position: absolute;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      // bottom: 2px;
+      right: 0;
 
-        @include mobile {
-            right: 1px;
-            top: 1px;
-        }
+      @include mobile {
+        right: 1px;
+        bottom: 1px;
+      }
     }
+  }
 }

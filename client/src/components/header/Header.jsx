@@ -10,7 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useLogout from "../../hooks/useLogout";
 import { useNavigate } from "react-router-dom";
-// import { faarrowright } from "@fortawesome/free-regular-svg-icons";
 
 const headerNav = [
   {
@@ -19,11 +18,11 @@ const headerNav = [
   },
   {
     display: "Movies",
-    path: "/movie",
+    path: "/movie/browse",
   },
   {
     display: "Shows",
-    path: "/show",
+    path: "/show/browse",
   },
 ];
 

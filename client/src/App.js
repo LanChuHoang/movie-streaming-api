@@ -21,12 +21,12 @@ function App() {
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth />}>
             <Route path="/" element={<Home />} />
-            <Route path="/:itemType" element={<Catalog />} />
-            <Route path="/:itemType/search/:query" element={<Catalog />} />
-            <Route path="/:itemType/:id" element={<Detail />} />
+            <Route path="/:itemType/:browseType" element={<Catalog />} />
+            <Route path="/:itemType/:id/detail" element={<Detail />} />
           </Route>
         </Route>
       </Route>
+      <Route path="*" element={<h1>404 Not found</h1>} />
     </Routes>
   );
 }
