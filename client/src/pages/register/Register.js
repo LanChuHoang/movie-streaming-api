@@ -171,7 +171,7 @@ function Register() {
             {!password ? "" : createValidationIcon(isValidPassword)}
           </div>
 
-          <p>{errorMessage}</p>
+          <p className="error-message">{errorMessage}</p>
 
           <button
             disabled={!isValidName || !isValidEmail || !isValidPassword}

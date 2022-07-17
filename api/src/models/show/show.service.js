@@ -43,12 +43,13 @@ async function getPaginatedShows(
       { $unwind: "$meta" },
     ]);
 
+    const totalDocs = result?.meta.total_documents || 0;
     const output = {
-      docs: result.docs,
+      docs: result?.docs || [],
       page: page,
       pageSize: DEFAULT_PAGE_SIZE,
-      total_pages: Math.ceil(result.meta.total_documents / DEFAULT_PAGE_SIZE),
-      total_documents: result.meta.total_documents,
+      total_pages: Math.ceil(totalDocs / DEFAULT_PAGE_SIZE),
+      total_documents: totalDocs,
     };
 
     return output;

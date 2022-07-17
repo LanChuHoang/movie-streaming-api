@@ -48,7 +48,7 @@ async function registerUser(req, res, next) {
     };
     const user = await userService.addUser(userData);
 
-    const { _id, isAdmin } = user.toObject();
+    const { _id, isAdmin } = user;
     const accessToken = authorizerService.generateAccessToken(_id, isAdmin);
     const refreshToken = authorizerService.generateRefreshToken(_id, isAdmin);
     await userService.updateUser(user._id, { refreshToken });
