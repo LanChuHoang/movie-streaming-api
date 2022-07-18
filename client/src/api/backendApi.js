@@ -99,6 +99,10 @@ const backendApi = {
     return items;
   },
 
+  getCastDetail: async (id) => {
+    return axiosClient.get(`/person/${id}`);
+  },
+
   interceptors: axiosClient.interceptors,
 
   axiosPrivateClient: axiosPrivateClient,
