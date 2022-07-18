@@ -13,7 +13,7 @@ const PASSWORD_REGEX = /^[^\s]{8,}$/;
 
 const tokenCookieOptions = {
   httpOnly: true,
-  secure: false,
+  secure: true,
   sameSite: "None",
   maxAge: REFRESH_TOKEN_EXPIRE_TIME * 1000, // in ms
 };
