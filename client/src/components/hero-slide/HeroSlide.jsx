@@ -3,19 +3,20 @@ import SwiperCore, { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Button, { OutlineButton } from "../button/Button";
 import Modal, { ModalContent } from "../modal/Modal";
-import tmdbApi from "../../api/tmdbApi";
 import "./hero-slide.scss";
 import { useNavigate } from "react-router";
+import useBackendApi from "../../hooks/useBackendApi";
 
 const HeroSlide = () => {
   SwiperCore.use([Autoplay]);
   const [movieItems, setMovieItems] = useState([]);
+  const backendApi = useBackendApi();
 
   useEffect(() => {
     const getMovies = async () => {
       try {
-        const response = await tmdbApi.getRandomMovies();
-        setMovieItems(response);
+        const movies = await backendApi.getRandomMovies();
+        setMovieItems(movies);
       } catch (error) {
         console.log(error);
       }
@@ -63,7 +64,9 @@ const HeroSlideItem = (props) => {
         .querySelector(".modal__content > iframe")
         .setAttribute("src", videoSrc);
     } else {
-      modal.querySelector(".modal__content").innerHTML = "No trailer";
+      modal
+        .querySelector(".modal__content")
+        .insertAdjacentHTML("afterbegin", "<p>No trailer</p>");
     }
 
     modal.classList.toggle("active");
@@ -79,7 +82,7 @@ const HeroSlideItem = (props) => {
           <h2 className="title">{item.title}</h2>
           <div className="overview">{item.overview}</div>
           <div className="btns">
-            <Button onClick={() => navigate("/movie/" + item._id)}>
+            <Button onClick={() => navigate(`/movie/${item._id}/detail`)}>
               Watch now
             </Button>
             <OutlineButton onClick={setModalActive}>

@@ -1,8 +1,11 @@
 const express = require("express");
 const personController = require("./person.controller");
 const routeValidator = require("../../validators/route.validator");
+const authorizerService = require("../../services/authorizer.service");
 
 const router = express.Router();
+
+router.use(authorizerService.verifyAccessToken);
 
 // POST /person - post new person
 router.post(

@@ -1,8 +1,11 @@
 const express = require("express");
 const routeValidator = require("../../validators/route.validator");
 const showController = require("./show.controller");
+const authorizerService = require("../../services/authorizer.service");
 
 const router = express.Router();
+
+router.use(authorizerService.verifyAccessToken);
 
 // POST /show - post new show
 // input: {title: required, optionals}

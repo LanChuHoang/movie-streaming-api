@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
-import { useNavigate } from "react-router";
-import tmdbApi from "../../api/tmdbApi";
+import useBackendApi from "../../hooks/useBackendApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import "./detail.scss";
@@ -10,19 +9,24 @@ import CastList from "./CastList";
 import VideoList from "./VideoList";
 import MovieList from "../../components/movie-list/MovieList";
 import SeasonList from "../../components/season-list/SeasonList";
+import { listType } from "../../api/backendApi";
 
 const Detail = () => {
   const { itemType, id } = useParams();
   const [item, setItem] = useState(null);
   const trailersRef = useRef();
   const seasonsRef = useRef();
-  const navigate = useNavigate();
+  const backendApi = useBackendApi();
 
   useEffect(() => {
     const getDetail = async () => {
-      const response = await tmdbApi.getItemDetail(itemType, id);
-      setItem(response);
-      window.scrollTo(0, 0);
+      try {
+        const { data } = await backendApi.getItemDetail(itemType, id);
+        setItem(data);
+        window.scrollTo(0, 0);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getDetail();
   }, [itemType, id]);
@@ -99,7 +103,11 @@ const Detail = () => {
               <div className="section__header mb-2">
                 <h2>Similar</h2>
               </div>
-              <MovieList itemType={itemType} category="similar" id={item._id} />
+              <MovieList
+                itemType={itemType}
+                listType={listType.similar}
+                id={item._id}
+              />
             </div>
           </div>
         </>

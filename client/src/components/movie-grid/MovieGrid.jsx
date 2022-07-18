@@ -4,7 +4,7 @@ import "./movie-grid.scss";
 import MovieCard from "../movie-card/MovieCard";
 import Button, { OutlineButton } from "../button/Button";
 import Input from "../input/Input";
-import backendApi from "../../api/backendApi";
+import useBackendApi from "../../hooks/useBackendApi";
 import filterOptions from "../../api/filterOptions";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 
@@ -13,21 +13,18 @@ const MovieGrid = (props) => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const { browseType } = useParams();
-  const [searchParams] = useSearchParams();
+  const [params] = useSearchParams();
+  const backendApi = useBackendApi();
 
   useEffect(() => {
     const getItems = async () => {
       try {
         let data;
         if (browseType === "search") {
-          console.log("Search for query " + searchParams.toString());
-          data = (await backendApi.searchItems(props.itemType, searchParams))
-            .data;
+          data = (await backendApi.searchItems(props.itemType, params)).data;
         } else if (browseType === "browse") {
-          console.log("Filter for query " + searchParams.toString());
-          data = (await backendApi.getItems(props.itemType, searchParams)).data;
+          data = (await backendApi.getItems(props.itemType, params)).data;
         }
-        console.log(data);
         setItems(data.docs);
         setTotalPage(data.total_pages);
       } catch (error) {
@@ -35,20 +32,20 @@ const MovieGrid = (props) => {
       }
     };
     browseType && getItems();
-  }, [props.itemType, browseType, searchParams]);
+  }, [props.itemType, browseType, params]);
 
   const loadMore = async () => {
     try {
       let data;
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("page", page + 1);
+      const urlSearchParams = new URLSearchParams(params.toString());
+      urlSearchParams.set("page", page + 1);
       if (browseType === "search") {
-        data = (await backendApi.searchItems(props.itemType, params)).data;
+        data = (await backendApi.searchItems(props.itemType, urlSearchParams))
+          .data;
       } else if (browseType === "browse") {
-        data = (await backendApi.getItems(props.itemType, params)).data;
+        data = (await backendApi.getItems(props.itemType, urlSearchParams))
+          .data;
       }
-      console.log(`Loadmore:`);
-      console.log(data);
       setItems([...items, ...data.docs]);
       setPage(page + 1);
     } catch (error) {
@@ -60,10 +57,7 @@ const MovieGrid = (props) => {
     <>
       <div className="search-filter-bar section mb-3">
         <FilterBar itemType={props.itemType} />
-        <MovieSearch
-          itemType={props.itemType}
-          query={searchParams.get("query")}
-        />
+        <MovieSearch itemType={props.itemType} query={params.get("query")} />
       </div>
       <div className="movie-grid">
         {items.map((item, i) => (

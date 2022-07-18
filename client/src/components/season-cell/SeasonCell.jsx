@@ -24,7 +24,6 @@ const SeasonCell = (props) => {
       day: "numeric",
     });
   };
-  console.log(props.item);
 
   return (
     <Link to={props.item.videoUrl || "/"}>

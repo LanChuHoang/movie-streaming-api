@@ -318,6 +318,4 @@ const filterOptions = {
   sorts: [{ display: "Release Date", value: "" }],
 };
 
-console.log(filterOptions);
-
 export default filterOptions;

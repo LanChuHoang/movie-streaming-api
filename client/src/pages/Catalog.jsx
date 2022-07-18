@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router";
 import PageHeader from "../components/page-header/PageHeader";
-import { itemType as type, movieCategory, showCategory } from "../api/tmdbApi";
+import { itemType as type } from "../api/backendApi";
 import MovieGrid from "../components/movie-grid/MovieGrid";
 
 const Catalog = () => {
@@ -12,12 +12,7 @@ const Catalog = () => {
       <PageHeader>{itemType === type.movie ? "Movies" : "Shows"}</PageHeader>
       <div className="container">
         <div className="section mb-3">
-          <MovieGrid
-            itemType={itemType}
-            category={
-              itemType === type.movie ? movieCategory.none : showCategory.none
-            }
-          />
+          <MovieGrid itemType={itemType} />
         </div>
       </div>
     </>
