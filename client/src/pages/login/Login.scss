@@ -2,7 +2,7 @@
   font-size: 16px;
   * {
     box-sizing: content-box;
-    font-family: -apple-system;
+    font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: normal;
@@ -76,7 +76,6 @@
           cursor: text;
 
           font-size: 18px;
-          font-family: -apple-system;
         }
 
         input:focus {
@@ -121,8 +120,7 @@
       }
 
       .signin-button {
-        font-family: -apple-system;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 500;
 
         border: none;
