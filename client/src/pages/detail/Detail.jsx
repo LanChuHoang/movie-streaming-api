@@ -37,7 +37,7 @@ const Detail = () => {
 
   const handlePlay = () => {
     itemType === "movie"
-      ? (window.location.href = item.videoUrl)
+      ? (window.location.href = item.videoUrl || "/")
       : scrollToRef(seasonsRef);
   };
 
