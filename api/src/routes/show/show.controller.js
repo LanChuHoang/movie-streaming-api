@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 const {
   errorResponse,
-  DEFAULT_PAGE_SIZE,
   showSortOptions,
 } = require("../../configs/route.config");
-const showService = require("../../models/show/show.service");
+const showModel = require("../../models/show/show.model");
 const { SHOW_GENRES, COUNTRIES } = require("../../models/enum");
 
 function validateGetShowParams(req, res, next) {
@@ -33,7 +32,7 @@ function validateGetShowParams(req, res, next) {
 // input: {title: required, optionals}
 async function postNewShow(req, res, next) {
   try {
-    const createdShow = await showService.addShow(req.body);
+    const createdShow = await showModel.addShow(req.body);
     return res.status(201).json(createdShow);
   } catch (error) {
     next(error);
@@ -50,7 +49,7 @@ async function getShows(req, res, next) {
       sort: showSortOptions[req.query.sort],
       page: req.query.page,
     };
-    const response = await showService.getShows(options);
+    const response = await showModel.getShows(options);
     return res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -60,7 +59,7 @@ async function getShows(req, res, next) {
 // GET /show/search?query&page
 async function searchShows(req, res, next) {
   try {
-    const response = await showService.getShowsByTitle(
+    const response = await showModel.getShowsByTitle(
       req.query.query,
       req.query.page
     );
@@ -73,7 +72,7 @@ async function searchShows(req, res, next) {
 // GET /show/similar - get similar shows
 async function getSimilarShows(req, res, next) {
   try {
-    const response = await showService.getSimilarShows(req.params.id);
+    const response = await showModel.getSimilarShows(req.params.id);
     return res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -83,7 +82,7 @@ async function getSimilarShows(req, res, next) {
 // GET /Show/random - get random Show
 async function getRandomShow(req, res, next) {
   try {
-    const randomShow = await showService.getRandomShow();
+    const randomShow = await showModel.getRandomShow();
     if (!randomShow)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(randomShow);
@@ -95,7 +94,7 @@ async function getRandomShow(req, res, next) {
 // GET /Show/:id/ - get Show detail
 async function getShow(req, res, next) {
   try {
-    const show = await showService.getShowByID(req.params.id);
+    const show = await showModel.getShowByID(req.params.id);
     if (!show) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(show);
   } catch (error) {
@@ -106,7 +105,7 @@ async function getShow(req, res, next) {
 // PATCH /Show/:id - update Show
 async function updateShow(req, res, next) {
   try {
-    const updatedShow = await showService.updateShow(req.params.id, req.body);
+    const updatedShow = await showModel.updateShow(req.params.id, req.body);
     if (!updatedShow)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(updatedShow);
@@ -118,7 +117,7 @@ async function updateShow(req, res, next) {
 // DELETE /Show/:id - delete Show
 async function deleteShow(req, res, next) {
   try {
-    const deletedShow = await showService.deleteShowByID(req.params.id);
+    const deletedShow = await showModel.deleteShowByID(req.params.id);
     if (!deletedShow)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(deletedShow);

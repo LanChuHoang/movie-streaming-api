@@ -2,8 +2,7 @@ const {
   errorResponse,
   REFRESH_TOKEN_EXPIRE_TIME,
 } = require("../../configs/route.config");
-const { rawListeners } = require("../../models/user/user.model");
-const userService = require("../../models/user/user.service");
+const userModel = require("../../models/user/user.model");
 const aesService = require("../../services/aes.service");
 const authorizerService = require("../../services/authorizer.service");
 
@@ -23,7 +22,7 @@ async function validateRegisterInput(req, res, next) {
   if (!username || !email || !password)
     return res.status(400).send(errorResponse.MISSING_USER_REGISTER_FIELDS);
 
-  if (await userService.exists(username, email)) {
+  if (await userModel.exists(username, email)) {
     return res.status(409).send(errorResponse.USER_EXISTS);
   }
 
@@ -46,12 +45,12 @@ async function registerUser(req, res, next) {
       email: req.body.email,
       password: aesService.encrypt(req.body.password),
     };
-    const user = await userService.addUser(userData);
+    const user = await userModel.addUser(userData);
 
     const { _id, isAdmin } = user;
     const accessToken = authorizerService.generateAccessToken(_id, isAdmin);
     const refreshToken = authorizerService.generateRefreshToken(_id, isAdmin);
-    await userService.updateUser(user._id, { refreshToken });
+    await userModel.updateUser(user._id, { refreshToken });
 
     const response = { ...user, accessToken };
     res.cookie("refresh_token", refreshToken, tokenCookieOptions);
@@ -66,7 +65,7 @@ async function authenticateUser(req, res, next) {
   if (!email || !password)
     return res.status(400).send(errorResponse.MISSING_USER_LOGIN_FIELDS);
 
-  const user = await userService.findUserByEmail(email, null);
+  const user = await userModel.findUserByEmail(email, null);
   if (!user) {
     return res.status(401).send(errorResponse.WRONG_EMAIL_PASSWORD);
   }
@@ -92,7 +91,7 @@ async function handleLoginUser(req, res, next) {
       user.isAdmin
     );
 
-    const updatedUser = await userService.updateUser(user._id, {
+    const updatedUser = await userModel.updateUser(user._id, {
       refreshToken,
     });
 
@@ -113,7 +112,7 @@ async function handleRefreshToken(req, res) {
 
 async function handleLogout(req, res, next) {
   try {
-    await userService.updateUser(req.payload.id, { refreshToken: "" });
+    await userModel.updateUser(req.payload.id, { refreshToken: "" });
     res.clearCookie("refresh_token", tokenCookieOptions);
     return res.status(200).send({ message: "User has been logged out" });
   } catch (error) {

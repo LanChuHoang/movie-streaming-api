@@ -1,12 +1,11 @@
 const axios = require("axios").default;
 const config = require("./tmdb.configure");
-const movieService = require("../../models/movie/movie.service");
-const showService = require("../../models/show/show.service");
-const personService = require("../../models/person/person.service");
-const personModel = require("../../models/person/person.model");
 const mongoService = require("../../services/mongo.service");
 const movieModel = require("../../models/movie/movie.model");
 const showModel = require("../../models/show/show.model");
+const personModel = require("../../models/person/person.model");
+
+const Show = require("../../models/show/Show");
 
 async function getPage(path, page) {
   try {
@@ -66,7 +65,7 @@ const loadPerson = async (id, job) => {
       avatarUrl: config.getProfileImageURL(tmdbModel.profile_path),
       images: undefined,
     };
-    const storedModel = await personService.addPerson(mappedModel);
+    const storedModel = await personModel.addPerson(mappedModel);
     return storedModel;
   } catch (error) {
     throw error;
@@ -80,7 +79,7 @@ async function loadCastAndDirectors(type, id) {
     // Load Cast
     const castIDs = [];
     for (const c of cast) {
-      const storedPerson = await personService.getPersonByName(c.name);
+      const storedPerson = await personModel.getPersonByName(c.name);
       if (!storedPerson) {
         // Download person data and store that person to db
         const person = await loadPerson(c.id, "Actor");
@@ -98,7 +97,7 @@ async function loadCastAndDirectors(type, id) {
     );
     const directorIDs = [];
     for (const d of directors) {
-      const storedPerson = await personService.getPersonByName(d.name);
+      const storedPerson = await personModel.getPersonByName(d.name);
       if (!storedPerson) {
         // Download person data and store that person to db
         const person = await loadPerson(d.id, "Director");
@@ -178,7 +177,7 @@ async function loadMovie(id) {
     //   console.log(`${(await personModel.exists({ _id: id })) !== null}`);
     // }
 
-    const storedModel = await movieService.addMovie(mappedModel);
+    const storedModel = await movieModel.addMovie(mappedModel);
     return storedModel;
   } catch (error) {
     throw error;
@@ -191,7 +190,7 @@ async function loadMovies(path, numPages = 1) {
       const { results } = await getPage(path, page);
 
       for (const result of results) {
-        if (await movieService.exists(result.title)) {
+        if (await movieModel.exists(result.title)) {
           console.log(`- ${result.title} is already existed`);
           continue;
         }
@@ -253,7 +252,7 @@ async function loadShow(id) {
     mappedModel.cast = castIDs;
     mappedModel.directors = directorIDs;
 
-    const storedModel = await showService.addShow(mappedModel);
+    const storedModel = await showModel.addShow(mappedModel);
     return storedModel;
   } catch (error) {
     throw error;
@@ -266,7 +265,7 @@ async function loadShows(path, numPages = 1) {
       const { results } = await getPage(path, page);
 
       for (const result of results) {
-        if (await showService.exists(result.name)) {
+        if (await showModel.exists(result.name)) {
           console.log(`- ${result.name} is already existed`);
           continue;
         }
@@ -286,10 +285,10 @@ async function loadShows(path, numPages = 1) {
 }
 
 async function updateDirectors() {
-  const movies = await showModel.find({}, { directors: 1 });
+  const movies = await Show.find({}, { directors: 1 });
   for (const movie of movies) {
     for (const id of movie.directors) {
-      const p = await personService.updatePerson(id, { job: "Director" });
+      const p = await personModel.updatePerson(id, { job: "Director" });
       console.log(p.name, p.job);
     }
   }

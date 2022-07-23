@@ -3,7 +3,7 @@ const {
   errorResponse,
   movieSortOptions,
 } = require("../../configs/route.config");
-const movieService = require("../../models/movie/movie.service");
+const movieModel = require("../../models/movie/movie.model");
 const { MOVIE_GENRES, COUNTRIES } = require("../../models/enum");
 
 function validateGetMovieParams(req, res, next) {
@@ -32,7 +32,7 @@ function validateGetMovieParams(req, res, next) {
 // input: {title: required, optionals}
 async function postNewMovie(req, res, next) {
   try {
-    const createdMovie = await movieService.addMovie(req.body);
+    const createdMovie = await movieModel.addMovie(req.body);
     return res.status(201).json(createdMovie);
   } catch (error) {
     next(error);
@@ -49,7 +49,7 @@ async function getMovies(req, res, next) {
       sort: movieSortOptions[req.query.sort],
       page: req.query.page,
     };
-    const response = await movieService.getMovies(options);
+    const response = await movieModel.getMovies(options);
     return res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -59,7 +59,7 @@ async function getMovies(req, res, next) {
 // GET /movie/upcoming?page - get upcoming movies
 async function getUpcomingMovies(req, res, next) {
   try {
-    const response = await movieService.getUpcomingMovies(req.query.page);
+    const response = await movieModel.getUpcomingMovies(req.query.page);
     return res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -69,7 +69,7 @@ async function getUpcomingMovies(req, res, next) {
 // GET /movie/search?query&page
 async function searchMovies(req, res, next) {
   try {
-    const response = await movieService.getMoviesByTitle(
+    const response = await movieModel.getMoviesByTitle(
       req.query.query,
       req.query.page
     );
@@ -81,10 +81,10 @@ async function searchMovies(req, res, next) {
 
 // GET /movie/similar - get similar movies
 async function getSimilarMovies(req, res, next) {
-  if (!(await movieService.getMovieByID(req.params.id)))
+  if (!(await movieModel.getMovieByID(req.params.id)))
     return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
   try {
-    const response = await movieService.getSimilarMovies(req.params.id);
+    const response = await movieModel.getSimilarMovies(req.params.id);
     return res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -94,7 +94,7 @@ async function getSimilarMovies(req, res, next) {
 // GET /movie/random - get random movie
 async function getRandomMovie(req, res, next) {
   try {
-    const randomMovie = await movieService.getRandomMovie();
+    const randomMovie = await movieModel.getRandomMovie();
     if (!randomMovie)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(randomMovie);
@@ -106,7 +106,7 @@ async function getRandomMovie(req, res, next) {
 // GET /movie/:id/ - get movie detail
 async function getMovie(req, res, next) {
   try {
-    const movie = await movieService.getMovieByID(req.params.id);
+    const movie = await movieModel.getMovieByID(req.params.id);
     if (!movie) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(movie);
   } catch (error) {
@@ -117,10 +117,7 @@ async function getMovie(req, res, next) {
 // PATCH /movie/:id - update movie
 async function updateMovie(req, res, next) {
   try {
-    const updatedMovie = await movieService.updateMovie(
-      req.params.id,
-      req.body
-    );
+    const updatedMovie = await movieModel.updateMovie(req.params.id, req.body);
     if (!updatedMovie)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(updatedMovie);
@@ -132,7 +129,7 @@ async function updateMovie(req, res, next) {
 // DELETE /movie/:id - delete movie
 async function deleteMovie(req, res, next) {
   try {
-    const deletedMovie = await movieService.deleteMovieByID(req.params.id);
+    const deletedMovie = await movieModel.deleteMovieByID(req.params.id);
     if (!deletedMovie)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(deletedMovie);

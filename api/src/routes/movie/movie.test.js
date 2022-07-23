@@ -1,5 +1,5 @@
-const movieService = require("../../models/movie/movie.service");
 const movieModel = require("../../models/movie/movie.model");
+const Movie = require("../../models/movie/Movie");
 const app = require("../../app");
 const agent = require("supertest").agent(app);
 const testHelper = require("../../helpers/test.helper");
@@ -29,7 +29,7 @@ describe("POST /movie - create movie", () => {
   });
 
   test("case: Movie is already existed", async () => {
-    const mockMovie = await movieService.addMovie({ title: "existed" });
+    const mockMovie = await movieModel.addMovie({ title: "existed" });
     const invalidMovie = { title: mockMovie.title };
     await agent
       .post(url)
@@ -106,7 +106,7 @@ describe("GET Movies", () => {
           releaseDate: "2023-01-03",
         },
       ];
-      const [movie1, movie2, movie3] = await movieModel.insertMany(movies);
+      const [movie1, movie2, movie3] = await Movie.insertMany(movies);
 
       const url = `${endpoint}?genre=Action&country=VN&year=2022&sort=releaseDate&page=1`;
       const response = await agent
@@ -134,7 +134,7 @@ describe("GET Movies", () => {
     const endpoint = "/api/movie/search";
 
     test("case: Success", async () => {
-      await movieModel.insertMany([
+      await Movie.insertMany([
         { title: "a b" },
         { title: "b d" },
         { title: "ab" },
@@ -162,8 +162,8 @@ describe("GET Movies", () => {
     const endpoint = "/api/movie/upcoming";
 
     test("case: Success", async () => {
-      await movieService.addMovie({ title: "old movie" });
-      const upcomingMovie = await movieService.addMovie({
+      await movieModel.addMovie({ title: "old movie" });
+      const upcomingMovie = await movieModel.addMovie({
         title: "upcoming",
         isUpcoming: true,
       });
@@ -197,13 +197,13 @@ describe("GET Movies", () => {
   describe("GET /movie/:id/similar - get similar movies", () => {
     test("case: Success", async () => {
       const [a, b, c, d] = ["Action", "Adventure", "Animation", "Comedy"];
-      const [m1, m2, m3] = await movieModel.insertMany([
+      const [m1, m2, m3] = await Movie.insertMany([
         { title: "ABC", genres: [a, b, c] },
         { title: "AB", genres: [a, b] },
         { title: "A", genres: [a] },
         { title: "D", genres: [d] },
       ]);
-      const mockMovie = await movieService.addMovie({
+      const mockMovie = await movieModel.addMovie({
         title: "similar",
         genres: [a, b, c],
       });
@@ -224,7 +224,7 @@ describe("GET Movies", () => {
 describe("GET Single Movie", () => {
   describe("GET /movie/random - get random movie", () => {
     test("case: Success", async () => {
-      const mockMovie = await movieService.addMovie({
+      const mockMovie = await movieModel.addMovie({
         title: "random movie",
       });
       const response = await agent
@@ -241,7 +241,7 @@ describe("GET Single Movie", () => {
     const endpoint = "/api/movie";
 
     test("case: Success", async () => {
-      const mockMovie = await movieService.addMovie({
+      const mockMovie = await movieModel.addMovie({
         title: "get movie detail",
       });
       const response = await agent
@@ -262,7 +262,7 @@ describe("PATCH /movie/:id - update movie", () => {
   const endpoint = "/api/movie";
 
   test("case: Success", async () => {
-    const mockMovie = await movieService.addMovie({ title: "to patch movie" });
+    const mockMovie = await movieModel.addMovie({ title: "to patch movie" });
     const validUpdate = { title: "patched movie" };
     await agent
       .patch(`${endpoint}/${mockMovie._id}`)
@@ -273,8 +273,8 @@ describe("PATCH /movie/:id - update movie", () => {
   });
 
   test("case: Movie is already existed", async () => {
-    const mockMovie = await movieService.addMovie({ title: "existed patch" });
-    const toPatchMovie = await movieService.addMovie({
+    const mockMovie = await movieModel.addMovie({ title: "existed patch" });
+    const toPatchMovie = await movieModel.addMovie({
       title: "to patch movie 2",
     });
     const invalidUpdate = { title: mockMovie.title };
@@ -312,7 +312,7 @@ describe("PATCH /movie/:id - update movie", () => {
 
     for (const testCase of testCases) {
       test(testCase.name, async () => {
-        const mockMovie = await movieService.addMovie({
+        const mockMovie = await movieModel.addMovie({
           title: "to patch invalid fields",
         });
         await agent
@@ -333,7 +333,7 @@ describe("DELETE /movie/:id/ - delete movie", () => {
   const endpoint = "/api/movie";
 
   test("case: Success", async () => {
-    const mockMovie = await movieService.addMovie({ title: "delete movie" });
+    const mockMovie = await movieModel.addMovie({ title: "delete movie" });
     const response = await agent
       .delete(`${endpoint}/${mockMovie._id}`)
       .expect("Content-Type", /json/)

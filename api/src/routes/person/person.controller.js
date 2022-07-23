@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const { errorResponse } = require("../../configs/route.config");
-const personService = require("../../models/person/person.service");
+const personModel = require("../../models/person/person.model");
 
 // POST /person - post new person
 async function postNewPerson(req, res, next) {
   try {
-    const createdPerson = await personService.addPerson(req.body);
+    const createdPerson = await personModel.addPerson(req.body);
     return res.status(201).json(createdPerson);
   } catch (error) {
     next(error);
@@ -15,7 +15,7 @@ async function postNewPerson(req, res, next) {
 // GET /person/:id/ - get person detail
 async function getPerson(req, res, next) {
   try {
-    const person = await personService.getPersonByID(req.params.id);
+    const person = await personModel.getPersonByID(req.params.id);
     if (!person) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(person);
   } catch (error) {
@@ -26,7 +26,7 @@ async function getPerson(req, res, next) {
 // PATCH /person/:id - update person
 async function updatePerson(req, res, next) {
   try {
-    const person = await personService.updatePerson(req.params.id, req.body);
+    const person = await personModel.updatePerson(req.params.id, req.body);
     if (!person) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(person);
   } catch (error) {
@@ -37,7 +37,7 @@ async function updatePerson(req, res, next) {
 // DELETE /person/:id - delete person
 async function deletePerson(req, res, next) {
   try {
-    const person = await personService.deletePersonByID(req.params.id);
+    const person = await personModel.deletePersonByID(req.params.id);
     if (!person) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(person);
   } catch (error) {

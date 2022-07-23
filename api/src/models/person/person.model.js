@@ -1,19 +1,37 @@
-const mongoose = require("mongoose");
-const { GENDERS, JOBS } = require("../enum");
+const Person = require("./Person");
 
-const personSchema = new mongoose.Schema(
-  {
-    name: { type: String },
-    gender: { type: String, enum: GENDERS },
-    dob: { type: Date },
-    pob: { type: String },
-    job: { type: String, enum: JOBS },
-    biography: { type: String },
-    avatarUrl: { type: String },
-    images: { type: [String] },
-    // joined: {type: [mongoose.SchemaTypes.ObjectId], ref: ""}
-  },
-  { timestamps: true }
-);
+async function exists(name) {
+  return (await Person.exists({ name: name })) != null;
+}
 
-module.exports = mongoose.model("Person", personSchema);
+function addPerson(person) {
+  return Person.create(person);
+}
+
+function getPersonByID(id) {
+  return Person.findById(id);
+}
+
+function getPersonByName(name) {
+  return Person.findOne({ name: name });
+}
+
+function updatePerson(id, updateData) {
+  return Person.findByIdAndUpdate(id, updateData, {
+    returnDocument: "after",
+    runValidators: true,
+  });
+}
+
+function deletePersonByID(id) {
+  return Person.findByIdAndDelete(id);
+}
+
+module.exports = {
+  exists,
+  addPerson,
+  getPersonByID,
+  getPersonByName,
+  updatePerson,
+  deletePersonByID,
+};

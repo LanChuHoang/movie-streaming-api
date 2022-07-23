@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const { errorResponse } = require("../../configs/route.config");
-const userService = require("../../models/user/user.service");
+const userModel = require("../../models/user/user.model");
 const aesService = require("../../services/aes.service");
 
 // GET /user?after_id:0&limit=10&sort_by=_id:desc
@@ -13,7 +13,7 @@ async function getAllUsers(req, res) {
   });
 
   try {
-    const users = await userService.getAllUsers(afterID, limit, sort);
+    const users = await userModel.getAllUsers(afterID, limit, sort);
     const responseData = {
       docs: users,
       afterID: afterID ? afterID : null,
@@ -35,7 +35,7 @@ async function getAllUsers(req, res) {
 
 async function getUser(req, res, next) {
   try {
-    const user = await userService.findUserByID(req.params.id);
+    const user = await userModel.findUserByID(req.params.id);
     if (!user) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
@@ -50,7 +50,7 @@ async function updateUser(req, res, next) {
     if (req.body.password) {
       req.body.password = aesService.encrypt(req.body.password);
     }
-    const updatedUser = await userService.updateUser(req.params.id, req.body);
+    const updatedUser = await userModel.updateUser(req.params.id, req.body);
     if (!updatedUser) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
@@ -62,7 +62,7 @@ async function updateUser(req, res, next) {
 
 async function deleteUser(req, res, next) {
   try {
-    const deletedUser = await userService.deleteUserByID(req.params.id);
+    const deletedUser = await userModel.deleteUserByID(req.params.id);
     if (!deletedUser) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
@@ -74,7 +74,7 @@ async function deleteUser(req, res, next) {
 
 async function getNumUserPerMonth(req, res, next) {
   try {
-    const data = await userService.getNumUserPerMonth();
+    const data = await userModel.getNumUserPerMonth();
     return res.status(200).json(data);
   } catch (error) {
     next(error);

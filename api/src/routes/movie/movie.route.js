@@ -5,7 +5,7 @@ const authorizerService = require("../../services/authorizer.service");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken);
+// router.use(authorizerService.verifyAccessToken);
 
 // POST /movie - post new movie
 // input: {title: required, optionals}

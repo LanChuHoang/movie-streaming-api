@@ -2,7 +2,7 @@ const {
   ACCESS_TOKEN_EXPIRE_TIME,
   REFRESH_TOKEN_EXPIRE_TIME,
 } = require("../configs/route.config");
-const userService = require("../models/user/user.service");
+const userModel = require("../models/user/user.model");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -46,7 +46,7 @@ async function verifyRefreshToken(req, res, next) {
   }
   try {
     const payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET_KEY);
-    const user = await userService.findUserByID(payload.id);
+    const user = await userModel.findUserByID(payload.id);
     if (user.refreshToken !== token)
       return res.status(403).send({ error: "Invalid token" });
     req.payload = payload;
