@@ -1,0 +1,42 @@
+@use "../../scss/breakpoint" as *;
+
+.season-select {
+  // Transparent
+  border: none;
+  background-color: transparent;
+
+  // Text
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+
+  // Size
+  padding-right: 30px;
+
+  // Arrow icon
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='35' viewBox='0 0 24 24' width='35' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+
+  background-repeat: no-repeat;
+  background-position-x: 100%;
+  background-position-y: 50%;
+}
+
+.season-list {
+  --swiper-navigation-color: white;
+
+  .swiper-slide {
+    width: 25%;
+
+    @include tablet {
+      width: 30%;
+    }
+
+    @include mobile {
+      width: 40%;
+    }
+  }
+}
