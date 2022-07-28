@@ -1,16 +1,17 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
-import "./header.scss";
-import logo from "../../assets/tmovie.png";
+import useAuth from "../../../hooks/useAuth";
+import "./MainHeader.scss";
+import logo from "../../../assets/tmovie.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretDown,
   faArrowRightFromBracket,
+  faScrewdriverWrench,
 } from "@fortawesome/free-solid-svg-icons";
-import useLogout from "../../hooks/useLogout";
+import useLogout from "../../../hooks/useLogout";
 import { useNavigate } from "react-router-dom";
-import useBackendApi from "../../hooks/useBackendApi";
+import useBackendApi from "../../../hooks/useBackendApi";
 
 const headerNav = [
   {
@@ -27,7 +28,7 @@ const headerNav = [
   },
 ];
 
-const Header = () => {
+const MainHeader = () => {
   const { pathname } = useLocation();
   const headerRef = useRef(null);
   const { auth } = useAuth();
@@ -92,6 +93,15 @@ const Header = () => {
             {user?.username}
             <FontAwesomeIcon icon={faCaretDown} />
             <ul className="dropdown-menu">
+              {auth?.isAdmin && (
+                <li>
+                  <Link to="/admin">
+                    <FontAwesomeIcon icon={faScrewdriverWrench} />
+                    Admin page
+                  </Link>
+                </li>
+              )}
+
               <li>
                 <Link to="/logout" onClick={handleLogout}>
                   <FontAwesomeIcon icon={faArrowRightFromBracket} />
@@ -106,4 +116,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default MainHeader;

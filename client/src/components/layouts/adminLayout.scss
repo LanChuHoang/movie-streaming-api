@@ -1,0 +1,14 @@
+.admin-layout-container {
+  display: flex;
+  height: 100vh;
+  background-color: red;
+
+  * {
+    font-family: "Nunito", sans-serif;
+  }
+
+  .right-side-container {
+    flex: 6;
+    background-color: blue;
+  }
+}

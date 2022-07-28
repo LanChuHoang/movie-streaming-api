@@ -1,4 +1,4 @@
-@use "../../scss/" as *;
+@use "../../../scss/" as *;
 
 .logo {
   font-size: 2.5rem;
@@ -35,6 +35,7 @@
     @include flex(center, space-between);
     height: 100%;
     padding: 0 2rem;
+    padding-right: 3.5rem;
 
     @include mobile {
       justify-content: center;
@@ -95,23 +96,24 @@
       margin-left: 10px;
     }
 
-    li {
-      padding: 10px 0;
-      font-size: 1rem;
-      font-weight: 600;
-
-      &.active::after,
-      &:hover::after {
-        width: 0%;
-      }
-    }
-
     .dropdown-menu {
+      padding-top: 15px;
       display: none;
-      //   background-color: red;
-      svg {
-        margin: 0;
-        margin-right: 10px;
+      min-width: 200px;
+
+      li {
+        font-size: 1rem;
+        font-weight: 600;
+        padding-bottom: 10px;
+
+        &::after {
+          display: none;
+        }
+
+        svg {
+          margin: 0;
+          margin-right: 10px;
+        }
       }
     }
   }
