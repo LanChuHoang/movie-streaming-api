@@ -5,7 +5,7 @@ import backendApi from "../../api/backendApi";
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Login.scss";
-import AuthHeader from "../../components/auth-header/AuthHeader";
+import AuthHeader from "../../components/headers/auth-header/AuthHeader";
 
 export default function Login() {
   const { setAuth } = useAuth();

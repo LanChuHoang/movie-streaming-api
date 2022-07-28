@@ -1,0 +1,30 @@
+@use "../../../scss/" as *;
+
+.admin-header-container {
+  overflow: auto;
+  background-color: white;
+  padding: 1rem 2rem;
+
+  .profile {
+    float: right;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    color: #b2b1b9;
+
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    p {
+      color: $admin-main-color;
+      padding: 0 1.5rem 0 0.75rem;
+    }
+
+    svg:hover {
+      color: #eb1d36;
+    }
+  }
+}

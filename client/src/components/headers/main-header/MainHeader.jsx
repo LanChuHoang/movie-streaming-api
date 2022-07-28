@@ -103,7 +103,7 @@ const MainHeader = () => {
               )}
 
               <li>
-                <Link to="/logout" onClick={handleLogout}>
+                <Link to="/" onClick={handleLogout}>
                   <FontAwesomeIcon icon={faArrowRightFromBracket} />
                   Logout
                 </Link>

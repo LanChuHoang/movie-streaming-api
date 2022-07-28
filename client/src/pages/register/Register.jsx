@@ -5,11 +5,11 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-regular-svg-icons";
 import "./Register.scss";
-import AuthHeader from "../../components/auth-header/AuthHeader";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
 import backendApi from "../../api/backendApi";
+import AuthHeader from "../../components/headers/auth-header/AuthHeader";
 
 function Register() {
   const [username, setUsername] = useState(null);

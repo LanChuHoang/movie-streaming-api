@@ -1,4 +1,4 @@
-import logo from "../../assets/tmovie.png";
+import logo from "../../../assets/tmovie.png";
 import { Link } from "react-router-dom";
 import "./AuthHeader.scss";
 
