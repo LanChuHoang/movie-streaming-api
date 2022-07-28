@@ -23,8 +23,12 @@
       padding: 0 1.5rem 0 0.75rem;
     }
 
-    svg:hover {
-      color: #eb1d36;
+    svg {
+      transition: color 0.2s;
+
+      &:hover {
+        color: #eb1d36;
+      }
     }
   }
 }

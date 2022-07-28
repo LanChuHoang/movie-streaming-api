@@ -24,7 +24,7 @@
   }
 
   .main-section {
-    padding-left: 0.5em;
+    padding: 0 0.25em;
 
     ul {
       // list-style: none;
@@ -32,6 +32,7 @@
       padding: 0;
 
       .group-header {
+        padding-left: 0.5em;
         font-size: 0.8em;
         font-weight: bold;
         color: #999;
@@ -40,27 +41,42 @@
       }
 
       li {
+        padding: 5px;
+        padding-left: 1em;
         display: flex;
         align-items: center;
-        padding: 5px;
+        border-radius: 0.25em;
         cursor: pointer;
         // text
         font-weight: 600;
         color: #888;
+        // animation
+        transition: background-color 0.2s;
+
+        &.selected {
+          background-color: #7451f8;
+          color: white;
+
+          &:hover {
+            background-color: #7451f8;
+            color: white;
+          }
+
+          svg {
+            color: white;
+          }
+        }
 
         &:hover {
           background-color: #ece8ff;
-          color: black;
-        }
-
-        .option-icon {
-          color: #7451f8;
-          margin-right: 10px;
+          color: #888;
         }
 
         svg {
-          font-size: 1rem;
+          margin-right: 10px;
           width: 1em;
+          color: #7451f8;
+          font-size: 1rem;
         }
       }
     }
