@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useLogout from "../../hooks/useLogout";
 import { useNavigate } from "react-router-dom";
+import useBackendApi from "../../hooks/useBackendApi";
 
 const headerNav = [
   {
@@ -33,6 +34,7 @@ const Header = () => {
   const [user, setUser] = useState();
   const logout = useLogout();
   const navigator = useNavigate();
+  const backendApi = useBackendApi();
 
   const active = headerNav.findIndex((e) => e.path === pathname);
 
@@ -54,8 +56,17 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    const { accessToken, ...user } = auth;
-    setUser(user);
+    const fetchUserDetail = async (id) => {
+      try {
+        const userDetail = (await backendApi.getUserDetail(id)).data;
+        setUser(userDetail);
+      } catch (error) {
+        console.log("Fetch user detail failed");
+        console.log(error.response?.data || error, error.response?.status);
+        setUser({});
+      }
+    };
+    fetchUserDetail(auth?.id);
   }, [auth]);
 
   const handleLogout = async (e) => {

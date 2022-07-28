@@ -39,10 +39,7 @@ export default function Login() {
       console.log(response.data);
 
       const userData = {
-        _id: response.data._id,
-        username: response.data.username,
-        email: response.data.email,
-        profileImage: response.data.profileImage,
+        id: response.data._id,
         isAdmin: response.data.isAdmin,
         accessToken: response.data.accessToken,
       };

@@ -17,13 +17,17 @@ function App() {
     <Routes>
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Layout />}>
-        <Route element={<PersistLogin />}>
-          <Route element={<RequireAuth />}>
+      <Route path="/" element={<PersistLogin />}>
+        <Route element={<RequireAuth forAdmin={false} />}>
+          <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="/:itemType/:browseType" element={<Catalog />} />
             <Route path="/:itemType/:id/detail" element={<Detail />} />
           </Route>
+        </Route>
+
+        <Route element={<RequireAuth forAdmin={true} />}>
+          <Route path="/admin" element={<h1>Hello admin</h1>} />
         </Route>
       </Route>
       <Route path="*" element={<h1>404 Not found</h1>} />

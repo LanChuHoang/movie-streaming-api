@@ -1,27 +1,23 @@
 import backendApi from "../api/backendApi";
+import parseJwt from "../api/helper";
 import useAuth from "./useAuth";
 
 const useRefreshToken = () => {
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
-  const refresh = async (withUserInfo = false) => {
-    const { accessToken } = (await backendApi.refreshToken()).data;
-    if (withUserInfo) {
-      const { data } = await backendApi.refetchUserDetail(accessToken);
-      setAuth((prevAuth) => {
-        console.log("Prev access token ", prevAuth.accessToken);
-        console.log("New access token ", accessToken);
-        return { ...data, accessToken };
-      });
-    } else {
-      setAuth((prevAuth) => {
-        console.log("Prev access token ", prevAuth.accessToken);
-        console.log("New access token ", accessToken);
-        return { ...prevAuth, accessToken };
-      });
+  const refresh = async () => {
+    try {
+      const { accessToken } = (await backendApi.refreshToken()).data;
+      const { id, isAdmin } = parseJwt(accessToken);
+      console.log("Prev access token ", auth?.accessToken);
+      console.log("New access token ", accessToken);
+      setAuth({ id, isAdmin, accessToken });
+      return accessToken;
+    } catch (error) {
+      console.log("Refresh token failed ");
+      console.log(error.response?.data || error, error.response?.status);
+      setAuth({});
     }
-
-    return accessToken;
   };
 
   return refresh;
