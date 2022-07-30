@@ -1,9 +1,10 @@
+@use "../../scss/" as *;
+
 .sidebar-container {
   flex: 1;
   border-right: 0.5px solid rgb(230, 227, 227);
   min-height: 100vh;
   background-color: white;
-  color: black;
 
   .logo-section {
     height: 5em;
@@ -14,7 +15,7 @@
     .logo {
       font-size: 2em;
       font-weight: bold;
-      color: #6439ff;
+      color: $admin-logo-color;
     }
   }
 
@@ -27,17 +28,13 @@
     padding: 0 0.25em;
 
     ul {
-      // list-style: none;
-      margin: 0;
-      padding: 0;
-
       .group-header {
         padding-left: 0.5em;
-        font-size: 0.8em;
-        font-weight: bold;
-        color: #999;
         margin-top: 1.25em;
         margin-bottom: 0.3em;
+        font-size: 0.8em;
+        font-weight: bold;
+        color: $admin-header-color;
       }
 
       li {
@@ -49,16 +46,15 @@
         cursor: pointer;
         // text
         font-weight: 600;
-        color: #888;
         // animation
         transition: background-color 0.2s;
 
         &.selected {
-          background-color: #7451f8;
+          background-color: $admin-main-color;
           color: white;
 
           &:hover {
-            background-color: #7451f8;
+            background-color: $admin-main-color;
             color: white;
           }
 
@@ -68,14 +64,14 @@
         }
 
         &:hover {
-          background-color: #ece8ff;
-          color: #888;
+          background-color: $admin-hover-color;
+          color: $admin-text-color;
         }
 
         svg {
           margin-right: 10px;
           width: 1em;
-          color: #7451f8;
+          color: $admin-main-color;
           font-size: 1rem;
         }
       }

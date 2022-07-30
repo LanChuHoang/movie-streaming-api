@@ -1,6 +1,7 @@
 @use "../../../scss/" as *;
 
 .admin-header-container {
+  flex: 0 1 auto;
   overflow: auto;
   background-color: white;
   padding: 1rem 2rem;
@@ -19,8 +20,8 @@
     }
 
     p {
-      color: $admin-main-color;
       padding: 0 1.5rem 0 0.75rem;
+      color: $admin-main-color;
     }
 
     svg {

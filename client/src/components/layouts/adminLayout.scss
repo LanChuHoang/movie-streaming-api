@@ -1,14 +1,19 @@
+@use "../../scss/" as *;
+
 .admin-layout-container {
   display: flex;
-  height: 100vh;
-  background-color: red;
-
-  * {
-    font-family: "Nunito", sans-serif;
-  }
+  // height: 100vh;
+  font-family: "Nunito", sans-serif;
+  color: $admin-text-color;
 
   .right-side-container {
     flex: 6;
-    background-color: blue;
+    flex-direction: column;
   }
+}
+
+.widget {
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 1rem;
 }

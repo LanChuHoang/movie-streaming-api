@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -39,8 +39,18 @@ const sideBarItems = [
   },
 ];
 
+function findSelectedIndex(path) {
+  const index = sideBarItems.findIndex((i) => i.path === path);
+  return index !== -1 ? index : 0;
+}
+
 const SideBar = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const location = useLocation();
+
+  useEffect(() => {
+    setSelectedIndex(findSelectedIndex(location.pathname));
+  }, [location]);
 
   return (
     <div className="sidebar-container">
@@ -56,7 +66,6 @@ const SideBar = () => {
           <SideBarItem
             key={sideBarItems[0].display}
             item={sideBarItems[0]}
-            onClick={() => setSelectedIndex(0)}
             selected={selectedIndex === 0}
           />
 
@@ -65,7 +74,6 @@ const SideBar = () => {
             <SideBarItem
               key={item.display}
               item={item}
-              onClick={() => setSelectedIndex(i + 1)}
               selected={selectedIndex === i + 1}
             />
           ))}

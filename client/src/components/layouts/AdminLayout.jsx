@@ -4,6 +4,8 @@ import { Outlet } from "react-router-dom";
 import "./adminLayout.scss";
 
 const AdminLayout = () => {
+  document.body.style.backgroundColor = "white";
+
   return (
     <div className="admin-layout-container">
       <SideBar />
