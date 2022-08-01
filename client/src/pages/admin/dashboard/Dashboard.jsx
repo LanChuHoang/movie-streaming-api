@@ -1,102 +1,120 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRotateRight,
-  faChevronUp,
-  faChevronDown,
-} from "@fortawesome/free-solid-svg-icons";
-import Chart from "../../../components/chart/Chart";
-import BasicAreaChart from "../../../components/charts/basic-area-chart/BasicAreaChart";
-import Table from "../../../components/table/Table";
-import BasicTable from "../../../components/tables/basic-table/BasicTable";
-import { Select, MenuItem } from "@mui/material";
-import "./dashboard.scss";
 import { useState, useEffect } from "react";
+import useBackendApi from "../../../hooks/useBackendApi";
+import { statType } from "../../../api/backendApi";
+import {
+  TIMES_IN_DAY,
+  getStartOfDay,
+  getMonthEnd,
+  getMonthStart,
+  toShortDateFormat,
+  toFullDateFormat,
+} from "../../../api/helper";
 
-function createData(id, username, email, joinDate, isAdmin) {
-  const role = isAdmin ? (
-    <div className="admin-role-cell">Admin</div>
-  ) : (
-    <div className="user-role-cell">User</div>
-  );
-  return { id, username, email, joinDate, role };
-}
+import SummaryWidget from "../../../components/widgets/summary-widget/SummaryWidget";
+import ChartWidget from "../../../components/widgets/chart-widget/ChartWidget";
+import TableListWidget from "../../../components/widgets/table-list-widget/TableListWidget";
+import "./dashboard.scss";
 
-const rows = [
-  createData(1, "chulan1", "chulan1@gmail.com", "1-1-2001", true),
-  createData(2, "chulan2", "chulan2@gmail.com", "2-2-2002", false),
-  createData(3, "chulan3", "chulan3@gmail.com", "3-3-2003", true),
-  createData(4, "chulan4", "chulan4@gmail.com", "4-4-2004", false),
-  createData(5, "chulan5", "chulan5@gmail.com", "5-5-2005", true),
-];
+const today = getStartOfDay();
 
 const chartOptions = [
   {
-    display: "Last Week (Total users)",
+    display: "Last 7 days (Total users)",
+    startDate: new Date(today.getTime() - 7 * TIMES_IN_DAY),
+    endDate: new Date(today.getTime() + TIMES_IN_DAY),
+    type: statType.daily,
   },
   {
-    display: "Last Month (Total users)",
+    display: "Last 30 days (Total users)",
+    startDate: new Date(today.getTime() - 30 * TIMES_IN_DAY),
+    endDate: new Date(today.getTime() + TIMES_IN_DAY),
+    type: statType.daily,
   },
   {
-    display: "Last 6 Months (Total users)",
+    display: "Last 6 months (Total users)",
+    startDate: getMonthStart(
+      (today.getMonth() - 5) % 12,
+      today.getMonth() - 5 >= 0 ? today.getFullYear() : today.getFullYear() - 1
+    ),
+    endDate: getMonthEnd(),
+    type: statType.monthly,
   },
-];
-
-function createChartData() {
-  return [0, 1, 2, 3, 4].map((i) => {
-    return {
-      total: Math.round(Math.random() * 3000),
-      date: `Day ${i + 1}`,
-    };
-  });
-}
-
-const mockItems = [
-  { label: "Total Users", amount: 462370 },
-  { label: "Today", increased: false, amount: 789 },
-  { label: "This week", increased: true, amount: 1946 },
-  { label: "This month", increased: true, amount: 97439 },
 ];
 
 const Dashboard = () => {
   const [summaryItems, setSummaryItems] = useState([]);
-  const [selectedChartIndex, setSelectedChartIndex] = useState(
-    chartOptions.length - 1
-  );
+  const [selectedChartIndex, setSelectedChartIndex] = useState(1);
   const [chartData, setChartData] = useState({});
   const [newestAccount, setNewestAccount] = useState([]);
+  const backendApi = useBackendApi();
 
   // Load data for Summary Widget
   const loadSummary = async () => {
-    const items = mockItems;
-    items[0].amount += Math.round(Math.random() * 30);
-    setSummaryItems([...items]);
+    const response = (await backendApi.getUserOverallStats()).data;
+    const items = [
+      { label: "Total Users", amount: response.total },
+      {
+        label: "Today",
+        increased: response.today.increased,
+        amount: response.today.count,
+      },
+      {
+        label: "This week",
+        increased: response.thisWeek.increased,
+        amount: response.thisWeek.count,
+      },
+      {
+        label: "This month",
+        increased: response.thisMonth.increased,
+        amount: response.thisMonth.count,
+      },
+    ];
+    setSummaryItems(items);
   };
 
   useEffect(() => loadSummary(), []);
 
   // Load data for Chart Widget
-  const loadChartData = async () => {
-    const data = {
-      data: createChartData(),
-      xKey: "date",
-      yKey: "total",
+  useEffect(() => {
+    const loadChartData = async (startDate, endDate, type) => {
+      const response = (
+        await backendApi.getUserDetailStats(startDate, endDate, type)
+      ).data;
+      const chartData = response.map((r) => {
+        return {
+          date:
+            type === statType.daily
+              ? toShortDateFormat(r.date)
+              : toShortDateFormat(r.month),
+          Total: r.totalUsers,
+        };
+      });
+      setChartData({ data: chartData, xKey: "date", yKey: "Total" });
     };
-    console.log(data);
-    setChartData(data);
-  };
-
-  useEffect(() => loadChartData(), []);
-
-  const handleChartOptionChange = (e) => {
-    const index = e.target.value;
-    loadChartData();
-    setSelectedChartIndex(index);
-  };
+    const { startDate, endDate, type } = chartOptions[selectedChartIndex];
+    loadChartData(startDate, endDate, type);
+  }, [selectedChartIndex]);
 
   // Load data for Table List Widget
   useEffect(() => {
     const loadNewestAccounts = async () => {
-      const accounts = rows;
+      const createData = (id, username, email, joinDate, isAdmin) => {
+        const formattedDate = toFullDateFormat(joinDate);
+        const role = isAdmin ? (
+          <div className="admin-role-cell">Admin</div>
+        ) : (
+          <div className="user-role-cell">User</div>
+        );
+        return { id, username, email, joinDate: formattedDate, role };
+      };
+
+      const response = (
+        await backendApi.getUsers({ limit: 5, sort_by: "createdAt:desc" })
+      ).data;
+      const accounts = response.docs.map((a) =>
+        createData(a._id, a.username, a.email, a.createdAt, a.isAdmin)
+      );
+
       setNewestAccount(accounts);
     };
     loadNewestAccounts();
@@ -110,94 +128,18 @@ const Dashboard = () => {
           mainItemIndex={0}
           onReset={loadSummary}
         />
-        <UserChartWidget
+        <ChartWidget
           value={selectedChartIndex}
           chartOptions={chartOptions}
           chartData={chartData}
-          onChange={handleChartOptionChange}
+          onChange={(e) => setSelectedChartIndex(e.target.value)}
         />
       </div>
       <TableListWidget
         title="Newest Accounts"
-        columns={Object.keys(newestAccount[0] || {})}
+        columns={["ID", "Username", "Email", "Join date", "Role"]}
         rows={newestAccount}
       />
-    </div>
-  );
-};
-
-const AmountItem = (props) => {
-  return (
-    <div
-      className={
-        "summary-item " +
-        (props.increased ? "increased-amount" : "decreased-amount")
-      }
-    >
-      <FontAwesomeIcon icon={props.increased ? faChevronUp : faChevronDown} />
-      {props.amount}
-    </div>
-  );
-};
-
-const SummaryWidget = (props) => {
-  return (
-    <div className="summary-widget-container widget">
-      <div className="header-container">
-        <h3>{props.summaryItems[props.mainItemIndex]?.label}</h3>
-        <FontAwesomeIcon
-          icon={faArrowRotateRight}
-          onClick={() => props.onReset()}
-        />
-      </div>
-      <div className="content-container">
-        <p className="total-users-amount">
-          {props.summaryItems[props.mainItemIndex]?.amount}
-        </p>
-        <p>Processing users may not be included. Reload to update the stats.</p>
-        <div className="summary-items-container">
-          {props.summaryItems.map((item, i) => {
-            return i !== props.mainItemIndex ? (
-              <>
-                <div className="summary-item title-item">{item.label}</div>
-                <AmountItem increased={item.increased} amount={item.amount} />
-              </>
-            ) : null;
-          })}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const UserChartWidget = (props) => {
-  return (
-    <div className="user-area-chart widget">
-      <Select
-        className="chart-select"
-        value={props.value}
-        onChange={props.onChange}
-      >
-        {props.chartOptions.map((o, i) => (
-          <MenuItem key={i} value={i}>
-            {o.display}
-          </MenuItem>
-        ))}
-      </Select>
-      <BasicAreaChart
-        data={props.chartData.data}
-        xDataKey={props.chartData.xKey}
-        yDataKey={props.chartData.yKey}
-      />
-    </div>
-  );
-};
-
-const TableListWidget = (props) => {
-  return (
-    <div className="newest-users-list widget">
-      <h3>{props.title}</h3>
-      <BasicTable columns={props.columns} rows={props.rows} />
     </div>
   );
 };

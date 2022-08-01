@@ -1,5 +1,5 @@
 import axiosClient, { axiosPrivateClient } from "./axiosClient";
-import parseJwt from "./helper";
+import parseJwt, { toShortISOString } from "./helper";
 
 const endpoint = {
   register: "/auth/register",
@@ -8,6 +8,13 @@ const endpoint = {
   logout: "/auth/logout",
   getUsers: "/user",
   randomMovie: "/movie/random",
+  userOverallStats: "/statistic/user/overall",
+  userDetailStats: "/statistic/user/detail",
+};
+
+export const statType = {
+  daily: "daily",
+  monthly: "monthly",
 };
 
 export const listType = {
@@ -44,10 +51,8 @@ const backendApi = {
     return axiosPrivateClient.post(endpoint.logout);
   },
 
-  getUserList: (abortController) => {
-    return axiosClient.get(endpoint.getUsers, {
-      signal: abortController.signal,
-    });
+  getUsers: (params = {}) => {
+    return axiosClient.get(endpoint.getUsers, { params });
   },
 
   getUserDetail: (id) => {
@@ -99,8 +104,21 @@ const backendApi = {
     return items;
   },
 
-  getCastDetail: async (id) => {
+  getCastDetail: (id) => {
     return axiosClient.get(`/person/${id}`);
+  },
+
+  getUserOverallStats: () => {
+    return axiosClient.get(endpoint.userOverallStats);
+  },
+
+  getUserDetailStats: (startDate, endDate, type) => {
+    const params = {
+      from: toShortISOString(startDate),
+      to: toShortISOString(endDate),
+      type,
+    };
+    return axiosClient.get(endpoint.userDetailStats, { params });
   },
 
   interceptors: axiosClient.interceptors,
