@@ -71,24 +71,6 @@ function deleteUserByID(id, projection = DEFAULT_PROJECTION) {
   return User.findByIdAndDelete(id, { projection: projection });
 }
 
-function getNumUserPerMonth() {
-  return User.aggregate([
-    {
-      $group: {
-        _id: { $month: "$createdAt" },
-        numUsers: { $sum: 1 },
-      },
-    },
-    {
-      $project: {
-        month: "$_id",
-        numUsers: 1,
-        _id: 0,
-      },
-    },
-  ]);
-}
-
 // Statistics
 
 function countUsers(startDate = null, endDate = null) {
@@ -115,7 +97,7 @@ function countUsersDaily(startDate, endDate) {
     {
       $project: { _id: 0, date: "$_id", totalUsers: 1 },
     },
-    { $sort: { _id: 1 } },
+    { $sort: { date: 1 } },
   ]);
 }
 

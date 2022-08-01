@@ -13,7 +13,12 @@ async function getAllUsers(req, res) {
   });
 
   try {
-    const users = await userModel.getAllUsers(afterID, limit, sort);
+    const users = await userModel.getAllUsers(afterID, limit, sort, {
+      __v: 0,
+      refreshToken: 0,
+      updatedAt: 0,
+      password: 0,
+    });
     const responseData = {
       docs: users,
       afterID: afterID ? afterID : null,

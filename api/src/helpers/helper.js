@@ -7,17 +7,16 @@ function getStartOfDay(date = new Date()) {
 }
 
 function getMonday(date = new Date()) {
-  const timesInDay = 24 * 60 * 60 * 1000;
-  const diff = date.getDay() !== 0 ? date.getDay() - 1 : 6;
-  const startDate = new Date(date.getTime() - diff * timesInDay);
+  const startOfDay = getStartOfDay(date);
+  const diff = startOfDay.getDay() !== 0 ? startOfDay.getDay() - 1 : 6;
+  const startDate = new Date(startOfDay.getTime() - diff * TIMES_IN_DAY);
   return startDate;
 }
 
 function getSunday(date = new Date()) {
-  date.setHours(0, 0, 0, 0);
-  const timesInDay = 24 * 60 * 60 * 1000;
-  const diff = date.getDay() !== 0 ? 7 - date.getDay() : 0;
-  const endDate = new Date(date.getTime() + diff * timesInDay);
+  const startOfDay = getStartOfDay(date);
+  const diff = startOfDay.getDay() !== 0 ? 7 - startOfDay.getDay() : 0;
+  const endDate = new Date(startOfDay.getTime() + diff * TIMES_IN_DAY);
   return endDate;
 }
 
