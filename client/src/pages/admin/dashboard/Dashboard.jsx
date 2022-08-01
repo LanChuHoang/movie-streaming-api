@@ -8,6 +8,8 @@ import {
   getMonthStart,
   toShortDateFormat,
   toFullDateFormat,
+  fillMissingDailyStats,
+  fillMissingMonthlyStats,
 } from "../../../api/helper";
 
 import SummaryWidget from "../../../components/widgets/summary-widget/SummaryWidget";
@@ -26,7 +28,7 @@ const chartOptions = [
   },
   {
     display: "Last 30 days (Total users)",
-    startDate: new Date(today.getTime() - 30 * TIMES_IN_DAY),
+    startDate: new Date(today.getTime() - 29 * TIMES_IN_DAY),
     endDate: new Date(today.getTime() + TIMES_IN_DAY),
     type: statType.daily,
   },
@@ -80,15 +82,11 @@ const Dashboard = () => {
       const response = (
         await backendApi.getUserDetailStats(startDate, endDate, type)
       ).data;
-      const chartData = response.map((r) => {
-        return {
-          date:
-            type === statType.daily
-              ? toShortDateFormat(r.date)
-              : toShortDateFormat(r.month),
-          Total: r.totalUsers,
-        };
-      });
+      console.log(fillMissingMonthlyStats(startDate, endDate, response));
+      const chartData =
+        type === statType.daily
+          ? fillMissingDailyStats(startDate, endDate, response)
+          : fillMissingMonthlyStats(startDate, endDate, response);
       setChartData({ data: chartData, xKey: "date", yKey: "Total" });
     };
     const { startDate, endDate, type } = chartOptions[selectedChartIndex];
