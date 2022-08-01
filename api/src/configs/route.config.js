@@ -19,6 +19,12 @@ module.exports = {
     INVALID_COUNTRIES: { error: "Invalid countries" },
     INVALID_PEOPLE: { error: "Invalid people" },
     MOVIE_EXISTED: { error: "Movie already exists" },
+    INVALID_DATE: {
+      error: "Invalid date. Date must be formatted as 'YYYY-MM-DD'",
+    },
+    INVALID_STATS_DETAIL_TYPE: {
+      error: "Invalid type",
+    },
   },
   ACCESS_TOKEN_EXPIRE_TIME: 15 * 60, // 15 mins
   REFRESH_TOKEN_EXPIRE_TIME: 24 * 60 * 60, // 1d

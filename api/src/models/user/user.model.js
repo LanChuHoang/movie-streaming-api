@@ -1,3 +1,4 @@
+const { getSunday, getMonday } = require("../../helpers/helper");
 const User = require("./User");
 
 const DEFAULT_PROJECTION = {
@@ -88,6 +89,57 @@ function getNumUserPerMonth() {
   ]);
 }
 
+// Statistics
+
+function countUsers(startDate = null, endDate = null) {
+  const filter = { isAdmin: false };
+  if (startDate && endDate)
+    filter.createdAt = { $gte: startDate, $lte: endDate };
+  return User.find(filter).count();
+}
+
+function countUsersDaily(startDate, endDate) {
+  return User.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startDate, $lte: endDate },
+        isAdmin: false,
+      },
+    },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        totalUsers: { $sum: 1 },
+      },
+    },
+    {
+      $project: { _id: 0, date: "$_id", totalUsers: 1 },
+    },
+    { $sort: { _id: 1 } },
+  ]);
+}
+
+function countUsersMonthly(startDate, endDate) {
+  return User.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startDate, $lte: endDate },
+        isAdmin: false,
+      },
+    },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+        totalUsers: { $sum: 1 },
+      },
+    },
+    {
+      $project: { _id: 0, month: "$_id", totalUsers: 1 },
+    },
+    { $sort: { month: 1 } },
+  ]);
+}
+
 module.exports = {
   exists,
   addUser,
@@ -97,5 +149,7 @@ module.exports = {
   getNewUsers,
   updateUser,
   deleteUserByID,
-  getNumUserPerMonth,
+  countUsers,
+  countUsersDaily,
+  countUsersMonthly,
 };

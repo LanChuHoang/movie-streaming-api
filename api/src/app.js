@@ -5,6 +5,7 @@ const userRouter = require("./routes/user/user.route");
 const movieRouter = require("./routes/movie/movie.route");
 const showRouter = require("./routes/show/show.route");
 const personRouter = require("./routes/person/person.route");
+const statisticRouter = require("./routes/statistic/statistic.route");
 const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/user", userRouter);
 app.use("/api/movie", movieRouter);
 app.use("/api/show", showRouter);
 app.use("/api/person", personRouter);
+app.use("/api/statistic", statisticRouter);
 
 app.use(errorHandler);
 
