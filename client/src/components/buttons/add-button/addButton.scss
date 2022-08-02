@@ -1,0 +1,22 @@
+.add-button {
+  padding: 0.5rem 0.75rem;
+  background-color: white;
+  border: 1px solid green;
+  border-radius: 0.25rem;
+  // text
+  color: green;
+  font-family: "Nunito", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  // animation
+  transition: background-color, 0.3s;
+
+  svg {
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background-color: green;
+    color: white;
+  }
+}

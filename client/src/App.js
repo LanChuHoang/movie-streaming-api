@@ -11,8 +11,9 @@ import Catalog from "./pages/Catalog";
 import Detail from "./pages/detail/Detail";
 import RequireAuth from "./components/auth/RequireAuth";
 import PersistLogin from "./components/auth/PersistLogin";
-import Dashboard from "./pages/admin/dashboard/Dashboard";
 import AdminLayout from "./components/layouts/AdminLayout";
+import Dashboard from "./pages/admin/dashboard/Dashboard";
+import Users from "./pages/admin/users/Users";
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
         <Route element={<RequireAuth forAdmin={true} />}>
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Dashboard />} />
-            <Route path="/admin/users" element={<h1>Hello users</h1>} />
+            <Route path="/admin/users" element={<Users />} />
             <Route path="/admin/movies" element={<h1>Hello movies</h1>} />
             <Route path="/admin/shows" element={<h1>Hello shows</h1>} />
             <Route path="/admin/people" element={<h1>Hello people</h1>} />

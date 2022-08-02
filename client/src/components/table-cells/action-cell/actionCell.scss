@@ -1,0 +1,23 @@
+.action-cell-container {
+  button {
+    margin-right: 0.5rem;
+  }
+}
+
+// Action Header
+.MuiDataGrid-columnHeader[data-field="action"] {
+  &:hover {
+    .MuiDataGrid-columnHeaderDraggableContainer {
+      .MuiDataGrid-columnHeaderTitleContainer {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .MuiDataGrid-columnHeaderDraggableContainer {
+    .MuiDataGrid-columnHeaderTitleContainer {
+      justify-content: right;
+      margin-right: 1.25rem;
+    }
+  }
+}

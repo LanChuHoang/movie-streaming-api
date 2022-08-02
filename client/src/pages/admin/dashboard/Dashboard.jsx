@@ -6,7 +6,6 @@ import {
   getStartOfDay,
   getMonthEnd,
   getMonthStart,
-  toShortDateFormat,
   toFullDateFormat,
   fillMissingDailyStats,
   fillMissingMonthlyStats,
@@ -16,6 +15,7 @@ import SummaryWidget from "../../../components/widgets/summary-widget/SummaryWid
 import ChartWidget from "../../../components/widgets/chart-widget/ChartWidget";
 import TableListWidget from "../../../components/widgets/table-list-widget/TableListWidget";
 import "./dashboard.scss";
+import RoleCell from "../../../components/table-cells/role-cell/RoleCell";
 
 const today = getStartOfDay();
 
@@ -82,7 +82,6 @@ const Dashboard = () => {
       const response = (
         await backendApi.getUserDetailStats(startDate, endDate, type)
       ).data;
-      console.log(fillMissingMonthlyStats(startDate, endDate, response));
       const chartData =
         type === statType.daily
           ? fillMissingDailyStats(startDate, endDate, response)
@@ -98,17 +97,14 @@ const Dashboard = () => {
     const loadNewestAccounts = async () => {
       const createData = (id, username, email, joinDate, isAdmin) => {
         const formattedDate = toFullDateFormat(joinDate);
-        const role = isAdmin ? (
-          <div className="admin-role-cell">Admin</div>
-        ) : (
-          <div className="user-role-cell">User</div>
-        );
+        const role = <RoleCell isAdmin={isAdmin} />;
         return { id, username, email, joinDate: formattedDate, role };
       };
 
       const response = (
         await backendApi.getUsers({ limit: 5, sort_by: "createdAt:desc" })
       ).data;
+      console.log(response);
       const accounts = response.docs.map((a) =>
         createData(a._id, a.username, a.email, a.createdAt, a.isAdmin)
       );

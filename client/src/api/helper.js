@@ -43,7 +43,7 @@ export function toShortISOString(date) {
 }
 
 export function toFullDateFormat(fullISOStr) {
-  return new Date(fullISOStr).toLocaleString();
+  return new Date(fullISOStr).toLocaleString("en-GB");
 }
 
 export function toShortDateFormat(shortISOStr) {

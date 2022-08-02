@@ -1,0 +1,25 @@
+@use "../../../scss/" as *;
+
+.users-container {
+  flex: 1 1 auto;
+  padding: 1.5rem;
+  height: 100%;
+
+  .users-top-container {
+    display: flex;
+
+    h1 {
+    }
+
+    button {
+      margin-left: auto;
+      align-self: center;
+    }
+  }
+
+  .users-table-container {
+    height: 90%;
+    margin-top: 1rem;
+    border-radius: 0.25rem;
+  }
+}
