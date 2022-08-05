@@ -3,10 +3,11 @@ const User = require("./User");
 
 const DEFAULT_PROJECTION = {
   __v: 0,
-  createdAt: 0,
   updatedAt: 0,
   password: 0,
 };
+
+const USERS_DEFAULT_PAGE_SIZE = 10;
 
 async function exists(username, email) {
   return (
@@ -19,8 +20,7 @@ async function exists(username, email) {
 async function addUser(user) {
   try {
     const createdUser = await User.create(user);
-    const { __v, createdAt, updatedAt, password, ...output } =
-      createdUser.toObject();
+    const { __v, updatedAt, password, ...output } = createdUser.toObject();
     return output;
   } catch (error) {
     throw error;
@@ -35,25 +35,16 @@ function findUserByEmail(email, projection = DEFAULT_PROJECTION) {
   return User.findOne({ email: email }, projection);
 }
 
-async function getAllUsers(
-  afterID = null,
-  limit = 10,
+function getAllUsers(
+  page = 1,
+  limit = USERS_DEFAULT_PAGE_SIZE,
   sort = null,
   projection = DEFAULT_PROJECTION
 ) {
-  try {
-    let filter = {};
-    if (afterID && sort) {
-      const firstSortField = Object.keys(sort)[0];
-      const pivot = (await User.findById(afterID))[firstSortField];
-      filter[firstSortField] = { $gt: pivot };
-    } else if (afterID) {
-      filter = { _id: { $gt: afterID } };
-    }
-    return await User.find(filter, projection).sort(sort).limit(limit);
-  } catch (error) {
-    throw error;
-  }
+  return User.find({}, projection)
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit);
 }
 
 function getNewUsers(amount, projection = DEFAULT_PROJECTION) {
@@ -72,6 +63,10 @@ function deleteUserByID(id, projection = DEFAULT_PROJECTION) {
 }
 
 // Statistics
+
+function getTotalUsers() {
+  return User.estimatedDocumentCount();
+}
 
 function countUsers(startDate = null, endDate = null) {
   const filter = { isAdmin: false };
@@ -123,6 +118,7 @@ function countUsersMonthly(startDate, endDate) {
 }
 
 module.exports = {
+  USERS_DEFAULT_PAGE_SIZE,
   exists,
   addUser,
   findUserByID,
@@ -131,6 +127,7 @@ module.exports = {
   getNewUsers,
   updateUser,
   deleteUserByID,
+  getTotalUsers,
   countUsers,
   countUsersDaily,
   countUsersMonthly,

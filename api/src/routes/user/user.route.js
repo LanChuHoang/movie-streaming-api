@@ -9,11 +9,12 @@ router.use(authorizerService.verifyAccessToken);
 
 // GET All Users: GET /user
 // by Admin
-// Output user infor except password, __v, createdAt, updateAt
+// Output user infor except password, __v, updateAt
 router.get(
   "/",
-  // authorizerService.authorizeAdmin,
-  userController.getAllUsers
+  authorizerService.authorizeAdmin,
+  userController.validateGetUsersInput,
+  userController.getUsers
 );
 
 // GET Single User: GET /user/:id
@@ -22,17 +23,17 @@ router.get(
 router.get(
   "/:id",
   routeValidator.validateIDParam,
-  // authorizerService.authorizeUserOrAdmin,
+  authorizerService.authorizeUserOrAdmin,
   userController.getUser
 );
 
-// UPDATE User Profile: PUT /user/:id
+// UPDATE User Profile: PATCH /user/:id
 // by Admin or Owner User
 // Output updated user infor except password, __v, createdAt, updateAt
 router.patch(
   "/:id",
   routeValidator.validateIDParam,
-  // authorizerService.authorizeUserOrAdmin,
+  authorizerService.authorizeUserOrAdmin,
   userController.updateUser
 );
 
@@ -42,17 +43,8 @@ router.patch(
 router.delete(
   "/:id",
   routeValidator.validateIDParam,
-  // authorizerService.authorizeUserOrAdmin,
+  authorizerService.authorizeUserOrAdmin,
   userController.deleteUser
-);
-
-// GET Number of user per month: GET /user/stats/
-// by Admin
-// Output user infor except password, __v, createdAt, updateAt
-router.get(
-  "/stats/",
-  authorizerService.authorizeAdmin,
-  userController.getNumUserPerMonth
 );
 
 module.exports = router;
