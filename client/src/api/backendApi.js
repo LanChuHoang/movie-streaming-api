@@ -69,6 +69,10 @@ const backendApi = {
     });
   },
 
+  deleteUser: (id) => {
+    return axiosClient.delete(`/user/${id}`);
+  },
+
   // Item
   getItems: (itemType, params = {}) => {
     const path = "/" + itemType;

@@ -9,7 +9,7 @@
   font-size: 0.8rem;
   font-weight: 500;
   // animation
-  transition: background-color, 0.3s;
+  transition: background-color 0.3s, transform 0.4s;
 
   svg {
     margin-right: 5px;
@@ -18,5 +18,9 @@
   &:hover {
     background-color: green;
     color: white;
+  }
+
+  &:active {
+    transform: scale(1.2, 1.2);
   }
 }

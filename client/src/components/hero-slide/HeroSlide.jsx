@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import SwiperCore, { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Button, { OutlineButton } from "../button/Button";
-import Modal, { ModalContent } from "../modal/Modal";
+// import Modal, { ModalContent } from "../modals/modal/Modal";
 import "./hero-slide.scss";
 import { useNavigate } from "react-router";
 import useBackendApi from "../../hooks/useBackendApi";
@@ -44,9 +44,9 @@ const HeroSlide = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-      {movieItems.map((item, i) => (
+      {/* {movieItems.map((item, i) => (
         <TrailerModal key={i} item={item} />
-      ))}
+      ))} */}
     </div>
   );
 };
@@ -98,24 +98,24 @@ const HeroSlideItem = (props) => {
   );
 };
 
-const TrailerModal = (props) => {
-  const item = props.item;
-  const iframeRef = useRef(null);
+// const TrailerModal = (props) => {
+//   const item = props.item;
+//   const iframeRef = useRef(null);
 
-  const onClose = () => iframeRef.current.setAttribute("src", "");
+//   const onClose = () => iframeRef.current.setAttribute("src", "");
 
-  return (
-    <Modal active={false} id={`modal_${item._id}`}>
-      <ModalContent onClose={onClose}>
-        <iframe
-          ref={iframeRef}
-          width="100%"
-          height="500px"
-          title="trailer"
-        ></iframe>
-      </ModalContent>
-    </Modal>
-  );
-};
+//   return (
+//     <Modal active={false} id={`modal_${item._id}`}>
+//       <ModalContent onClose={onClose}>
+//         <iframe
+//           ref={iframeRef}
+//           width="100%"
+//           height="500px"
+//           title="trailer"
+//         ></iframe>
+//       </ModalContent>
+//     </Modal>
+//   );
+// };
 
 export default HeroSlide;

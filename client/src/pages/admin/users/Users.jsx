@@ -6,61 +6,93 @@ import AddButton from "../../../components/buttons/add-button/AddButton";
 import DataTable from "../../../components/tables/data-table/DataTable";
 import RoleCell from "../../../components/table-cells/role-cell/RoleCell";
 import ActionCell from "../../../components/table-cells/action-cell/ActionCell";
+import { ConfirmModal, MessageModal } from "../../../components/modals/Modals";
 import "./users.scss";
 
 const columns = [
-  { field: "_id", headerName: "ID", width: 250 },
-  { field: "username", headerName: "Username", width: 150 },
-  { field: "email", headerName: "Email", width: 200 },
+  { field: "_id", headerName: "ID", flex: 3, filterable: false },
+  { field: "username", headerName: "Username", flex: 1.5, filterable: false },
+  { field: "email", headerName: "Email", flex: 2, filterable: false },
   {
     field: "createdAt",
     headerName: "Join date",
     type: "date",
-    width: 200,
+    flex: 2,
+    filterable: false,
     valueGetter: (params) => toFullDateFormat(params.row.createdAt),
   },
   {
     field: "isAdmin",
     headerName: "Role",
-    renderCell: (params) => <RoleCell isAdmin={params.isAdmin} />,
-  },
-  {
-    field: "action",
-    headerName: "Action",
-    width: 200,
-    align: "right",
-    sortable: false,
-    renderCell: (_) => (
-      <ActionCell
-        onView={() => console.log("view")}
-        onDelete={() => console.log("delete")}
-      />
-    ),
+    filterable: false,
+    renderCell: (params) => <RoleCell isAdmin={params.row.isAdmin} />,
   },
 ];
 
 const Users = () => {
   const [users, setUsers] = useState([]);
+  const [totalUsers, setTotalUsers] = useState();
+  const [pageSize, setPageSize] = useState();
   const [selectedPage, setSelectedPage] = useState(1);
-  const [sortModel, setSortModel] = useState([]);
-  const [selectedIds, setSelectedIds] = useState();
+  const [sortModel, setSortModel] = useState([
+    { field: "createdAt", sort: "desc" },
+  ]);
+  const [toDeleteId, setToDeleteId] = useState();
+  const [confirmModalActive, setConfirmModalActive] = useState(false);
+  const [errorMessage, setErrorMessage] = useState();
+  const [messageModalActive, setMessageModalActive] = useState(false);
   const backendApi = useBackendApi();
 
+  const loadUsers = async () => {
+    const params = { page: selectedPage };
+    sortModel.forEach((o) => (params.sort_by = o.field + ":" + o.sort));
+    const response = (await backendApi.getUsers(params)).data;
+    setUsers(response.docs);
+    setPageSize(response.page_size);
+    setTotalUsers(response.total_documents);
+  };
   useEffect(() => {
-    const loadUsers = async () => {
-      const params = { page: selectedPage };
-      sortModel.forEach((o) => (params.sort_by = o.field + ":" + o.sort));
-      console.log(params);
-      const response = (await backendApi.getUsers(params)).data;
-
-      setUsers(response.docs);
-    };
     loadUsers();
   }, [selectedPage, sortModel]);
 
-  useEffect(() => {
-    selectedIds && console.log(selectedIds);
-  }, [selectedIds]);
+  const handleViewUser = (id) => {
+    console.log("view", id);
+  };
+
+  const handleDeleteUser = async (id) => {
+    try {
+      console.log("delete", id);
+      const deletedUser = (await backendApi.deleteUser(id)).data;
+      loadUsers();
+    } catch (error) {
+      console.log(error);
+      setErrorMessage("Something went wrong. Delete user failed");
+      setMessageModalActive(true);
+    } finally {
+      setConfirmModalActive(false);
+    }
+  };
+
+  const actionColumn = [
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 2,
+      align: "right",
+      headerAlign: "right",
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params) => (
+        <ActionCell
+          onView={() => handleViewUser(params.row._id)}
+          onDelete={() => {
+            setConfirmModalActive(true);
+            setToDeleteId(params.row._id);
+          }}
+        />
+      ),
+    },
+  ];
 
   return (
     <div className="users-container">
@@ -72,15 +104,30 @@ const Users = () => {
       <div className="users-table-container">
         <DataTable
           rows={users}
-          columns={columns}
+          columns={[...columns, ...actionColumn]}
           getRowId={(r) => r._id}
-          totalRows={100}
-          pageSize={10}
+          totalRows={totalUsers || 0}
+          sortModel={sortModel}
+          pageSize={pageSize}
           onPageChange={(page) => setSelectedPage(page + 1)}
           onSortModelChange={(model) => setSortModel(model)}
-          onSelectionModelChange={(model) => setSelectedIds(model)}
         />
       </div>
+
+      <ConfirmModal
+        active={confirmModalActive}
+        confirmButtonTitle="Delete"
+        onCancel={() => setConfirmModalActive(false)}
+        onConfirm={() => handleDeleteUser(toDeleteId)}
+      >
+        Are you sure you want to delete this user?
+      </ConfirmModal>
+      <MessageModal
+        active={messageModalActive}
+        onConfirm={() => setMessageModalActive(false)}
+      >
+        {errorMessage}
+      </MessageModal>
     </div>
   );
 };
