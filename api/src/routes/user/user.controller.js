@@ -3,8 +3,6 @@ const { errorResponse } = require("../../configs/route.config");
 const userModel = require("../../models/user/user.model");
 const aesService = require("../../services/aes.service");
 
-// GET /user?page=1 & limit=1 & sort_by=_id:desc
-
 async function validateGetUsersInput(req, res, next) {
   const { page, limit } = req.query;
   const isPositiveNumber = (n) => isFinite(Number(n)) && Number(n) > 0;
@@ -15,6 +13,7 @@ async function validateGetUsersInput(req, res, next) {
   next();
 }
 
+// GET /user?page=1 & limit=1 & sort_by=_id:desc
 async function getUsers(req, res, next) {
   const { page, limit, sort_by: sortOptions } = req.query;
   const sort = sortOptions ? {} : null;

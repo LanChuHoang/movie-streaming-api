@@ -98,7 +98,6 @@ const Users = () => {
     <div className="users-container">
       <div className="users-top-container">
         <h1>Users</h1>
-        <AddButton onClick={() => console.log("add")}>Add user</AddButton>
       </div>
 
       <div className="users-table-container">
