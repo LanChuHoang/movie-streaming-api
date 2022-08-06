@@ -14,6 +14,9 @@ import PersistLogin from "./components/auth/PersistLogin";
 import AdminLayout from "./components/layouts/AdminLayout";
 import Dashboard from "./pages/admin/dashboard/Dashboard";
 import Users from "./pages/admin/users/Users";
+import Movies from "./pages/admin/movies/Movies";
+import Shows from "./pages/admin/shows/Shows";
+import People from "./pages/admin/people/People";
 
 function App() {
   return (
@@ -33,9 +36,9 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/users" element={<Users />} />
-            <Route path="/admin/movies" element={<h1>Hello movies</h1>} />
-            <Route path="/admin/shows" element={<h1>Hello shows</h1>} />
-            <Route path="/admin/people" element={<h1>Hello people</h1>} />
+            <Route path="/admin/movies" element={<Movies />} />
+            <Route path="/admin/shows" element={<Shows />} />
+            <Route path="/admin/people" element={<People />} />
           </Route>
         </Route>
       </Route>

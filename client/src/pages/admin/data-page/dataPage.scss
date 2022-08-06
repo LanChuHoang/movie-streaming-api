@@ -1,11 +1,11 @@
 @use "../../../scss/" as *;
 
-.users-container {
+.data-page-container {
   flex: 1 1 auto;
   padding: 1.5rem;
   height: 100%;
 
-  .users-top-container {
+  .data-page-top-container {
     display: flex;
 
     h1 {
@@ -17,7 +17,7 @@
     }
   }
 
-  .users-table-container {
+  .data-page-table-container {
     height: 90%;
     margin-top: 1rem;
     border-radius: 0.25rem;

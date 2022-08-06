@@ -47,7 +47,7 @@ async function getPaginatedMovies(
     const output = {
       docs: result?.docs || [],
       page: page,
-      pageSize: DEFAULT_PAGE_SIZE,
+      page_size: DEFAULT_PAGE_SIZE,
       total_pages: Math.ceil(totalDocs / DEFAULT_PAGE_SIZE),
       total_documents: totalDocs,
     };
