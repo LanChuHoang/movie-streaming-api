@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
-const {
-  errorResponse,
-  movieSortOptions,
-} = require("../../configs/route.config");
+const { errorResponse } = require("../../configs/route.config");
 const movieModel = require("../../models/movie/movie.model");
 const { MOVIE_GENRES, COUNTRIES } = require("../../models/enum");
 
@@ -19,10 +16,6 @@ function validateGetMovieParams(req, res, next) {
     req.query.year = Number(req.query.year);
     if (isNaN(req.query.year))
       return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.sort && !movieSortOptions[req.query.sort]) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
   }
 
   next();
@@ -46,9 +39,11 @@ async function getMovies(req, res, next) {
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
-      sort: movieSortOptions[req.query.sort],
+      sort: req.query.sort,
       page: req.query.page,
+      limit: +req.query.limit,
     };
+    console.log(options);
     const response = await movieModel.getMovies(options);
     return res.status(200).json(response);
   } catch (error) {

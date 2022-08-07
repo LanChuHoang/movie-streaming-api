@@ -1,7 +1,8 @@
 const { ObjectId } = require("mongoose").Types;
 const {
   errorResponse,
-  sortOptions,
+  adminSortOptions,
+  userSortOptions,
   sortOrders,
 } = require("../configs/route.config");
 const { getItemTypeOfEndpoint } = require("../helpers/helper");
@@ -48,8 +49,10 @@ function validatePaginationInput(req, res, next) {
   if (sort) {
     const [field, order] = sort.split(":");
     const itemType = getItemTypeOfEndpoint(req.originalUrl);
-    const sortFields = sortOptions[itemType];
-    if (!sortFields.includes(field) || !sortOrders.includes(order))
+    const sortFields = req.user?.isAdmin
+      ? adminSortOptions[itemType]
+      : userSortOptions[itemType];
+    if (!sortFields?.includes(field) || !sortOrders?.includes(order))
       return res.status(400).send(errorResponse.INVALID_QUERY);
   }
 

@@ -21,10 +21,6 @@ function validateGetShowParams(req, res, next) {
       return res.status(400).json(errorResponse.INVALID_QUERY);
   }
 
-  if (req.query.sort && !showSortOptions[req.query.sort]) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
   next();
 }
 
@@ -46,8 +42,9 @@ async function getShows(req, res, next) {
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
-      sort: showSortOptions[req.query.sort],
+      sort: req.query.sort,
       page: req.query.page,
+      limit: +req.query.limit,
     };
     const response = await showModel.getShows(options);
     return res.status(200).json(response);

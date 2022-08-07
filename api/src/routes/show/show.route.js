@@ -2,6 +2,7 @@ const express = require("express");
 const routeValidator = require("../../validators/route.validator");
 const showController = require("./show.controller");
 const authorizerService = require("../../services/authorizer.service");
+const { parseSortOption } = require("../../middlewares/middleware");
 
 const router = express.Router();
 
@@ -18,7 +19,8 @@ router.post(
 // GET /show?genres & country & year  & sort & page
 router.get(
   "/",
-  routeValidator.validatePageParam,
+  routeValidator.validatePaginationInput,
+  parseSortOption,
   showController.validateGetShowParams,
   showController.getShows
 );

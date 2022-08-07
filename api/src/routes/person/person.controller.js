@@ -17,12 +17,10 @@ async function postNewPerson(req, res, next) {
 
 // GET /person?page&limit&sort
 async function getPeople(req, res, next) {
-  const { page, limit, sort } = req.query;
-  const [field, order] = sort.split(":");
-  const sortOption = sort ? { [field]: order } : undefined;
   try {
+    const { page, limit, sort } = req.query;
     const [people, totalPeople] = await Promise.all([
-      personModel.getPeople(page, limit, sortOption),
+      personModel.getPeople(page, limit, sort),
       personModel.getTotalPeople(),
     ]);
     const pageSize = limit || DEFAULT_PAGE_SIZE;
@@ -32,6 +30,7 @@ async function getPeople(req, res, next) {
       pageSize,
       totalPages: Math.ceil(totalPeople / pageSize),
       totalDocuments: totalPeople,
+      sort,
     };
     return res.send(response);
   } catch (error) {

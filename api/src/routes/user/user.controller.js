@@ -15,28 +15,19 @@ async function validateGetUsersInput(req, res, next) {
 
 // GET /user?page=1 & limit=1 & sort_by=_id:desc
 async function getUsers(req, res, next) {
-  const { page, limit, sort_by: sortOptions } = req.query;
-  const sort = sortOptions ? {} : null;
-  sortOptions?.split(",").forEach((option) => {
-    [field, order] = option.split(":");
-    sort[field] = order;
-  });
-
   try {
-    const [users, totalDocs] = await Promise.all([
+    const { page, limit, sort } = req.query;
+    const [users, totalUsers] = await Promise.all([
       userModel.getAllUsers(page, limit, sort),
       userModel.getTotalUsers(),
     ]);
-
     const pageSize = limit || userModel.USERS_DEFAULT_PAGE_SIZE;
-    const totalDocuments = totalDocs || 0;
-    const totalPages = Math.ceil(totalDocuments / pageSize);
     const responseData = {
       docs: users,
       page: page || 1,
       pageSize,
-      totalPages,
-      totalDocuments,
+      totalPages: Math.ceil(totalUsers / pageSize),
+      totalDocuments: totalUsers,
       sort,
     };
     return res.status(200).json(responseData);

@@ -2,6 +2,7 @@ const express = require("express");
 const userController = require("./user.controller");
 const authorizerService = require("../../services/authorizer.service");
 const routeValidator = require("../../validators/route.validator");
+const { parseSortOption } = require("../../middlewares/middleware");
 
 const router = express.Router();
 
@@ -13,7 +14,8 @@ router.use(authorizerService.verifyAccessToken);
 router.get(
   "/",
   authorizerService.authorizeAdmin,
-  userController.validateGetUsersInput,
+  routeValidator.validatePaginationInput,
+  parseSortOption,
   userController.getUsers
 );
 

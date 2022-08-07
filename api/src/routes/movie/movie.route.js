@@ -2,10 +2,11 @@ const express = require("express");
 const routeValidator = require("../../validators/route.validator");
 const movieController = require("./movie.controller");
 const authorizerService = require("../../services/authorizer.service");
+const { parseSortOption } = require("../../middlewares/middleware");
 
 const router = express.Router();
 
-// router.use(authorizerService.verifyAccessToken);
+router.use(authorizerService.verifyAccessToken);
 
 // POST /movie - post new movie
 // input: {title: required, optionals}
@@ -18,7 +19,8 @@ router.post(
 // GET /movie?genres & country & year  & sort & page
 router.get(
   "/",
-  routeValidator.validatePageParam,
+  routeValidator.validatePaginationInput,
+  parseSortOption,
   movieController.validateGetMovieParams,
   movieController.getMovies
 );

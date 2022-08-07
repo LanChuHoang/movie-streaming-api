@@ -1,10 +1,11 @@
 const { default: mongoose } = require("mongoose");
 const {
   DEFAULT_PAGE_SIZE,
-  movieSortOptions,
   customProjection,
 } = require("../../configs/route.config");
 const Movie = require("./Movie");
+
+const DEFAULT_SORT_OPTION = { releaseDate: -1 };
 
 async function exists(title) {
   return (await Movie.exists({ title: title })) !== null;
@@ -22,8 +23,9 @@ function getAllMovies() {
 
 async function getPaginatedMovies(
   filter = null,
-  sort = null,
-  page = 1,
+  sort,
+  page,
+  limit,
   project = customProjection.ITEM_BASE_INFO
 ) {
   try {
@@ -34,7 +36,7 @@ async function getPaginatedMovies(
           docs: [
             { $sort: sort },
             { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
-            { $limit: DEFAULT_PAGE_SIZE },
+            { $limit: limit },
             { $project: project },
           ],
           meta: [{ $count: "total_documents" }],
@@ -47,8 +49,8 @@ async function getPaginatedMovies(
     const output = {
       docs: result?.docs || [],
       page: page,
-      pageSize: DEFAULT_PAGE_SIZE,
-      totalPages: Math.ceil(totalDocs / DEFAULT_PAGE_SIZE),
+      pageSize: limit,
+      totalPages: Math.ceil(totalDocs / limit),
       totalDocuments: totalDocs,
     };
 
@@ -62,8 +64,9 @@ async function getMovies({
   genre = null,
   country = null,
   year = null,
-  sort = movieSortOptions.releaseDate,
+  sort = DEFAULT_SORT_OPTION,
   page = 1,
+  limit = DEFAULT_PAGE_SIZE,
 }) {
   const filter = { isUpcoming: false };
   if (genre) filter.genres = { $all: [genre] };
@@ -75,7 +78,7 @@ async function getMovies({
     };
 
   try {
-    return await getPaginatedMovies(filter, sort, page);
+    return await getPaginatedMovies(filter, sort, page, limit);
   } catch (error) {
     throw error;
   }

@@ -1,7 +1,24 @@
-const { sortFields: personSortFields } = require("./route.person.config");
+const {
+  movieAdminSortFields,
+  movieUserSortFields,
+} = require("./route.config.movie");
+const {
+  showAdminSortFields,
+  showUserSortFields,
+} = require("./route.config.show");
+const { personAdminSortFields } = require("./route.config.person");
+const { userAdminSortFields } = require("./route.config.user");
 
-const sortOptions = {
-  person: personSortFields,
+const adminSortOptions = {
+  movie: movieAdminSortFields,
+  person: personAdminSortFields,
+  show: showAdminSortFields,
+  user: userAdminSortFields,
+};
+
+const userSortOptions = {
+  movie: movieUserSortFields,
+  show: showUserSortFields,
 };
 
 const sortOrders = ["asc", "desc"];
@@ -68,6 +85,7 @@ module.exports = {
       avatarUrl: 1,
     },
   },
-  sortOptions,
+  adminSortOptions,
+  userSortOptions,
   sortOrders,
 };
