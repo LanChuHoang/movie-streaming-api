@@ -28,12 +28,16 @@ async function getUsers(req, res, next) {
       userModel.getTotalUsers(),
     ]);
 
+    const pageSize = limit || userModel.USERS_DEFAULT_PAGE_SIZE;
+    const totalDocuments = totalDocs || 0;
+    const totalPages = Math.ceil(totalDocuments / pageSize);
     const responseData = {
       docs: users,
       page: page || 1,
-      page_size: limit || userModel.USERS_DEFAULT_PAGE_SIZE,
-      total_documents: totalDocs || 0,
-      sort_by: sort,
+      pageSize,
+      totalPages,
+      totalDocuments,
+      sort,
     };
     return res.status(200).json(responseData);
   } catch (error) {
