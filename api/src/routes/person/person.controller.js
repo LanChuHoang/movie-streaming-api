@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
-const { errorResponse } = require("../../configs/route.config");
+const {
+  errorResponse,
+  DEFAULT_PAGE_SIZE,
+} = require("../../configs/route.config");
 const personModel = require("../../models/person/person.model");
 
 // POST /person - post new person
@@ -7,6 +10,30 @@ async function postNewPerson(req, res, next) {
   try {
     const createdPerson = await personModel.addPerson(req.body);
     return res.status(201).json(createdPerson);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// GET /person?page&limit&sort
+async function getPeople(req, res, next) {
+  const { page, limit, sort } = req.query;
+  const [field, order] = sort.split(":");
+  const sortOption = sort ? { [field]: order } : undefined;
+  try {
+    const [people, totalPeople] = await Promise.all([
+      personModel.getPeople(page, limit, sortOption),
+      personModel.getTotalPeople(),
+    ]);
+    const pageSize = limit || DEFAULT_PAGE_SIZE;
+    const response = {
+      docs: people,
+      page: page || 1,
+      pageSize,
+      totalPages: Math.ceil(totalPeople / pageSize),
+      totalDocuments: totalPeople,
+    };
+    return res.send(response);
   } catch (error) {
     next(error);
   }
@@ -65,6 +92,7 @@ function updatePersonErrorHandler(error, req, res, next) {
 
 module.exports = {
   postNewPerson,
+  getPeople,
   getPerson,
   updatePerson,
   deletePerson,

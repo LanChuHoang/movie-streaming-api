@@ -30,10 +30,15 @@ function isShortISOFormat(dateStr) {
   return date.toISOString().startsWith(dateStr);
 }
 
+function getItemTypeOfEndpoint(url) {
+  return url?.split("?")[0]?.split("/").pop();
+}
+
 module.exports = {
   TIMES_IN_DAY,
   getStartOfDay,
   getMonday,
   getSunday,
   isShortISOFormat,
+  getItemTypeOfEndpoint,
 };

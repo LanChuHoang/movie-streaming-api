@@ -1,3 +1,11 @@
+const { sortFields: personSortFields } = require("./route.person.config");
+
+const sortOptions = {
+  person: personSortFields,
+};
+
+const sortOrders = ["asc", "desc"];
+
 module.exports = {
   errorResponse: {
     DEFAULT_500_ERROR: { error: "Something went wrong" },
@@ -60,4 +68,6 @@ module.exports = {
       avatarUrl: 1,
     },
   },
+  sortOptions,
+  sortOrders,
 };

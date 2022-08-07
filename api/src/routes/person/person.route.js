@@ -14,6 +14,14 @@ router.post(
   personController.updatePersonErrorHandler
 );
 
+// GET /person - get people
+router.get(
+  "/",
+  authorizerService.authorizeAdmin,
+  routeValidator.validatePaginationInput,
+  personController.getPeople
+);
+
 // GET /person/:id/ - get person detail
 router.get("/:id", routeValidator.validateIDParam, personController.getPerson);
 

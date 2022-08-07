@@ -1,3 +1,4 @@
+const { DEFAULT_PAGE_SIZE } = require("../../configs/route.config");
 const Person = require("./Person");
 
 async function exists(name) {
@@ -6,6 +7,13 @@ async function exists(name) {
 
 function addPerson(person) {
   return Person.create(person);
+}
+
+function getPeople(page = 1, limit = DEFAULT_PAGE_SIZE, sort = {}) {
+  return Person.find()
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit);
 }
 
 function getPersonByID(id) {
@@ -27,11 +35,18 @@ function deletePersonByID(id) {
   return Person.findByIdAndDelete(id);
 }
 
+// Stats
+function getTotalPeople() {
+  return Person.estimatedDocumentCount();
+}
+
 module.exports = {
   exists,
   addPerson,
+  getPeople,
   getPersonByID,
   getPersonByName,
   updatePerson,
   deletePersonByID,
+  getTotalPeople,
 };
