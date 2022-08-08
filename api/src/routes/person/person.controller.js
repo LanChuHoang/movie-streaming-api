@@ -89,7 +89,7 @@ function updatePersonErrorHandler(error, req, res, next) {
   ) {
     return res.status(400).json(errorResponse.INVALID_QUERY);
   }
-  return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
+  next(error);
 }
 
 module.exports = {

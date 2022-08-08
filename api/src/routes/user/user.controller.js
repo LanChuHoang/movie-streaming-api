@@ -8,7 +8,7 @@ async function getUsers(req, res, next) {
   try {
     const { page, limit, sort, projection } = req.query;
     const [users, totalUsers] = await Promise.all([
-      userModel.getAllUsers(page, limit, sort, projection),
+      userModel.getUsers(page, limit, sort, projection),
       userModel.getTotalUsers(),
     ]);
     const pageSize = limit || userModel.USERS_DEFAULT_PAGE_SIZE;
@@ -36,7 +36,7 @@ async function getUsers(req, res, next) {
 // BOTH
 async function getUser(req, res, next) {
   try {
-    const user = await userModel.findUserByID(
+    const user = await userModel.getUserById(
       req.params.id,
       req.query.defaultProjection
     );

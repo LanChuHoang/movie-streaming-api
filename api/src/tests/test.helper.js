@@ -77,6 +77,18 @@ function testInvalidFilterParams(endpoint) {
   });
 }
 
+function testInvalidBodyRequest(agent, bodies, expectedError, status = 400) {
+  return Promise.all(
+    bodies.map((b) =>
+      agent
+        .send(b)
+        .expect("Content-Type", /json/)
+        .expect(status)
+        .expect((res) => expect(res.body).toEqual(expectedError))
+    )
+  );
+}
+
 module.exports = {
   connectDB,
   disconnectDB,
@@ -86,4 +98,5 @@ module.exports = {
   testInvalidPageParam,
   testInvalidQueryParam,
   testInvalidFilterParams,
+  testInvalidBodyRequest,
 };
