@@ -1,9 +1,5 @@
 const { default: mongoose } = require("mongoose");
-const {
-  DEFAULT_PAGE_SIZE,
-  customProjection,
-  PROJECTION,
-} = require("../../configs/route.config");
+const { DEFAULT_PAGE_SIZE, PROJECTION } = require("../../configs/route.config");
 const Show = require("./Show");
 
 const DEFAULT_SORT_OPTION = { lastAirDate: -1 };
@@ -101,7 +97,7 @@ async function getShowsByTitle(
 async function getSimilarShows(id) {
   try {
     const { genres } = await Show.findById(id, { genres: 1 });
-    const projection = customProjection.ITEM_BASE_INFO;
+    const projection = PROJECTION.CUSTOM.ITEM_BASE_INFO;
     projection.numSimilar = {
       $size: { $setIntersection: [genres, "$genres"] },
     };
@@ -127,8 +123,8 @@ async function getSimilarShows(id) {
 // BOTH
 function getShowByID(id, projection) {
   return Show.findById(id, projection)
-    .populate("cast", customProjection.PERSON_BRIEF_INFO)
-    .populate("directors", customProjection.PERSON_BRIEF_INFO);
+    .populate("cast", PROJECTION.CUSTOM.PERSON_BRIEF_INFO)
+    .populate("directors", PROJECTION.CUSTOM.PERSON_BRIEF_INFO);
 }
 
 function getShowByTitle(title) {
@@ -139,7 +135,7 @@ function getShowByTitle(title) {
 function getRandomShow() {
   return Show.aggregate([
     { $sample: { size: 1 } },
-    { $project: customProjection.ITEM_BASE_INFO },
+    { $project: PROJECTION.CUSTOM.ITEM_BASE_INFO },
   ]);
 }
 

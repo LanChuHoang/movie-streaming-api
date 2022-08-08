@@ -51,6 +51,30 @@ const PROJECTION = {
       USER: { ...ADMIN_DEFAULT_PROJECTION, createdAt: 0 },
     },
   },
+  CUSTOM: {
+    ITEM_BASE_INFO: {
+      title: 1,
+      overview: 1,
+      adult: 1,
+      runtime: 1,
+      releaseDate: 1,
+      genres: 1,
+      trailers: 1,
+      posterUrl: 1,
+      thumbnailUrl: 1,
+      backdropUrl: 1,
+    },
+    ITEM_FULL_INFO: {
+      __v: 0,
+      createdAt: 0,
+      updatedAt: 0,
+    },
+    PERSON_BRIEF_INFO: {
+      _id: 1,
+      name: 1,
+      avatarUrl: 1,
+    },
+  },
 };
 
 module.exports = {
@@ -84,37 +108,6 @@ module.exports = {
   ACCESS_TOKEN_EXPIRE_TIME: 15 * 60 * 10000, // 15 mins
   REFRESH_TOKEN_EXPIRE_TIME: 24 * 60 * 60, // 1d
   DEFAULT_PAGE_SIZE: 30,
-  movieSortOptions: {
-    releaseDate: { releaseDate: -1 },
-    popular: "",
-  },
-  showSortOptions: {
-    lastAirDate: { lastAirDate: -1 },
-  },
-  customProjection: {
-    ITEM_BASE_INFO: {
-      title: 1,
-      overview: 1,
-      adult: 1,
-      runtime: 1,
-      releaseDate: 1,
-      genres: 1,
-      trailers: 1,
-      posterUrl: 1,
-      thumbnailUrl: 1,
-      backdropUrl: 1,
-    },
-    ITEM_FULL_INFO: {
-      __v: 0,
-      createdAt: 0,
-      updatedAt: 0,
-    },
-    PERSON_BRIEF_INFO: {
-      _id: 1,
-      name: 1,
-      avatarUrl: 1,
-    },
-  },
   PROJECTION,
   SORT,
 };

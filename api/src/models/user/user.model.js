@@ -1,14 +1,6 @@
 const { PROJECTION } = require("../../configs/route.config");
-const { getSunday, getMonday } = require("../../helpers/helper");
+const { USERS_DEFAULT_PAGE_SIZE } = require("../../configs/route.config.user");
 const User = require("./User");
-
-const DEFAULT_PROJECTION = {
-  __v: 0,
-  updatedAt: 0,
-  password: 0,
-};
-
-const USERS_DEFAULT_PAGE_SIZE = 10;
 
 async function exists(username, email) {
   return (

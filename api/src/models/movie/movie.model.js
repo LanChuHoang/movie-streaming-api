@@ -1,9 +1,5 @@
 const { default: mongoose } = require("mongoose");
-const {
-  DEFAULT_PAGE_SIZE,
-  PROJECTION,
-  customProjection,
-} = require("../../configs/route.config");
+const { DEFAULT_PAGE_SIZE, PROJECTION } = require("../../configs/route.config");
 const Movie = require("./Movie");
 
 const DEFAULT_SORT_OPTION = { releaseDate: -1 };
@@ -140,7 +136,7 @@ async function getSimilarMovies(id) {
       },
       { $sort: { numSimilar: -1, releaseDate: -1 } },
       { $limit: DEFAULT_PAGE_SIZE },
-      { $project: customProjection.ITEM_BASE_INFO },
+      { $project: PROJECTION.CUSTOM.ITEM_BASE_INFO },
     ]);
     return similarMovies;
   } catch (error) {
@@ -152,8 +148,8 @@ async function getSimilarMovies(id) {
 // BOTH
 function getMovieByID(id, projection) {
   return Movie.findById(id, projection)
-    .populate("cast", customProjection.PERSON_BRIEF_INFO)
-    .populate("directors", customProjection.PERSON_BRIEF_INFO);
+    .populate("cast", PROJECTION.CUSTOM.PERSON_BRIEF_INFO)
+    .populate("directors", PROJECTION.CUSTOM.PERSON_BRIEF_INFO);
 }
 
 // USER
@@ -161,7 +157,7 @@ function getRandomMovie() {
   return Movie.aggregate([
     { $match: { isUpcoming: false } },
     { $sample: { size: 1 } },
-    { $project: customProjection.ITEM_BASE_INFO },
+    { $project: PROJECTION.CUSTOM.ITEM_BASE_INFO },
   ]);
 }
 
