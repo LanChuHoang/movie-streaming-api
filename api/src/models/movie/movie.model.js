@@ -1,5 +1,9 @@
 const { default: mongoose } = require("mongoose");
-const { DEFAULT_PAGE_SIZE, PROJECTION } = require("../../configs/route.config");
+const {
+  DEFAULT_PAGE_SIZE,
+  PROJECTION,
+  customProjection,
+} = require("../../configs/route.config");
 const Movie = require("./Movie");
 
 const DEFAULT_SORT_OPTION = { releaseDate: -1 };
@@ -9,6 +13,7 @@ async function exists(title) {
 }
 
 // Add
+// ADMIN
 function addMovie(movie) {
   return Movie.create(movie);
 }
@@ -57,6 +62,7 @@ async function getPaginatedMovies(
   }
 }
 
+// BOTH
 async function getMovies({
   genre = null,
   country = null,
@@ -82,26 +88,38 @@ async function getMovies({
   }
 }
 
-async function getUpcomingMovies(page = 1) {
+// TODO:
+async function getUpcomingMovies(
+  page = 1,
+  limit = DEFAULT_PAGE_SIZE,
+  projection
+) {
   try {
     const filter = { isUpcoming: true };
     const sort = { releaseDate: 1 };
-    return await getPaginatedMovies(filter, sort, page);
+    return await getPaginatedMovies(filter, sort, page, limit, projection);
   } catch (error) {
     throw error;
   }
 }
 
-async function getMoviesByTitle(query, page = 1) {
+// BOTH
+async function getMoviesByTitle(
+  query,
+  page = 1,
+  limit = DEFAULT_PAGE_SIZE,
+  projection
+) {
   try {
     const filter = { $text: { $search: query } };
     const sort = { score: { $meta: "textScore" } };
-    return await getPaginatedMovies(filter, sort, page);
+    return await getPaginatedMovies(filter, sort, page, limit, projection);
   } catch (error) {
     throw error;
   }
 }
 
+// USER
 async function getSimilarMovies(id) {
   try {
     const { genres } = await Movie.findById(id, { genres: 1 });
@@ -131,16 +149,14 @@ async function getSimilarMovies(id) {
 }
 
 // Get Single Movie
-function getMovieByID(id) {
-  return Movie.findById(id, customProjection.ITEM_FULL_INFO)
+// BOTH
+function getMovieByID(id, projection) {
+  return Movie.findById(id, projection)
     .populate("cast", customProjection.PERSON_BRIEF_INFO)
     .populate("directors", customProjection.PERSON_BRIEF_INFO);
 }
 
-function getMovieByTitle(title) {
-  return Movie.findOne({ title: title });
-}
-
+// USER
 function getRandomMovie() {
   return Movie.aggregate([
     { $match: { isUpcoming: false } },
@@ -149,19 +165,25 @@ function getRandomMovie() {
   ]);
 }
 
+function getMovieByTitle(title) {
+  return Movie.findOne({ title: title });
+}
+
 // Update
+// ADMIN
 function updateMovie(id, updateData) {
   return Movie.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
     runValidators: true,
-    projection: customProjection.ITEM_FULL_INFO,
+    projection: PROJECTION.ADMIN.DEFAULT.MOVIE,
   });
 }
 
 // Delete
+// ADMIN
 function deleteMovieByID(id) {
   return Movie.findByIdAndDelete(id, {
-    projection: customProjection.ITEM_FULL_INFO,
+    projection: PROJECTION.ADMIN.DEFAULT.MOVIE,
   });
 }
 

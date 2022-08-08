@@ -13,6 +13,7 @@ async function exists(title) {
 }
 
 // Add
+// ADMIN
 function addShow(show) {
   return Show.create(show);
 }
@@ -55,6 +56,7 @@ async function getPaginatedShows(filter = null, sort, page, limit, projection) {
   }
 }
 
+// BOTH
 async function getShows({
   genre = null,
   country = null,
@@ -80,11 +82,17 @@ async function getShows({
   }
 }
 
-async function getShowsByTitle(query, page = 1) {
+// BOTH
+async function getShowsByTitle(
+  query,
+  page = 1,
+  limit = DEFAULT_PAGE_SIZE,
+  projection
+) {
   try {
     const filter = { $text: { $search: query } };
     const sort = { score: { $meta: "textScore" } };
-    return await getPaginatedShows(filter, sort, page);
+    return await getPaginatedShows(filter, sort, page, limit, projection);
   } catch (error) {
     throw error;
   }
@@ -116,8 +124,9 @@ async function getSimilarShows(id) {
 }
 
 // Get Single Shows
-function getShowByID(id) {
-  return Show.findById(id, customProjection.ITEM_FULL_INFO)
+// BOTH
+function getShowByID(id, projection) {
+  return Show.findById(id, projection)
     .populate("cast", customProjection.PERSON_BRIEF_INFO)
     .populate("directors", customProjection.PERSON_BRIEF_INFO);
 }
@@ -126,6 +135,7 @@ function getShowByTitle(title) {
   return Show.findOne({ title: title });
 }
 
+// USER
 function getRandomShow() {
   return Show.aggregate([
     { $sample: { size: 1 } },
@@ -134,18 +144,20 @@ function getRandomShow() {
 }
 
 // Update
+// ADMIN
 function updateShow(id, updateData) {
   return Show.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
     runValidators: true,
-    projection: customProjection.ITEM_FULL_INFO,
+    projection: PROJECTION.ADMIN.DEFAULT.SHOW,
   });
 }
 
 // Delete
+// ADMIN
 function deleteShowByID(id) {
   return Show.findByIdAndDelete(id, {
-    projection: customProjection.ITEM_FULL_INFO,
+    projection: PROJECTION.ADMIN.DEFAULT.SHOW,
   });
 }
 

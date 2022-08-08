@@ -65,7 +65,7 @@ async function authenticateUser(req, res, next) {
   if (!email || !password)
     return res.status(400).send(errorResponse.MISSING_USER_LOGIN_FIELDS);
 
-  const user = await userModel.findUserByEmail(email, null);
+  const user = await userModel.getUserByEmail(email, null);
   if (!user) {
     return res.status(401).send(errorResponse.WRONG_EMAIL_PASSWORD);
   }

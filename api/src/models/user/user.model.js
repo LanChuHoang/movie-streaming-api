@@ -18,6 +18,7 @@ async function exists(username, email) {
   );
 }
 
+// USER
 async function addUser(user) {
   try {
     const createdUser = await User.create(user);
@@ -28,15 +29,8 @@ async function addUser(user) {
   }
 }
 
-function findUserByID(id, projection = DEFAULT_PROJECTION) {
-  return User.findById(id, projection);
-}
-
-function findUserByEmail(email, projection = DEFAULT_PROJECTION) {
-  return User.findOne({ email: email }, projection);
-}
-
-function getAllUsers(
+// BOTH
+function getUsers(
   page = 1,
   limit = USERS_DEFAULT_PAGE_SIZE,
   sort = null,
@@ -48,23 +42,32 @@ function getAllUsers(
     .limit(limit);
 }
 
-function getNewUsers(amount, projection = DEFAULT_PROJECTION) {
-  return User.find({}, projection).sort({ _id: -1 }).limit(amount);
+// BOTH
+function getUserById(id, projection) {
+  return User.findById(id, projection);
 }
 
-function updateUser(id, updateData, projection = DEFAULT_PROJECTION) {
+// USER
+function getUserByEmail(email, projection = PROJECTION.USER.DEFAULT.USER) {
+  return User.findOne({ email: email }, projection);
+}
+
+// BOTH
+function updateUser(id, updateData, projection = PROJECTION.USER.DEFAULT.USER) {
   return User.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
     projection: projection,
   });
 }
 
-function deleteUserByID(id, projection = DEFAULT_PROJECTION) {
-  return User.findByIdAndDelete(id, { projection: projection });
+// ADMIN
+function deleteUserByID(id) {
+  return User.findByIdAndDelete(id, {
+    projection: PROJECTION.ADMIN.DEFAULT.USER,
+  });
 }
 
 // Statistics
-
 function getTotalUsers() {
   return User.estimatedDocumentCount();
 }
@@ -122,10 +125,9 @@ module.exports = {
   USERS_DEFAULT_PAGE_SIZE,
   exists,
   addUser,
-  findUserByID,
-  findUserByEmail,
-  getAllUsers,
-  getNewUsers,
+  getUsers,
+  getUserById,
+  getUserByEmail,
   updateUser,
   deleteUserByID,
   getTotalUsers,

@@ -46,7 +46,7 @@ async function verifyRefreshToken(req, res, next) {
   }
   try {
     const payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET_KEY);
-    const user = await userModel.findUserByID(payload.id);
+    const user = await userModel.getUserById(payload.id, null);
     if (user.refreshToken !== token)
       return res.status(403).send({ error: "Invalid token" });
     req.payload = payload;

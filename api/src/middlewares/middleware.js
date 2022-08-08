@@ -9,22 +9,29 @@ function parsePaginationOptions(req, res, next) {
     const [field, order] = sort.split(":");
     req.query.sort = { [field]: order === "asc" ? 1 : -1 };
   }
-  const itemType = getItemTypeOfEndpoint(req.originalUrl);
-  const defaultProjection = req.user?.isAdmin
-    ? PROJECTION.ADMIN.DEFAULT[itemType]
-    : PROJECTION.USER.DEFAULT[itemType];
+
   if (fields) {
     req.query.projection = fields
       .split(",")
-      .filter((f) => defaultProjection[f] !== 0)
+      .filter((f) => req.query.defaultProjection[f] !== 0)
       .reduce((prevResult, f) => ({ ...prevResult, [f]: 1 }), {});
   } else {
-    req.query.projection = defaultProjection;
+    req.query.projection = req.query.defaultProjection;
   }
 
   next();
 }
 
+function parseDefaultProjection(req, res, next) {
+  const itemType = getItemTypeOfEndpoint(req.originalUrl);
+  const defaultProjection = req.user?.isAdmin
+    ? PROJECTION.ADMIN.DEFAULT[itemType]
+    : PROJECTION.USER.DEFAULT[itemType];
+  req.query.defaultProjection = defaultProjection;
+  next();
+}
+
 module.exports = {
   parsePaginationOptions,
+  parseDefaultProjection,
 };

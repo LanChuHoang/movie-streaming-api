@@ -21,7 +21,7 @@ function validateGetMovieParams(req, res, next) {
   next();
 }
 
-// POST /movie - post new movie
+// ADMIN POST /movie - post new movie
 // input: {title: required, optionals}
 async function postNewMovie(req, res, next) {
   try {
@@ -32,7 +32,7 @@ async function postNewMovie(req, res, next) {
   }
 }
 
-// GET /movie?genre & country & year & sort & page
+// BOTH GET /movie?genre & country & year & sort & page
 async function getMovies(req, res, next) {
   try {
     const options = {
@@ -52,22 +52,14 @@ async function getMovies(req, res, next) {
   }
 }
 
-// GET /movie/upcoming?page - get upcoming movies
+// TODO:
+// BOTH GET /movie/upcoming?page - get upcoming movies
 async function getUpcomingMovies(req, res, next) {
   try {
-    const response = await movieModel.getUpcomingMovies(req.query.page);
-    return res.status(200).json(response);
-  } catch (error) {
-    next(error);
-  }
-}
-
-// GET /movie/search?query&page
-async function searchMovies(req, res, next) {
-  try {
-    const response = await movieModel.getMoviesByTitle(
-      req.query.query,
-      req.query.page
+    const response = await movieModel.getUpcomingMovies(
+      req.query.page,
+      req.query.limit,
+      req.query.defaultProjection
     );
     return res.status(200).json(response);
   } catch (error) {
@@ -75,7 +67,22 @@ async function searchMovies(req, res, next) {
   }
 }
 
-// GET /movie/similar - get similar movies
+// BOTH GET /movie/search?query&page
+async function searchMovies(req, res, next) {
+  try {
+    const response = await movieModel.getMoviesByTitle(
+      req.query.query,
+      req.query.page,
+      req.query.limit,
+      req.query.defaultProjection
+    );
+    return res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// USER GET /movie/similar - get similar movies
 async function getSimilarMovies(req, res, next) {
   if (!(await movieModel.getMovieByID(req.params.id)))
     return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
@@ -87,24 +94,27 @@ async function getSimilarMovies(req, res, next) {
   }
 }
 
-// GET /movie/random - get random movie
+// BOTH GET /movie/:id/ - get movie detail
+async function getMovie(req, res, next) {
+  try {
+    const movie = await movieModel.getMovieByID(
+      req.params.id,
+      req.query.defaultProjection
+    );
+    if (!movie) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).json(movie);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// USER GET /movie/random - get random movie
 async function getRandomMovie(req, res, next) {
   try {
     const randomMovie = await movieModel.getRandomMovie();
     if (!randomMovie)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(randomMovie);
-  } catch (error) {
-    next(error);
-  }
-}
-
-// GET /movie/:id/ - get movie detail
-async function getMovie(req, res, next) {
-  try {
-    const movie = await movieModel.getMovieByID(req.params.id);
-    if (!movie) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(movie);
   } catch (error) {
     next(error);
   }

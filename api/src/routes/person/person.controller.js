@@ -5,7 +5,7 @@ const {
 } = require("../../configs/route.config");
 const personModel = require("../../models/person/person.model");
 
-// POST /person - post new person
+// ADMIN POST /person - post new person
 async function postNewPerson(req, res, next) {
   try {
     const createdPerson = await personModel.addPerson(req.body);
@@ -15,7 +15,7 @@ async function postNewPerson(req, res, next) {
   }
 }
 
-// GET /person?page&limit&sort
+// ADMIN GET /person?page&limit&sort
 async function getPeople(req, res, next) {
   try {
     const { page, limit, sort, projection } = req.query;
@@ -38,10 +38,13 @@ async function getPeople(req, res, next) {
   }
 }
 
-// GET /person/:id/ - get person detail
+// BOTH GET /person/:id/ - get person detail
 async function getPerson(req, res, next) {
   try {
-    const person = await personModel.getPersonByID(req.params.id);
+    const person = await personModel.getPersonByID(
+      req.params.id,
+      req.query.defaultProjection
+    );
     if (!person) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(person);
   } catch (error) {
@@ -49,7 +52,7 @@ async function getPerson(req, res, next) {
   }
 }
 
-// PATCH /person/:id - update person
+// ADMIN PATCH /person/:id - update person
 async function updatePerson(req, res, next) {
   try {
     const person = await personModel.updatePerson(req.params.id, req.body);
@@ -60,7 +63,7 @@ async function updatePerson(req, res, next) {
   }
 }
 
-// DELETE /person/:id - delete person
+// ADMIN DELETE /person/:id - delete person
 async function deletePerson(req, res, next) {
   try {
     const person = await personModel.deletePersonByID(req.params.id);

@@ -2,11 +2,14 @@ const express = require("express");
 const routeValidator = require("../../validators/route.validator");
 const movieController = require("./movie.controller");
 const authorizerService = require("../../services/authorizer.service");
-const { parsePaginationOptions } = require("../../middlewares/middleware");
+const {
+  parsePaginationOptions,
+  parseDefaultProjection,
+} = require("../../middlewares/middleware");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken);
+router.use(authorizerService.verifyAccessToken, parseDefaultProjection);
 
 // POST /movie - post new movie
 // input: {title: required, optionals}

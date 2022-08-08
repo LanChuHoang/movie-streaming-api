@@ -2,11 +2,14 @@ const express = require("express");
 const userController = require("./user.controller");
 const authorizerService = require("../../services/authorizer.service");
 const routeValidator = require("../../validators/route.validator");
-const { parsePaginationOptions } = require("../../middlewares/middleware");
+const {
+  parsePaginationOptions,
+  parseDefaultProjection,
+} = require("../../middlewares/middleware");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken);
+router.use(authorizerService.verifyAccessToken, parseDefaultProjection);
 
 // GET All Users: GET /user
 // by Admin

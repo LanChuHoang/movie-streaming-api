@@ -24,7 +24,7 @@ function validateGetShowParams(req, res, next) {
   next();
 }
 
-// POST /Show - post new Show
+// ADMIN POST /Show - post new Show
 // input: {title: required, optionals}
 async function postNewShow(req, res, next) {
   try {
@@ -35,7 +35,7 @@ async function postNewShow(req, res, next) {
   }
 }
 
-// GET /Show?genre & country & year & sort & page
+// BOTH GET /Show?genre & country & year & sort & page
 async function getShows(req, res, next) {
   try {
     const options = {
@@ -54,12 +54,14 @@ async function getShows(req, res, next) {
   }
 }
 
-// GET /show/search?query&page
+// BOTH GET /show/search?query&page
 async function searchShows(req, res, next) {
   try {
     const response = await showModel.getShowsByTitle(
       req.query.query,
-      req.query.page
+      req.query.page,
+      rq.query.limit,
+      req.query.defaultProjection
     );
     return res.status(200).json(response);
   } catch (error) {
@@ -67,7 +69,7 @@ async function searchShows(req, res, next) {
   }
 }
 
-// GET /show/similar - get similar shows
+// USER GET /show/similar - get similar shows
 async function getSimilarShows(req, res, next) {
   try {
     const response = await showModel.getSimilarShows(req.params.id);
@@ -77,24 +79,27 @@ async function getSimilarShows(req, res, next) {
   }
 }
 
-// GET /Show/random - get random Show
+// BOTH GET /Show/:id/ - get Show detail
+async function getShow(req, res, next) {
+  try {
+    const show = await showModel.getShowByID(
+      req.params.id,
+      req.query.defaultProjection
+    );
+    if (!show) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).json(show);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// USER GET /Show/random - get random Show
 async function getRandomShow(req, res, next) {
   try {
     const randomShow = await showModel.getRandomShow();
     if (!randomShow)
       return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).json(randomShow);
-  } catch (error) {
-    next(error);
-  }
-}
-
-// GET /Show/:id/ - get Show detail
-async function getShow(req, res, next) {
-  try {
-    const show = await showModel.getShowByID(req.params.id);
-    if (!show) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(show);
   } catch (error) {
     next(error);
   }

@@ -1,12 +1,5 @@
 const { ObjectId } = require("mongoose").Types;
-const {
-  errorResponse,
-  adminSortOptions,
-  userSortOptions,
-  sortOrders,
-  PROJECTION,
-  SORT,
-} = require("../configs/route.config");
+const { errorResponse, SORT } = require("../configs/route.config");
 const { getItemTypeOfEndpoint } = require("../helpers/helper");
 
 function validateIDParam(req, res, next) {

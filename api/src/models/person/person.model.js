@@ -5,15 +5,17 @@ async function exists(name) {
   return (await Person.exists({ name: name })) != null;
 }
 
+// Admin
 function addPerson(person) {
   return Person.create(person);
 }
 
+// Admin
 function getPeople(
   page = 1,
   limit = DEFAULT_PAGE_SIZE,
   sort = {},
-  projection = PROJECTION.USER.DEFAULT.PERSON
+  projection = PROJECTION.ADMIN.DEFAULT.USER
 ) {
   return Person.find({}, projection)
     .sort(sort)
@@ -21,23 +23,29 @@ function getPeople(
     .limit(limit);
 }
 
-function getPersonByID(id) {
-  return Person.findById(id);
+// Both
+function getPersonByID(id, projection) {
+  return Person.findById(id, projection);
 }
 
 function getPersonByName(name) {
   return Person.findOne({ name: name });
 }
 
+// Admin
 function updatePerson(id, updateData) {
   return Person.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
     runValidators: true,
+    projection: PROJECTION.ADMIN.DEFAULT.PERSON,
   });
 }
 
+// Admin
 function deletePersonByID(id) {
-  return Person.findByIdAndDelete(id);
+  return Person.findByIdAndDelete(id, {
+    projection: PROJECTION.ADMIN.DEFAULT.PERSON,
+  });
 }
 
 // Stats
