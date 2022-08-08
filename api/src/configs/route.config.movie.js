@@ -1,4 +1,4 @@
-const movieAdminSortFields = [
+const ADMIN_SORT_FIELDS = [
   "_id",
   "title",
   "adult",
@@ -10,9 +10,9 @@ const movieAdminSortFields = [
   "createdAt",
 ];
 
-const movieUserSortFields = ["releaseDate"];
+const USER_SORT_FIELDS = ["releaseDate"];
 
 module.exports = {
-  movieAdminSortFields,
-  movieUserSortFields,
+  ADMIN_SORT_FIELDS,
+  USER_SORT_FIELDS,
 };

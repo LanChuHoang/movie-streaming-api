@@ -41,7 +41,8 @@ async function getMovies(req, res, next) {
       year: req.query.year,
       sort: req.query.sort,
       page: req.query.page,
-      limit: +req.query.limit,
+      limit: req.query.limit,
+      projection: req.query.projection,
     };
     console.log(options);
     const response = await movieModel.getMovies(options);

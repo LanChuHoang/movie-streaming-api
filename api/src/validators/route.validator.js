@@ -4,6 +4,8 @@ const {
   adminSortOptions,
   userSortOptions,
   sortOrders,
+  PROJECTION,
+  SORT,
 } = require("../configs/route.config");
 const { getItemTypeOfEndpoint } = require("../helpers/helper");
 
@@ -39,20 +41,27 @@ function validateSearchParams(req, res, next) {
 }
 
 function validatePaginationInput(req, res, next) {
-  const { page, limit, sort } = req.query;
+  const { page, limit, sort, fields } = req.query;
   const isPositiveNumber = (n) => isFinite(Number(n)) && Number(n) > 0;
   if (page && !isPositiveNumber(page))
     return res.status(400).send(errorResponse.INVALID_QUERY);
   if (limit && !isPositiveNumber(limit))
     return res.status(400).send(errorResponse.INVALID_QUERY);
 
+  const itemType = getItemTypeOfEndpoint(req.originalUrl);
+
   if (sort) {
     const [field, order] = sort.split(":");
-    const itemType = getItemTypeOfEndpoint(req.originalUrl);
     const sortFields = req.user?.isAdmin
-      ? adminSortOptions[itemType]
-      : userSortOptions[itemType];
-    if (!sortFields?.includes(field) || !sortOrders?.includes(order))
+      ? SORT.FIELDS.ADMIN[itemType]
+      : SORT.FIELDS.USER[itemType];
+    if (!sortFields?.includes(field) || !SORT.ORDERS?.includes(order))
+      return res.status(400).send(errorResponse.INVALID_QUERY);
+  }
+
+  if (fields) {
+    const fieldsArr = fields.split(",");
+    if (fieldsArr.length === 0 || fields.includes(" "))
       return res.status(400).send(errorResponse.INVALID_QUERY);
   }
 

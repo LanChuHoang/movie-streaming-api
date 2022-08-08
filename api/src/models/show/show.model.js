@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 const {
   DEFAULT_PAGE_SIZE,
   customProjection,
+  PROJECTION,
 } = require("../../configs/route.config");
 const Show = require("./Show");
 
@@ -21,13 +22,7 @@ function getAllShows() {
   return Show.find();
 }
 
-async function getPaginatedShows(
-  filter = null,
-  sort,
-  page,
-  limit,
-  project = customProjection.ITEM_BASE_INFO
-) {
+async function getPaginatedShows(filter = null, sort, page, limit, projection) {
   try {
     const [result] = await Show.aggregate([
       { $match: filter },
@@ -37,7 +32,7 @@ async function getPaginatedShows(
             { $sort: sort },
             { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
             { $limit: limit },
-            { $project: project },
+            { $project: projection },
           ],
           meta: [{ $count: "total_documents" }],
         },
@@ -67,6 +62,7 @@ async function getShows({
   sort = DEFAULT_SORT_OPTION,
   page = 1,
   limit = DEFAULT_PAGE_SIZE,
+  projection = PROJECTION.USER.DEFAULT.SHOW,
 }) {
   const filter = {};
   if (genre) filter.genres = { $all: [genre] };
@@ -78,7 +74,7 @@ async function getShows({
     };
 
   try {
-    return await getPaginatedShows(filter, sort, page, limit);
+    return await getPaginatedShows(filter, sort, page, limit, projection);
   } catch (error) {
     throw error;
   }

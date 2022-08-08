@@ -1,3 +1,4 @@
+const { PROJECTION } = require("../../configs/route.config");
 const { getSunday, getMonday } = require("../../helpers/helper");
 const User = require("./User");
 
@@ -39,7 +40,7 @@ function getAllUsers(
   page = 1,
   limit = USERS_DEFAULT_PAGE_SIZE,
   sort = null,
-  projection = DEFAULT_PROJECTION
+  projection = PROJECTION.USER.DEFAULT.USER
 ) {
   return User.find({}, projection)
     .sort(sort)

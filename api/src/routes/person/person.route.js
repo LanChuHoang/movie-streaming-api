@@ -2,7 +2,7 @@ const express = require("express");
 const personController = require("./person.controller");
 const routeValidator = require("../../validators/route.validator");
 const authorizerService = require("../../services/authorizer.service");
-const { parseSortOption } = require("../../middlewares/middleware");
+const { parsePaginationOptions } = require("../../middlewares/middleware");
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.get(
   "/",
   authorizerService.authorizeAdmin,
   routeValidator.validatePaginationInput,
-  parseSortOption,
+  parsePaginationOptions,
   personController.getPeople
 );
 

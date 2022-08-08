@@ -31,7 +31,7 @@ function isShortISOFormat(dateStr) {
 }
 
 function getItemTypeOfEndpoint(url) {
-  return url?.split("?")[0]?.split("/").pop();
+  return url?.split("?")[0]?.split("/").pop().toUpperCase();
 }
 
 module.exports = {

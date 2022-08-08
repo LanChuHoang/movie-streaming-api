@@ -1,4 +1,4 @@
-const personAdminSortFields = [
+const ADMIN_SORT_FIELDS = [
   "_id",
   "name",
   "gender",
@@ -8,6 +8,9 @@ const personAdminSortFields = [
   "createdAt",
 ];
 
+const USER_SORT_FIELDS = [];
+
 module.exports = {
-  personAdminSortFields,
+  ADMIN_SORT_FIELDS,
+  USER_SORT_FIELDS,
 };

@@ -1,4 +1,4 @@
-const { DEFAULT_PAGE_SIZE } = require("../../configs/route.config");
+const { DEFAULT_PAGE_SIZE, PROJECTION } = require("../../configs/route.config");
 const Person = require("./Person");
 
 async function exists(name) {
@@ -9,8 +9,13 @@ function addPerson(person) {
   return Person.create(person);
 }
 
-function getPeople(page = 1, limit = DEFAULT_PAGE_SIZE, sort = {}) {
-  return Person.find()
+function getPeople(
+  page = 1,
+  limit = DEFAULT_PAGE_SIZE,
+  sort = {},
+  projection = PROJECTION.USER.DEFAULT.PERSON
+) {
+  return Person.find({}, projection)
     .sort(sort)
     .skip((page - 1) * limit)
     .limit(limit);

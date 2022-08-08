@@ -1,24 +1,14 @@
 const { default: mongoose } = require("mongoose");
-const { errorResponse } = require("../../configs/route.config");
+const { errorResponse, projection } = require("../../configs/route.config");
 const userModel = require("../../models/user/user.model");
 const aesService = require("../../services/aes.service");
-
-async function validateGetUsersInput(req, res, next) {
-  const { page, limit } = req.query;
-  const isPositiveNumber = (n) => isFinite(Number(n)) && Number(n) > 0;
-  if (page && !isPositiveNumber(page))
-    return res.status(400).send(errorResponse.INVALID_QUERY);
-  if (limit && !isPositiveNumber(limit))
-    return res.status(400).send(errorResponse.INVALID_QUERY);
-  next();
-}
 
 // GET /user?page=1 & limit=1 & sort_by=_id:desc
 async function getUsers(req, res, next) {
   try {
-    const { page, limit, sort } = req.query;
+    const { page, limit, sort, projection } = req.query;
     const [users, totalUsers] = await Promise.all([
-      userModel.getAllUsers(page, limit, sort),
+      userModel.getAllUsers(page, limit, sort, projection),
       userModel.getTotalUsers(),
     ]);
     const pageSize = limit || userModel.USERS_DEFAULT_PAGE_SIZE;
@@ -83,7 +73,6 @@ async function deleteUser(req, res, next) {
 }
 
 module.exports = {
-  validateGetUsersInput,
   getUsers,
   getUser,
   updateUser,

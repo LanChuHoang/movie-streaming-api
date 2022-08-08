@@ -44,7 +44,8 @@ async function getShows(req, res, next) {
       year: req.query.year,
       sort: req.query.sort,
       page: req.query.page,
-      limit: +req.query.limit,
+      limit: req.query.limit,
+      projection: req.query.projection,
     };
     const response = await showModel.getShows(options);
     return res.status(200).json(response);

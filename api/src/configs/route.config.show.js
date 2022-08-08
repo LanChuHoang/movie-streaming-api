@@ -1,4 +1,4 @@
-const showAdminSortFields = [
+const ADMIN_SORT_FIELDS = [
   "_id",
   "title",
   "adult",
@@ -11,9 +11,9 @@ const showAdminSortFields = [
   "createdAt",
 ];
 
-const showUserSortFields = ["lastAirDate"];
+const USER_SORT_FIELDS = ["lastAirDate"];
 
 module.exports = {
-  showAdminSortFields,
-  showUserSortFields,
+  ADMIN_SORT_FIELDS,
+  USER_SORT_FIELDS,
 };

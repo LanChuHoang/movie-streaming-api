@@ -1,27 +1,57 @@
-const {
-  movieAdminSortFields,
-  movieUserSortFields,
-} = require("./route.config.movie");
-const {
-  showAdminSortFields,
-  showUserSortFields,
-} = require("./route.config.show");
-const { personAdminSortFields } = require("./route.config.person");
-const { userAdminSortFields } = require("./route.config.user");
+const movieConfig = require("./route.config.movie");
+const showConfig = require("./route.config.show");
+const personConfig = require("./route.config.person");
+const userConfig = require("./route.config.user");
 
-const adminSortOptions = {
-  movie: movieAdminSortFields,
-  person: personAdminSortFields,
-  show: showAdminSortFields,
-  user: userAdminSortFields,
+const SORT = {
+  FIELDS: {
+    ADMIN: {
+      MOVIE: movieConfig.ADMIN_SORT_FIELDS,
+      SHOW: showConfig.ADMIN_SORT_FIELDS,
+      PERSON: personConfig.ADMIN_SORT_FIELDS,
+      USER: userConfig.ADMIN_SORT_FIELDS,
+    },
+    USER: {
+      MOVIE: movieConfig.USER_SORT_FIELDS,
+      SHOW: showConfig.USER_SORT_FIELDS,
+      PERSON: personConfig.USER_SORT_FIELDS,
+      USER: userConfig.USER_SORT_FIELDS,
+    },
+  },
+  ORDERS: ["asc", "desc"],
 };
 
-const userSortOptions = {
-  movie: movieUserSortFields,
-  show: showUserSortFields,
+const ADMIN_DEFAULT_PROJECTION = {
+  __v: 0,
+  password: 0,
+  refreshToken: 0,
+};
+const USER_DEFAULT_PROJECTION = {
+  __v: 0,
+  createdAt: 0,
+  updatedAt: 0,
+  password: 0,
+  refreshToken: 0,
 };
 
-const sortOrders = ["asc", "desc"];
+const PROJECTION = {
+  ADMIN: {
+    DEFAULT: {
+      MOVIE: ADMIN_DEFAULT_PROJECTION,
+      SHOW: ADMIN_DEFAULT_PROJECTION,
+      PERSON: ADMIN_DEFAULT_PROJECTION,
+      USER: ADMIN_DEFAULT_PROJECTION,
+    },
+  },
+  USER: {
+    DEFAULT: {
+      MOVIE: USER_DEFAULT_PROJECTION,
+      SHOW: USER_DEFAULT_PROJECTION,
+      PERSON: USER_DEFAULT_PROJECTION,
+      USER: { ...ADMIN_DEFAULT_PROJECTION, createdAt: 0 },
+    },
+  },
+};
 
 module.exports = {
   errorResponse: {
@@ -51,7 +81,7 @@ module.exports = {
       error: "Invalid type",
     },
   },
-  ACCESS_TOKEN_EXPIRE_TIME: 15 * 60, // 15 mins
+  ACCESS_TOKEN_EXPIRE_TIME: 15 * 60 * 10000, // 15 mins
   REFRESH_TOKEN_EXPIRE_TIME: 24 * 60 * 60, // 1d
   DEFAULT_PAGE_SIZE: 30,
   movieSortOptions: {
@@ -85,7 +115,6 @@ module.exports = {
       avatarUrl: 1,
     },
   },
-  adminSortOptions,
-  userSortOptions,
-  sortOrders,
+  PROJECTION,
+  SORT,
 };

@@ -18,9 +18,9 @@ async function postNewPerson(req, res, next) {
 // GET /person?page&limit&sort
 async function getPeople(req, res, next) {
   try {
-    const { page, limit, sort } = req.query;
+    const { page, limit, sort, projection } = req.query;
     const [people, totalPeople] = await Promise.all([
-      personModel.getPeople(page, limit, sort),
+      personModel.getPeople(page, limit, sort, projection),
       personModel.getTotalPeople(),
     ]);
     const pageSize = limit || DEFAULT_PAGE_SIZE;
