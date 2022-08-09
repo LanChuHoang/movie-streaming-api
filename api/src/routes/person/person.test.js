@@ -84,6 +84,32 @@ describe("Person routes", () => {
     });
   });
 
+  describe.only("GET /api/perso/search", () => {
+    test("case: Success", async () => {
+      await Person.insertMany(validPeople);
+      const responses = await Promise.all(
+        validPeople.map((_, i) =>
+          adminAgent.get(BASE_ENDPOINT).query({
+            page: i + 1,
+            limit: 1,
+            query: "valid",
+            fields: "name,gender",
+          })
+        )
+      );
+
+      const received = responses.map((r) => ({
+        name: r.body.docs[0].name,
+        gender: r.body.docs[0].gender,
+      }));
+      const expected = validPeople.map((p) => ({
+        name: p.name,
+        gender: p.gender,
+      }));
+      expect(received).toEqual(expected);
+    });
+  });
+
   describe("GET /api/person/:id", () => {
     test("case: Success", async () => {
       const mockPerson = await Person.create(validPeople[0]);

@@ -15,7 +15,7 @@ async function postNewPerson(req, res, next) {
   }
 }
 
-// ADMIN GET /person?page&limit&sort
+// ADMIN GET /person?page&limit&sort&fields
 async function getPeople(req, res, next) {
   try {
     const { page, limit, sort, projection } = req.query;
@@ -32,6 +32,22 @@ async function getPeople(req, res, next) {
       totalDocuments: totalPeople,
       sort,
     };
+    return res.send(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// ADMIN GET/person/search?query&page&limit&fields
+async function searchPeople(req, res, next) {
+  try {
+    const { query, page, limit, projection } = req.query;
+    const response = await personModel.getPeopleByName(
+      query,
+      page,
+      limit,
+      projection
+    );
     return res.send(response);
   } catch (error) {
     next(error);
@@ -95,6 +111,7 @@ function updatePersonErrorHandler(error, req, res, next) {
 module.exports = {
   postNewPerson,
   getPeople,
+  searchPeople,
   getPerson,
   updatePerson,
   deletePerson,

@@ -27,6 +27,14 @@ router.get(
   personController.getPeople
 );
 
+// GET /person/search - search people
+router.get(
+  "/search",
+  authorizerService.authorizeAdmin,
+  routeValidator.validateSearchParams,
+  personController.searchPeople
+);
+
 // GET /person/:id/ - get person detail
 router.get("/:id", routeValidator.validateIDParam, personController.getPerson);
 

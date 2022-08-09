@@ -9,7 +9,7 @@ afterEach(async () => {
   await User.deleteMany();
 });
 
-describe("User routes", () => {
+describe.skip("User routes", () => {
   const BASE_ENDPOINT = "/api/user";
   const validUsers = [
     {

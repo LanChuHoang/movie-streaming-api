@@ -1,6 +1,45 @@
 const { DEFAULT_PAGE_SIZE, PROJECTION } = require("../../configs/route.config");
 const Person = require("./Person");
 
+async function getPaginatedPeople(
+  filter = null,
+  sort,
+  page,
+  limit,
+  projection
+) {
+  try {
+    const [result] = await Person.aggregate([
+      { $match: filter },
+      {
+        $facet: {
+          docs: [
+            { $sort: sort },
+            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
+            { $limit: limit },
+            { $project: projection },
+          ],
+          meta: [{ $count: "total_documents" }],
+        },
+      },
+      { $unwind: "$meta" },
+    ]);
+
+    const totalDocs = result?.meta.total_documents || 0;
+    const output = {
+      docs: result?.docs || [],
+      page: page,
+      pageSize: limit,
+      totalPages: Math.ceil(totalDocs / limit),
+      totalDocuments: totalDocs,
+    };
+
+    return output;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function exists(name) {
   return (await Person.exists({ name: name })) != null;
 }
@@ -15,12 +54,24 @@ function getPeople(
   page = 1,
   limit = DEFAULT_PAGE_SIZE,
   sort = {},
-  projection = PROJECTION.ADMIN.DEFAULT.USER
+  projection = PROJECTION.ADMIN.DEFAULT.PERSON
 ) {
   return Person.find({}, projection)
     .sort(sort)
     .skip((page - 1) * limit)
     .limit(limit);
+}
+
+// Admin
+function getPeopleByName(
+  query,
+  page,
+  limit,
+  projection = PROJECTION.ADMIN.DEFAULT.PERSON
+) {
+  const filter = { $text: { $search: query } };
+  const sort = { score: { $meta: "textScore" } };
+  return getPaginatedMovies(filter, sort, page, limit, projection);
 }
 
 // Both
@@ -57,6 +108,7 @@ module.exports = {
   exists,
   addPerson,
   getPeople,
+  getPeopleByName,
   getPersonByID,
   getPersonByName,
   updatePerson,
