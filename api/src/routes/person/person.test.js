@@ -49,21 +49,21 @@ describe("Person routes", () => {
       await testHelper.testInvalidBodyRequest(
         adminAgent.post(BASE_ENDPOINT),
         invalidGenders.map((g) => ({ gender: g })),
-        { error: "Invalid gender" }
+        errorResponse.INVALID_GENDER
       ));
 
     test("case: Invalid Job", async () =>
       await testHelper.testInvalidBodyRequest(
         adminAgent.post(BASE_ENDPOINT),
         invalidJobs.map((j) => ({ job: j })),
-        { error: "Invalid job" }
+        errorResponse.INVALID_JOB
       ));
 
     test("case: Invalid Date", async () =>
       await testHelper.testInvalidBodyRequest(
         adminAgent.post(BASE_ENDPOINT),
         invalidDates.map((d) => ({ dob: d })),
-        { error: "Invalid query" }
+        errorResponse.INVALID_QUERY
       ));
   });
 
@@ -113,21 +113,21 @@ describe("Person routes", () => {
       await testHelper.testInvalidBodyRequest(
         adminAgent.patch(`${BASE_ENDPOINT}/${mockPerson._id}`),
         invalidGenders.map((g) => ({ gender: g })),
-        { error: "Invalid gender" }
+        errorResponse.INVALID_GENDER
       ));
 
     test("case: Invalid Job", async () =>
       await testHelper.testInvalidBodyRequest(
         adminAgent.patch(`${BASE_ENDPOINT}/${mockPerson._id}`),
         invalidJobs.map((j) => ({ job: j })),
-        { error: "Invalid job" }
+        errorResponse.INVALID_JOB
       ));
 
     test("case: Invalid Date", async () =>
       await testHelper.testInvalidBodyRequest(
         adminAgent.patch(`${BASE_ENDPOINT}/${mockPerson._id}`),
         invalidDates.map((d) => ({ dob: d })),
-        { error: "Invalid query" }
+        errorResponse.INVALID_QUERY
       ));
   });
 

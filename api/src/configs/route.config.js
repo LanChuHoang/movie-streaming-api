@@ -81,7 +81,10 @@ module.exports = {
   errorResponse: {
     DEFAULT_500_ERROR: { error: "Something went wrong" },
     DEFAULT_404_ERROR: { error: "Requested resource not found" },
+    DEFAULT_403_ERROR: { error: "Permission denined" },
+    DEFAULT_401_ERROR: { error: "Unauthorize" },
     INVALID_QUERY: { error: "Invalid query" },
+    INVALID_TOKEN: { error: "Invalid token" },
     MISSING_USER_REGISTER_FIELDS: {
       error: "Missing username, email or password",
     },
@@ -101,8 +104,14 @@ module.exports = {
     INVALID_DATE: {
       error: "Invalid date. Date must be formatted as 'YYYY-MM-DD'",
     },
+    INVALID_GENDER: {
+      error: "Invalid gender",
+    },
+    INVALID_JOB: {
+      error: "Invalid job",
+    },
     INVALID_STATS_DETAIL_TYPE: {
-      error: "Invalid type",
+      error: "Invalid stats option",
     },
   },
   ACCESS_TOKEN_EXPIRE_TIME: 15 * 60 * 10000, // 15 mins

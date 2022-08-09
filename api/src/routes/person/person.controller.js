@@ -77,10 +77,10 @@ async function deletePerson(req, res, next) {
 function updatePersonErrorHandler(error, req, res, next) {
   console.log(error);
   if (error.errors?.gender?.kind === "enum") {
-    return res.status(400).json({ error: "Invalid gender" });
+    return res.status(400).json(errorResponse.INVALID_GENDER);
   }
   if (error.errors?.job?.kind === "enum") {
-    return res.status(400).json({ error: "Invalid job" });
+    return res.status(400).json(errorResponse.INVALID_JOB);
   }
   if (
     error instanceof mongoose.Error.CastError ||
