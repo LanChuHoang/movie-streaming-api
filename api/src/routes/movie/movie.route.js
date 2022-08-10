@@ -3,8 +3,9 @@ const routeValidator = require("../../validators/route.validator");
 const movieController = require("./movie.controller");
 const authorizerService = require("../../services/authorizer.service");
 const {
-  parsePaginationOptions,
   parseDefaultProjection,
+  parseGetItemsParams,
+  parseSearchItemsParams,
 } = require("../../middlewares/middleware");
 
 const router = express.Router();
@@ -22,25 +23,16 @@ router.post(
 // GET /movie?genres & country & year  & sort & page
 router.get(
   "/",
-  routeValidator.validatePaginationInput,
-  parsePaginationOptions,
+  parseGetItemsParams,
   movieController.validateGetMovieParams,
   movieController.getMovies
 );
 
 // GET /movie/search?query&page
-router.get(
-  "/search",
-  routeValidator.validateSearchParams,
-  movieController.searchMovies
-);
+router.get("/search", parseSearchItemsParams, movieController.searchMovies);
 
 // GET /movie/upcoming?page - get upcoming movies
-router.get(
-  "/upcoming",
-  routeValidator.validatePageParam,
-  movieController.getUpcomingMovies
-);
+router.get("/upcoming", parseGetItemsParams, movieController.getUpcomingMovies);
 
 // GET /movie/similar
 router.get(

@@ -3,8 +3,9 @@ const personController = require("./person.controller");
 const routeValidator = require("../../validators/route.validator");
 const authorizerService = require("../../services/authorizer.service");
 const {
-  parsePaginationOptions,
   parseDefaultProjection,
+  parseGetItemsParams,
+  parseSearchItemsParams,
 } = require("../../middlewares/middleware");
 
 const router = express.Router();
@@ -22,8 +23,7 @@ router.post(
 router.get(
   "/",
   authorizerService.authorizeAdmin,
-  routeValidator.validatePaginationInput,
-  parsePaginationOptions,
+  parseGetItemsParams,
   personController.getPeople
 );
 
@@ -31,7 +31,7 @@ router.get(
 router.get(
   "/search",
   authorizerService.authorizeAdmin,
-  routeValidator.validateSearchParams,
+  parseSearchItemsParams,
   personController.searchPeople
 );
 

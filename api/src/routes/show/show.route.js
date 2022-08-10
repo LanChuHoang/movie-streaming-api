@@ -3,8 +3,9 @@ const routeValidator = require("../../validators/route.validator");
 const showController = require("./show.controller");
 const authorizerService = require("../../services/authorizer.service");
 const {
-  parsePaginationOptions,
   parseDefaultProjection,
+  parseGetItemsParams,
+  parseSearchItemsParams,
 } = require("../../middlewares/middleware");
 
 const router = express.Router();
@@ -22,18 +23,13 @@ router.post(
 // GET /show?genres & country & year  & sort & page
 router.get(
   "/",
-  routeValidator.validatePaginationInput,
-  parsePaginationOptions,
+  parseGetItemsParams,
   showController.validateGetShowParams,
   showController.getShows
 );
 
 // GET /show/search?query&page
-router.get(
-  "/search",
-  routeValidator.validateSearchParams,
-  showController.searchShows
-);
+router.get("/search", parseSearchItemsParams, showController.searchShows);
 
 // GET /show/random - get random show
 router.get("/random", showController.getRandomShow);

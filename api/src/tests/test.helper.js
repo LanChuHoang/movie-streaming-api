@@ -2,11 +2,18 @@ const mongoose = require("mongoose");
 const app = require("../app");
 const agent = require("supertest").agent(app);
 const queryString = require("query-string");
-const { errorResponse } = require("../configs/route.config");
+const { PROJECTION, errorResponse } = require("../configs/route.config");
 
 async function connectDB() {
   await mongoose.connect(globalThis.__MONGO_URI__);
-  await mongoose.connection.collections.movies.createIndex({ title: "text" });
+  await mongoose.connection.collections.movies.createIndex(
+    { title: "text" },
+    { default_language: "none" }
+  );
+  await mongoose.connection.collections.people.createIndex(
+    { name: "text" },
+    { default_language: "none" }
+  );
 }
 
 async function disconnectDB() {
@@ -77,16 +84,75 @@ function testInvalidFilterParams(endpoint) {
   });
 }
 
-function testInvalidBodyRequest(agent, bodies, expectedError, status = 400) {
+function testInvalidBody(agentMethod, bodies, expectedError, status = 400) {
   return Promise.all(
     bodies.map((b) =>
-      agent
+      agentMethod
         .send(b)
         .expect("Content-Type", /json/)
         .expect(status)
         .expect((res) => expect(res.body).toEqual(expectedError))
     )
   );
+}
+
+function testInvalidParams(
+  agentMethod,
+  invalidParams,
+  status = 400,
+  expectedError = errorResponse.INVALID_QUERY
+) {
+  return Promise.all(
+    invalidParams.map((p) =>
+      agentMethod
+        .query(p)
+        .expect(status)
+        .expect((res) => expect(res.body).toEqual(expectedError))
+    )
+  );
+}
+
+function testInvalidPaginationParams(url, agent) {
+  const toParam = (params) => ({ query: "a", ...params });
+  const invalidParams = ["a", "@", "-1", "1.1", "0"];
+  const invalidPages = invalidParams.map((p) => toParam({ page: p }));
+  const invalidLimits = invalidParams.map((p) => toParam({ limit: p }));
+  const invalidFields = ["a,", "a, b", " ,a", ",", ",,"].map((p) =>
+    toParam({ fields: p })
+  );
+  return Promise.all([
+    testInvalidParams(agent.get(url), invalidPages),
+    testInvalidParams(agent.get(url), invalidLimits),
+    testInvalidParams(agent.get(url), invalidFields),
+  ]);
+}
+
+function testInvalidGetItemsParams(url, agent) {
+  const invalidSorts = [
+    "",
+    ":",
+    " :",
+    ": ",
+    "a:",
+    "a: ",
+    ":a",
+    " :a",
+    "a:b",
+  ].map((s) => ({ sort: s }));
+  return Promise.all([
+    testInvalidParams(agent.get(url), invalidSorts),
+    testInvalidPaginationParams(url, agent),
+  ]);
+}
+
+function testInvalidSearchItemsParams(url, agent) {
+  const invalidQuerries = ["", " ", undefined].map((q) =>
+    q ? { query: q } : {}
+  );
+  return Promise.all([
+    testInvalidParams(agent.get(url), invalidQuerries),
+    testInvalidPaginationParams(url, agent),
+  ]);
 }
 
 module.exports = {
@@ -98,5 +164,9 @@ module.exports = {
   testInvalidPageParam,
   testInvalidQueryParam,
   testInvalidFilterParams,
-  testInvalidBodyRequest,
+  testInvalidBody,
+  testInvalidParams,
+  testInvalidPaginationParams,
+  testInvalidGetItemsParams,
+  testInvalidSearchItemsParams,
 };

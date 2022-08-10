@@ -9,26 +9,26 @@ afterEach(async () => {
   await User.deleteMany();
 });
 
-describe.skip("User routes", () => {
-  const BASE_ENDPOINT = "/api/user";
-  const validUsers = [
-    {
-      username: "validuser0",
-      email: "validuser@gmail.com",
-      password: "a",
-    },
-    {
-      username: "validuser1",
-      email: "validuser1@gmail.com",
-      password: "a",
-    },
-    {
-      username: "validuser2",
-      email: "validuser2@gmail.com",
-      password: "a",
-    },
-  ];
+const BASE_ENDPOINT = "/api/user";
+const validUsers = [
+  {
+    username: "validuser0",
+    email: "validuser@gmail.com",
+    password: "a",
+  },
+  {
+    username: "validuser1",
+    email: "validuser1@gmail.com",
+    password: "a",
+  },
+  {
+    username: "validuser2",
+    email: "validuser2@gmail.com",
+    password: "a",
+  },
+];
 
+describe("User routes", () => {
   describe("GET /api/user", () => {
     test("case: Success", async () => {
       await User.insertMany(validUsers);
@@ -44,7 +44,40 @@ describe.skip("User routes", () => {
       const usernames = responses.map((r) => r.body.docs[0]?.username);
       expect(usernames).toEqual(validUsers.map((p) => p.username).reverse());
     });
+
+    test('"case: Invalid get items params', async () => {
+      await testHelper.testInvalidGetItemsParams(BASE_ENDPOINT, adminAgent);
+    });
   });
+
+  // describe.only("GET /api/user/search", () => {
+  //   test("case: Success", async () => {
+  //     await User.insertMany(validUsers);
+  //     const responses = await Promise.all(
+  //       validUsers.map((_, i) =>
+  //         adminAgent.get(BASE_ENDPOINT).query({
+  //           page: i + 1,
+  //           limit: 1,
+  //           query: "valid",
+  //           fields: "username,email",
+  //         })
+  //       )
+  //     );
+  //     const received = responses.map((r) => ({
+  //       username: r.body.docs[0].username,
+  //       email: r.body.docs[0].email,
+  //     }));
+  //     const expected = validUsers.map((p) => ({
+  //       username: p.username,
+  //       email: p.email,
+  //     }));
+  //     expect(received).toEqual(expected);
+  //   });
+
+  //   test("case: Invalid search params", async () => {
+  //     await testHelper.testInvalidSearchItemsParams(BASE_ENDPOINT, adminAgent);
+  //   });
+  // });
 
   describe("GET /api/user/:id", () => {
     test("case: Success", async () => {

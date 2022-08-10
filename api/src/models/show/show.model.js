@@ -4,21 +4,6 @@ const Show = require("./Show");
 
 const DEFAULT_SORT_OPTION = { lastAirDate: -1 };
 
-async function exists(title) {
-  return (await Show.exists({ title: title })) !== null;
-}
-
-// Add
-// ADMIN
-function addShow(show) {
-  return Show.create(show);
-}
-
-// Get Shows
-function getAllShows() {
-  return Show.find();
-}
-
 async function getPaginatedShows(filter = null, sort, page, limit, projection) {
   try {
     const [result] = await Show.aggregate([
@@ -27,7 +12,7 @@ async function getPaginatedShows(filter = null, sort, page, limit, projection) {
         $facet: {
           docs: [
             { $sort: sort },
-            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
+            { $skip: limit * (page - 1) },
             { $limit: limit },
             { $project: projection },
           ],
@@ -50,6 +35,21 @@ async function getPaginatedShows(filter = null, sort, page, limit, projection) {
   } catch (error) {
     throw error;
   }
+}
+
+async function exists(title) {
+  return (await Show.exists({ title: title })) !== null;
+}
+
+// Add
+// ADMIN
+function addShow(show) {
+  return Show.create(show);
+}
+
+// Get Shows
+function getAllShows() {
+  return Show.find();
 }
 
 // BOTH

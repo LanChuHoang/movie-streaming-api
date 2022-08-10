@@ -4,21 +4,6 @@ const Movie = require("./Movie");
 
 const DEFAULT_SORT_OPTION = { releaseDate: -1 };
 
-async function exists(title) {
-  return (await Movie.exists({ title: title })) !== null;
-}
-
-// Add
-// ADMIN
-function addMovie(movie) {
-  return Movie.create(movie);
-}
-
-// Get Movies
-function getAllMovies() {
-  return Movie.find();
-}
-
 async function getPaginatedMovies(
   filter = null,
   sort,
@@ -33,7 +18,7 @@ async function getPaginatedMovies(
         $facet: {
           docs: [
             { $sort: sort },
-            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
+            { $skip: limit * (page - 1) },
             { $limit: limit },
             { $project: projection },
           ],
@@ -56,6 +41,21 @@ async function getPaginatedMovies(
   } catch (error) {
     throw error;
   }
+}
+
+async function exists(title) {
+  return (await Movie.exists({ title: title })) !== null;
+}
+
+// Add
+// ADMIN
+function addMovie(movie) {
+  return Movie.create(movie);
+}
+
+// Get Movies
+function getAllMovies() {
+  return Movie.find();
 }
 
 // BOTH

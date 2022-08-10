@@ -15,7 +15,7 @@ async function getPaginatedPeople(
         $facet: {
           docs: [
             { $sort: sort },
-            { $skip: DEFAULT_PAGE_SIZE * (page - 1) },
+            { $skip: limit * (page - 1) },
             { $limit: limit },
             { $project: projection },
           ],
@@ -65,13 +65,13 @@ function getPeople(
 // Admin
 function getPeopleByName(
   query,
-  page,
-  limit,
+  page = 1,
+  limit = DEFAULT_PAGE_SIZE,
   projection = PROJECTION.ADMIN.DEFAULT.PERSON
 ) {
   const filter = { $text: { $search: query } };
-  const sort = { score: { $meta: "textScore" } };
-  return getPaginatedMovies(filter, sort, page, limit, projection);
+  const sort = { score: { $meta: "textScore" }, name: 1 };
+  return getPaginatedPeople(filter, sort, page, limit, projection);
 }
 
 // Both

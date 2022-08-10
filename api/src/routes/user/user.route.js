@@ -3,8 +3,9 @@ const userController = require("./user.controller");
 const authorizerService = require("../../services/authorizer.service");
 const routeValidator = require("../../validators/route.validator");
 const {
-  parsePaginationOptions,
   parseDefaultProjection,
+  parseGetItemsParams,
+  parseSearchItemsParams,
 } = require("../../middlewares/middleware");
 
 const router = express.Router();
@@ -17,8 +18,7 @@ router.use(authorizerService.verifyAccessToken, parseDefaultProjection);
 router.get(
   "/",
   authorizerService.authorizeAdmin,
-  routeValidator.validatePaginationInput,
-  parsePaginationOptions,
+  parseGetItemsParams,
   userController.getUsers
 );
 
