@@ -2,15 +2,13 @@ const express = require("express");
 const personController = require("./person.controller");
 const routeValidator = require("../../validators/route.validator");
 const authorizerService = require("../../services/authorizer.service");
-const {
-  parseDefaultProjection,
-  parseGetItemsParams,
-  parseSearchItemsParams,
-} = require("../../middlewares/middleware");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken, parseDefaultProjection);
+router.use(
+  authorizerService.verifyAccessToken,
+  routeValidator.parseDefaultProjection
+);
 
 // POST /person - post new person
 router.post(
@@ -23,7 +21,7 @@ router.post(
 router.get(
   "/",
   authorizerService.authorizeAdmin,
-  parseGetItemsParams,
+  routeValidator.parseGetItemsParams,
   personController.getPeople
 );
 
@@ -31,7 +29,7 @@ router.get(
 router.get(
   "/search",
   authorizerService.authorizeAdmin,
-  parseSearchItemsParams,
+  routeValidator.parseSearchItemsParams,
   personController.searchPeople
 );
 

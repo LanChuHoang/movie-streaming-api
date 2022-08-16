@@ -2,15 +2,13 @@ const express = require("express");
 const routeValidator = require("../../validators/route.validator");
 const showController = require("./show.controller");
 const authorizerService = require("../../services/authorizer.service");
-const {
-  parseDefaultProjection,
-  parseGetItemsParams,
-  parseSearchItemsParams,
-} = require("../../middlewares/middleware");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken, parseDefaultProjection);
+router.use(
+  authorizerService.verifyAccessToken,
+  routeValidator.parseDefaultProjection
+);
 
 // POST /show - post new show
 // input: {title: required, optionals}
@@ -23,13 +21,17 @@ router.post(
 // GET /show?genres & country & year  & sort & page
 router.get(
   "/",
-  parseGetItemsParams,
+  routeValidator.parseGetItemsParams,
   showController.validateGetShowParams,
   showController.getShows
 );
 
 // GET /show/search?query&page
-router.get("/search", parseSearchItemsParams, showController.searchShows);
+router.get(
+  "/search",
+  routeValidator.parseSearchItemsParams,
+  showController.searchShows
+);
 
 // GET /show/random - get random show
 router.get("/random", showController.getRandomShow);

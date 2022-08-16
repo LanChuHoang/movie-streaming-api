@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongoose").Types;
-const { errorResponse, SORT } = require("../configs/route.config");
+const { errorResponse, SORT, PROJECTION } = require("../configs/route.config");
 const { getItemTypeOfEndpoint } = require("../helpers/helper");
 
 function validateIDParam(req, res, next) {
@@ -9,7 +9,16 @@ function validateIDParam(req, res, next) {
   next();
 }
 
-function validatePageinationParams(req, res, next) {
+function parseDefaultProjection(req, res, next) {
+  const itemType = getItemTypeOfEndpoint(req.originalUrl);
+  const defaultProjection = req.user?.isAdmin
+    ? PROJECTION.ADMIN.DEFAULT[itemType]
+    : PROJECTION.USER.DEFAULT[itemType];
+  req.query.defaultProjection = defaultProjection;
+  next();
+}
+
+function validatePaginationParams(req, res, next) {
   const { page, limit, fields } = req.query;
   const isPositiveNumber = (n) => Number.isInteger(Number(n)) && Number(n) > 0;
   if (page && !isPositiveNumber(page))
@@ -25,6 +34,21 @@ function validatePageinationParams(req, res, next) {
       fields.includes(" ")
     )
       return res.status(400).send(errorResponse.INVALID_QUERY);
+  }
+  next();
+}
+
+function parsePaginationParams(req, res, next) {
+  const { page, limit, fields } = req.query;
+  req.query.page = page ? Number(page) : undefined;
+  req.query.limit = limit ? Number(limit) : undefined;
+  if (fields) {
+    req.query.projection = fields
+      .split(",")
+      .filter((f) => req.query.defaultProjection[f] !== 0)
+      .reduce((prevResult, f) => ({ ...prevResult, [f]: 1 }), {});
+  } else {
+    req.query.projection = req.query.defaultProjection;
   }
   next();
 }
@@ -49,6 +73,17 @@ function validateSortParam(req, res, next) {
   next();
 }
 
+function parseSortParam(req, res, next) {
+  const { sort } = req.query;
+  if (sort) {
+    const [field, order] = sort.split(":");
+    req.query.sort = { [field]: order === "asc" ? 1 : -1 };
+  } else {
+    req.query.sort = undefined;
+  }
+  next();
+}
+
 function validateQueryParam(req, res, next) {
   const { query } = req.query;
   if (!query || query.trim().length === 0) {
@@ -57,14 +92,29 @@ function validateQueryParam(req, res, next) {
   next();
 }
 
-const validateGetItemsParams = [validatePageinationParams, validateSortParam];
-const validateSearchItemsParams = [
-  validatePageinationParams,
+function parseQueryParam(req, res, next) {
+  const { query } = req.query;
+  req.query.query = query.trim();
+  next();
+}
+
+const parseGetItemsParams = [
+  validatePaginationParams,
+  parsePaginationParams,
+  validateSortParam,
+  parseSortParam,
+];
+
+const parseSearchItemsParams = [
+  validatePaginationParams,
+  parsePaginationParams,
   validateQueryParam,
+  parseQueryParam,
 ];
 
 module.exports = {
   validateIDParam,
-  validateGetItemsParams,
-  validateSearchItemsParams,
+  parseDefaultProjection,
+  parseGetItemsParams,
+  parseSearchItemsParams,
 };

@@ -3,142 +3,127 @@ const { errorResponse } = require("../../configs/route.config");
 const movieModel = require("../../models/movie/movie.model");
 const { MOVIE_GENRES, COUNTRIES } = require("../../models/enum");
 
-function validateGetMovieParams(req, res, next) {
-  if (req.query.genre && !MOVIE_GENRES.includes(req.query.genre)) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
+// TODO:
+function parseGetMoviesParams(req, res, next) {
+  const { genre, country, year } = req.query;
+  if (genre && !MOVIE_GENRES.includes(genre)) {
+    return res.status(400).send(errorResponse.INVALID_QUERY);
   }
-
-  if (req.query.country && !COUNTRIES.includes(req.query.country)) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
+  if (country && !COUNTRIES.includes(country)) {
+    return res.status(400).send(errorResponse.INVALID_QUERY);
   }
-
-  if (req.query.year) {
-    req.query.year = Number(req.query.year);
+  if (year) {
+    req.query.year = Number(year);
     if (isNaN(req.query.year))
-      return res.status(400).json(errorResponse.INVALID_QUERY);
+      return res.status(400).send(errorResponse.INVALID_QUERY);
   }
-
   next();
 }
 
-// ADMIN POST /movie - post new movie
-// input: {title: required, optionals}
+function parseUpcomingParam(req, res, next) {
+  const { upcoming } = req.query;
+  if (upcoming && upcoming !== "true" && upcoming !== "false")
+    return res.status(400).send(errorResponse.INVALID_QUERY);
+  req.query.upcoming = upcoming === "true" ? true : false;
+  next();
+}
+
 async function postNewMovie(req, res, next) {
   try {
     const createdMovie = await movieModel.addMovie(req.body);
-    return res.status(201).json(createdMovie);
+    return res.status(201).send(createdMovie);
   } catch (error) {
     next(error);
   }
 }
 
-// BOTH GET /movie?genre & country & year & sort & page
 async function getMovies(req, res, next) {
   try {
     const options = {
       genre: req.query.genre,
       country: req.query.country,
       year: req.query.year,
+      isUpcoming: req.query.upcoming,
       sort: req.query.sort,
       page: req.query.page,
       limit: req.query.limit,
       projection: req.query.projection,
     };
-    console.log(options);
     const response = await movieModel.getMovies(options);
-    return res.status(200).json(response);
+    return res.status(200).send(response);
   } catch (error) {
     next(error);
   }
 }
 
-// TODO:
-// BOTH GET /movie/upcoming?page - get upcoming movies
-async function getUpcomingMovies(req, res, next) {
-  try {
-    const response = await movieModel.getUpcomingMovies(
-      req.query.page,
-      req.query.limit,
-      req.query.defaultProjection
-    );
-    return res.status(200).json(response);
-  } catch (error) {
-    next(error);
-  }
-}
-
-// BOTH GET /movie/search?query&page
 async function searchMovies(req, res, next) {
   try {
-    const response = await movieModel.getMoviesByTitle(
-      req.query.query,
-      req.query.page,
-      req.query.limit,
-      req.query.defaultProjection
-    );
-    return res.status(200).json(response);
+    const options = {
+      query: req.query.query,
+      isUpcoming: req.query.upcoming,
+      page: req.query.page,
+      limit: req.query.limit,
+      projection: req.query.projection,
+    };
+    const response = await movieModel.getMoviesByTitle(options);
+    return res.status(200).send(response);
   } catch (error) {
     next(error);
   }
 }
 
-// USER GET /movie/similar - get similar movies
 async function getSimilarMovies(req, res, next) {
   if (!(await movieModel.getMovieByID(req.params.id)))
-    return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
+    return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
   try {
     const response = await movieModel.getSimilarMovies(req.params.id);
-    return res.status(200).json(response);
+    return res.status(200).send(response);
   } catch (error) {
     next(error);
   }
 }
 
-// BOTH GET /movie/:id/ - get movie detail
 async function getMovie(req, res, next) {
   try {
     const movie = await movieModel.getMovieByID(
       req.params.id,
       req.query.defaultProjection
     );
-    if (!movie) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(movie);
+    if (!movie) return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).send(movie);
   } catch (error) {
     next(error);
   }
 }
 
-// USER GET /movie/random - get random movie
 async function getRandomMovie(req, res, next) {
   try {
     const randomMovie = await movieModel.getRandomMovie();
     if (!randomMovie)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(randomMovie);
+      return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).send(randomMovie);
   } catch (error) {
     next(error);
   }
 }
 
-// PATCH /movie/:id - update movie
 async function updateMovie(req, res, next) {
   try {
     const updatedMovie = await movieModel.updateMovie(req.params.id, req.body);
     if (!updatedMovie)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(updatedMovie);
+      return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).send(updatedMovie);
   } catch (error) {
     next(error);
   }
 }
 
-// DELETE /movie/:id - delete movie
 async function deleteMovie(req, res, next) {
   try {
     const deletedMovie = await movieModel.deleteMovieByID(req.params.id);
     if (!deletedMovie)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(deletedMovie);
+      return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).send(deletedMovie);
   } catch (error) {
     next(error);
   }
@@ -147,35 +132,35 @@ async function deleteMovie(req, res, next) {
 function updateMovieErrorHandler(error, req, res, next) {
   console.log(error);
   if (error.code === 11000) {
-    return res.status(400).json(errorResponse.MOVIE_EXISTED);
+    return res.status(400).send(errorResponse.MOVIE_EXISTED);
   }
   if (error.errors?.title?.kind === "required") {
-    return res.status(400).json(errorResponse.MISSING_TITLE);
+    return res.status(400).send(errorResponse.MISSING_TITLE);
   }
   if (error.errors?.["genres.0"]?.kind === "enum") {
-    return res.status(400).json(errorResponse.INVALID_GENRES);
+    return res.status(400).send(errorResponse.INVALID_GENRES);
   }
   if (error.errors?.["countries.0"]?.kind === "enum") {
-    return res.status(400).json(errorResponse.INVALID_COUNTRIES);
+    return res.status(400).send(errorResponse.INVALID_COUNTRIES);
   }
   if (error.errors?.people) {
-    return res.status(400).json(errorResponse.INVALID_PEOPLE);
+    return res.status(400).send(errorResponse.INVALID_PEOPLE);
   }
   if (
     error instanceof mongoose.Error.CastError ||
     (error.errors &&
       Object.values(error.errors)[0] instanceof mongoose.Error.CastError)
   ) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
+    return res.status(400).send(errorResponse.INVALID_QUERY);
   }
-  return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
+  return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
 }
 
 module.exports = {
-  validateGetMovieParams,
+  parseGetMoviesParams,
+  parseUpcomingParam,
   postNewMovie,
   getMovies,
-  getUpcomingMovies,
   searchMovies,
   getSimilarMovies,
   getMovie,

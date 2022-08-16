@@ -2,15 +2,13 @@ const express = require("express");
 const userController = require("./user.controller");
 const authorizerService = require("../../services/authorizer.service");
 const routeValidator = require("../../validators/route.validator");
-const {
-  parseDefaultProjection,
-  parseGetItemsParams,
-  parseSearchItemsParams,
-} = require("../../middlewares/middleware");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken, parseDefaultProjection);
+router.use(
+  authorizerService.verifyAccessToken,
+  routeValidator.parseDefaultProjection
+);
 
 // GET All Users: GET /user
 // by Admin
@@ -18,7 +16,7 @@ router.use(authorizerService.verifyAccessToken, parseDefaultProjection);
 router.get(
   "/",
   authorizerService.authorizeAdmin,
-  parseGetItemsParams,
+  routeValidator.parseGetItemsParams,
   userController.getUsers
 );
 

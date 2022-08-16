@@ -48,7 +48,6 @@ async function exists(title) {
 }
 
 // Add
-// ADMIN
 function addMovie(movie) {
   return Movie.create(movie);
 }
@@ -58,17 +57,17 @@ function getAllMovies() {
   return Movie.find();
 }
 
-// BOTH
-async function getMovies({
+function getMovies({
   genre = null,
   country = null,
   year = null,
+  isUpcoming = false,
   sort = DEFAULT_SORT_OPTION,
   page = 1,
   limit = DEFAULT_PAGE_SIZE,
   projection = PROJECTION.USER.DEFAULT.MOVIE,
 }) {
-  const filter = { isUpcoming: false };
+  const filter = { isUpcoming };
   if (genre) filter.genres = { $all: [genre] };
   if (country) filter.countries = { $all: [country] };
   if (year)
@@ -76,46 +75,21 @@ async function getMovies({
       $gte: new Date(`${year}-01-01`),
       $lte: new Date(`${year}-12-31`),
     };
-
-  try {
-    return await getPaginatedMovies(filter, sort, page, limit, projection);
-  } catch (error) {
-    throw error;
-  }
+  return getPaginatedMovies(filter, sort, page, limit, projection);
 }
 
-// TODO:
-async function getUpcomingMovies(
-  page = 1,
-  limit = DEFAULT_PAGE_SIZE,
-  projection
-) {
-  try {
-    const filter = { isUpcoming: true };
-    const sort = { releaseDate: 1 };
-    return await getPaginatedMovies(filter, sort, page, limit, projection);
-  } catch (error) {
-    throw error;
-  }
-}
-
-// BOTH
-async function getMoviesByTitle(
+function getMoviesByTitle({
   query,
+  isUpcoming = false,
   page = 1,
   limit = DEFAULT_PAGE_SIZE,
-  projection
-) {
-  try {
-    const filter = { $text: { $search: query } };
-    const sort = { score: { $meta: "textScore" } };
-    return await getPaginatedMovies(filter, sort, page, limit, projection);
-  } catch (error) {
-    throw error;
-  }
+  projection,
+}) {
+  const filter = { $text: { $search: query }, isUpcoming };
+  const sort = { score: { $meta: "textScore" } };
+  return getPaginatedMovies(filter, sort, page, limit, projection);
 }
 
-// USER
 async function getSimilarMovies(id) {
   try {
     const { genres } = await Movie.findById(id, { genres: 1 });
@@ -145,14 +119,12 @@ async function getSimilarMovies(id) {
 }
 
 // Get Single Movie
-// BOTH
 function getMovieByID(id, projection) {
   return Movie.findById(id, projection)
     .populate("cast", PROJECTION.CUSTOM.PERSON_BRIEF_INFO)
     .populate("directors", PROJECTION.CUSTOM.PERSON_BRIEF_INFO);
 }
 
-// USER
 function getRandomMovie() {
   return Movie.aggregate([
     { $match: { isUpcoming: false } },
@@ -166,7 +138,6 @@ function getMovieByTitle(title) {
 }
 
 // Update
-// ADMIN
 function updateMovie(id, updateData) {
   return Movie.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
@@ -176,7 +147,6 @@ function updateMovie(id, updateData) {
 }
 
 // Delete
-// ADMIN
 function deleteMovieByID(id) {
   return Movie.findByIdAndDelete(id, {
     projection: PROJECTION.ADMIN.DEFAULT.MOVIE,
@@ -188,7 +158,6 @@ module.exports = {
   addMovie,
   getAllMovies,
   getMovies,
-  getUpcomingMovies,
   getMoviesByTitle,
   getSimilarMovies,
   getMovieByID,

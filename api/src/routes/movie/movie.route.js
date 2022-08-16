@@ -2,15 +2,13 @@ const express = require("express");
 const routeValidator = require("../../validators/route.validator");
 const movieController = require("./movie.controller");
 const authorizerService = require("../../services/authorizer.service");
-const {
-  parseDefaultProjection,
-  parseGetItemsParams,
-  parseSearchItemsParams,
-} = require("../../middlewares/middleware");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken, parseDefaultProjection);
+router.use(
+  authorizerService.verifyAccessToken,
+  routeValidator.parseDefaultProjection
+);
 
 // POST /movie - post new movie
 // input: {title: required, optionals}
@@ -20,19 +18,22 @@ router.post(
   movieController.updateMovieErrorHandler
 );
 
-// GET /movie?genres & country & year  & sort & page
+// GET /movie?genres & country & year & upcoming & sort & page & limit & fields
 router.get(
   "/",
-  parseGetItemsParams,
-  movieController.validateGetMovieParams,
+  routeValidator.parseGetItemsParams,
+  movieController.parseGetMoviesParams,
+  movieController.parseUpcomingParam,
   movieController.getMovies
 );
 
-// GET /movie/search?query&page
-router.get("/search", parseSearchItemsParams, movieController.searchMovies);
-
-// GET /movie/upcoming?page - get upcoming movies
-router.get("/upcoming", parseGetItemsParams, movieController.getUpcomingMovies);
+// GET /movie/search?query & upcoming & page & limit & fields
+router.get(
+  "/search",
+  routeValidator.parseSearchItemsParams,
+  movieController.parseUpcomingParam,
+  movieController.searchMovies
+);
 
 // GET /movie/similar
 router.get(
