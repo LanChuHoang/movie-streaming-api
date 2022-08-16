@@ -7,6 +7,7 @@ const endpoint = {
   refreshToken: "/auth/refresh_token",
   logout: "/auth/logout",
   getUsers: "/user",
+  searchUsers: "/user/search",
   randomMovie: "/movie/random",
   userOverallStats: "/statistic/user/overall",
   userDetailStats: "/statistic/user/detail",
@@ -53,6 +54,10 @@ const backendApi = {
 
   getUsers: (params = {}) => {
     return axiosClient.get(endpoint.getUsers, { params });
+  },
+
+  searchUsers: (params = {}) => {
+    return axiosClient.get(endpoint.searchUsers, { params });
   },
 
   getUserDetail: (id) => {

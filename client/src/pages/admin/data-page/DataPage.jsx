@@ -6,9 +6,12 @@ import ActionCell from "../../../components/table-cells/action-cell/ActionCell";
 import { ConfirmModal, MessageModal } from "../../../components/modals/Modals";
 import "./dataPage.scss";
 import AddButton from "../../../components/buttons/add-button/AddButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const DataPage = (props) => {
   const [items, setItems] = useState([]);
+  const [query, setQuery] = useState();
   const [totalItems, setTotalItems] = useState();
   const [pageSize, setPageSize] = useState();
   const [selectedPage, setSelectedPage] = useState(1);
@@ -23,12 +26,19 @@ const DataPage = (props) => {
 
   const loadItems = async () => {
     try {
-      const params = { page: selectedPage };
-      sortModel.forEach((o) => (params.sort_by = o.field + ":" + o.sort));
-      const response = await model.getItems(params);
+      let response;
+      if (query) {
+        const params = { query, page: selectedPage };
+        response = (await model.searchItems(params)).data;
+      } else {
+        const params = { page: selectedPage };
+        sortModel.forEach((o) => (params.sort = o.field + ":" + o.sort));
+        console.log(params);
+        response = (await model.getItems(params)).data;
+      }
       setItems(response.docs);
-      setPageSize(response.page_size);
-      setTotalItems(response.total_documents);
+      setPageSize(response.pageSize);
+      setTotalItems(response.totalDocuments);
     } catch (error) {
       console.log(error);
       setErrorMessage(`Something went wrong. Load ${itemType} failed`);
@@ -39,14 +49,23 @@ const DataPage = (props) => {
     loadItems();
   }, [selectedPage, sortModel]);
 
-  const handleViewItem = (id) => {
+  const handleSearchItems = async (e) => {
+    e.preventDefault();
+    const query = e.target.searchInput.value;
+    if (!query) return;
+    setQuery(query);
+    setSelectedPage(1);
+    setSortModel([]);
+  };
+
+  const handleEditItem = (id) => {
     console.log("view", id);
   };
 
   const handleDeleteItem = async (id) => {
     try {
       console.log("delete", id);
-      const deletedItem = await model.deleteItem(id);
+      const deletedItem = (await model.deleteItem(id)).data;
       loadItems();
     } catch (error) {
       console.log(error);
@@ -60,19 +79,18 @@ const DataPage = (props) => {
   const actionColumn = [
     {
       field: "action",
-      headerName: "Action",
-      flex: 2,
+      headerName: "",
+      flex: 1.2,
       align: "right",
-      headerAlign: "right",
       disableColumnMenu: true,
       sortable: false,
       renderCell: (params) => (
         <ActionCell
-          onView={() => handleViewItem(params.row._id)}
           onDelete={() => {
             setConfirmModalActive(true);
             setToDeleteId(params.row._id);
           }}
+          onEdit={() => handleEditItem(params.row._id)}
         />
       ),
     },
@@ -82,7 +100,25 @@ const DataPage = (props) => {
     <div className="data-page-container">
       <div className="data-page-top-container">
         <h1>{props.title}</h1>
-        {model.addItem && <AddButton>Add {itemType}</AddButton>}
+        <div className="data-page-tool-bar">
+          <form onSubmit={handleSearchItems}>
+            <div className="search-icon-wrapper">
+              <FontAwesomeIcon icon={faSearch} />
+            </div>
+            <input
+              onInput={(e) => {
+                if (!e.target.value && query) {
+                  setQuery("");
+                  setSelectedPage(1);
+                  setSortModel([{ field: "createdAt", sort: "desc" }]);
+                }
+              }}
+              name="searchInput"
+              placeholder="Search"
+            />
+          </form>
+          {model.addItem && <AddButton>Add {itemType}</AddButton>}
+        </div>
       </div>
 
       <div className="data-page-table-container">
@@ -92,6 +128,7 @@ const DataPage = (props) => {
           getRowId={(r) => r._id}
           totalRows={totalItems || 0}
           sortModel={sortModel}
+          page={selectedPage - 1}
           pageSize={pageSize}
           onPageChange={(page) => setSelectedPage(page + 1)}
           onSortModelChange={(model) => setSortModel(model)}

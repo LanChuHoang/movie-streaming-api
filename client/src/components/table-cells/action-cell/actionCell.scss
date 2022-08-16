@@ -1,5 +1,32 @@
+@use "../../../scss/" as *;
+
 .action-cell-container {
-  button {
-    margin-right: 0.5rem;
+  width: 100%;
+  padding-right: 0.5rem;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  transition: all 0.2s;
+
+  i {
+    padding: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    color: #90949e;
+
+    &.delete-icon:hover {
+      background-color: rgba(255, 0, 0, 0.05);
+      color: crimson;
+    }
+
+    &.edit-icon:hover {
+      background-color: $admin-hover-color;
+      color: $admin-main-color;
+    }
+
+    &:active {
+      opacity: 0.8;
+    }
   }
 }

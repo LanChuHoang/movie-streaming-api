@@ -1,14 +1,10 @@
-import {
-  ViewButton,
-  DeleteButton,
-} from "../../buttons/action-button/ActionButton";
 import "./actionCell.scss";
 
 const ActionCell = (props) => {
   return (
     <div className="action-cell-container">
-      <ViewButton onClick={props.onView} />
-      <DeleteButton onClick={props.onDelete} />
+      <i onClick={props.onDelete} className="bx bx-trash delete-icon"></i>
+      <i onClick={props.onEdit} className="bx bx-pencil edit-icon"></i>
     </div>
   );
 };

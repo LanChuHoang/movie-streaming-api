@@ -27,15 +27,13 @@ const columns = [
 const Users = () => {
   const backendApi = useBackendApi();
   const model = {
-    getItems: async (params) => {
-      return (await backendApi.getUsers(params)).data;
-    },
+    addItem: () => {},
+    getItems: backendApi.getUsers,
+    searchItems: backendApi.searchUsers,
     updateItem: (id) => {
       console.log(id);
     },
-    deleteItem: async (id) => {
-      return (await backendApi.deleteUser(id)).data;
-    },
+    deleteItem: backendApi.deleteUser,
   };
   return (
     <DataPage title="Users" itemType="user" columns={columns} model={model} />

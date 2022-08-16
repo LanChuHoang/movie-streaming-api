@@ -14,6 +14,7 @@ const DataTable = (props) => {
         rowsPerPageOptions={props.rowsPerPageOptions || [10]}
         pagination
         paginationMode="server"
+        page={props.page || 0}
         pageSize={props.pageSize || 5}
         rowCount={props.totalRows || props.rows?.length || 0}
         onPageChange={props.onPageChange}
