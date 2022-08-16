@@ -44,12 +44,10 @@ async function exists(name) {
   return (await Person.exists({ name: name })) != null;
 }
 
-// Admin
 function addPerson(person) {
   return Person.create(person);
 }
 
-// Admin
 function getPeople(
   page = 1,
   limit = DEFAULT_PAGE_SIZE,
@@ -62,7 +60,6 @@ function getPeople(
     .limit(limit);
 }
 
-// Admin
 function getPeopleByName(
   query,
   page = 1,
@@ -74,7 +71,6 @@ function getPeopleByName(
   return getPaginatedPeople(filter, sort, page, limit, projection);
 }
 
-// Both
 function getPersonByID(id, projection) {
   return Person.findById(id, projection);
 }
@@ -83,7 +79,6 @@ function getPersonByName(name) {
   return Person.findOne({ name: name });
 }
 
-// Admin
 function updatePerson(id, updateData) {
   return Person.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
@@ -92,7 +87,6 @@ function updatePerson(id, updateData) {
   });
 }
 
-// Admin
 function deletePersonByID(id) {
   return Person.findByIdAndDelete(id, {
     projection: PROJECTION.ADMIN.DEFAULT.PERSON,

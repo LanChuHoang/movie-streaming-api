@@ -5,17 +5,15 @@ const {
 } = require("../../configs/route.config");
 const personModel = require("../../models/person/person.model");
 
-// ADMIN POST /person - post new person
 async function postNewPerson(req, res, next) {
   try {
     const createdPerson = await personModel.addPerson(req.body);
-    return res.status(201).json(createdPerson);
+    return res.status(201).send(createdPerson);
   } catch (error) {
     next(error);
   }
 }
 
-// ADMIN GET /person?page&limit&sort&fields
 async function getPeople(req, res, next) {
   try {
     const { page, limit, sort, projection } = req.query;
@@ -38,7 +36,6 @@ async function getPeople(req, res, next) {
   }
 }
 
-// ADMIN GET/person/search?query&page&limit&fields
 async function searchPeople(req, res, next) {
   try {
     const { query, page, limit, projection } = req.query;
@@ -54,37 +51,34 @@ async function searchPeople(req, res, next) {
   }
 }
 
-// BOTH GET /person/:id/ - get person detail
 async function getPerson(req, res, next) {
   try {
     const person = await personModel.getPersonByID(
       req.params.id,
       req.query.defaultProjection
     );
-    if (!person) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(person);
+    if (!person) return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.send(person);
   } catch (error) {
     next(error);
   }
 }
 
-// ADMIN PATCH /person/:id - update person
 async function updatePerson(req, res, next) {
   try {
     const person = await personModel.updatePerson(req.params.id, req.body);
-    if (!person) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(person);
+    if (!person) return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.send(person);
   } catch (error) {
     next(error);
   }
 }
 
-// ADMIN DELETE /person/:id - delete person
 async function deletePerson(req, res, next) {
   try {
     const person = await personModel.deletePersonByID(req.params.id);
-    if (!person) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(person);
+    if (!person) return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.send(person);
   } catch (error) {
     next(error);
   }
@@ -93,17 +87,17 @@ async function deletePerson(req, res, next) {
 function updatePersonErrorHandler(error, req, res, next) {
   console.log(error);
   if (error.errors?.gender?.kind === "enum") {
-    return res.status(400).json(errorResponse.INVALID_GENDER);
+    return res.status(400).send(errorResponse.INVALID_GENDER);
   }
   if (error.errors?.job?.kind === "enum") {
-    return res.status(400).json(errorResponse.INVALID_JOB);
+    return res.status(400).send(errorResponse.INVALID_JOB);
   }
   if (
     error instanceof mongoose.Error.CastError ||
     (error.errors &&
       Object.values(error.errors)[0] instanceof mongoose.Error.CastError)
   ) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
+    return res.status(400).send(errorResponse.INVALID_QUERY);
   }
   next(error);
 }
