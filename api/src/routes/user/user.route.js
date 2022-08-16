@@ -20,6 +20,13 @@ router.get(
   userController.getUsers
 );
 
+router.get(
+  "/search",
+  authorizerService.authorizeAdmin,
+  routeValidator.parseSearchItemsParams,
+  userController.searchUsers
+);
+
 // GET Single User: GET /user/:id
 // by Admin or Owner User
 // Output user infor except password, __v, createdAt, updateAt

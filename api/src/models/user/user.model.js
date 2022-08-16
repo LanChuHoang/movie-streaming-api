@@ -10,7 +10,6 @@ async function exists(username, email) {
   );
 }
 
-// USER
 async function addUser(user) {
   try {
     const createdUser = await User.create(user);
@@ -21,7 +20,6 @@ async function addUser(user) {
   }
 }
 
-// BOTH
 function getUsers(
   page = 1,
   limit = USERS_DEFAULT_PAGE_SIZE,
@@ -34,17 +32,27 @@ function getUsers(
     .limit(limit);
 }
 
-// BOTH
+function searchUsers({
+  query,
+  page = 1,
+  limit = USERS_DEFAULT_PAGE_SIZE,
+  projection = PROJECTION.ADMIN.DEFAULT.USER,
+}) {
+  const regExp = new RegExp(query, "gi");
+  const filter = { $or: [{ username: regExp }, { email: regExp }] };
+  return User.find(filter, projection)
+    .skip((page - 1) * limit)
+    .limit(limit);
+}
+
 function getUserById(id, projection) {
   return User.findById(id, projection);
 }
 
-// USER
 function getUserByEmail(email, projection = PROJECTION.USER.DEFAULT.USER) {
   return User.findOne({ email: email }, projection);
 }
 
-// BOTH
 function updateUser(id, updateData, projection = PROJECTION.USER.DEFAULT.USER) {
   return User.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
@@ -52,7 +60,6 @@ function updateUser(id, updateData, projection = PROJECTION.USER.DEFAULT.USER) {
   });
 }
 
-// ADMIN
 function deleteUserByID(id) {
   return User.findByIdAndDelete(id, {
     projection: PROJECTION.ADMIN.DEFAULT.USER,
@@ -118,6 +125,7 @@ module.exports = {
   exists,
   addUser,
   getUsers,
+  searchUsers,
   getUserById,
   getUserByEmail,
   updateUser,

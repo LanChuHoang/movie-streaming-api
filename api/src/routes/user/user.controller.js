@@ -1,9 +1,8 @@
 const { default: mongoose } = require("mongoose");
-const { errorResponse, projection } = require("../../configs/route.config");
+const { errorResponse } = require("../../configs/route.config");
 const userModel = require("../../models/user/user.model");
 const aesService = require("../../services/aes.service");
 
-// ADMIN GET /user?page=1 & limit=1 & sort=_id:desc
 async function getUsers(req, res, next) {
   try {
     const { page, limit, sort, projection } = req.query;
@@ -20,7 +19,7 @@ async function getUsers(req, res, next) {
       totalDocuments: totalUsers,
       sort,
     };
-    return res.status(200).json(responseData);
+    return res.send(responseData);
   } catch (error) {
     console.log(error);
     if (
@@ -33,7 +32,28 @@ async function getUsers(req, res, next) {
   }
 }
 
-// BOTH
+async function searchUsers(req, res, next) {
+  try {
+    const { query, page, limit, projection } = req.query;
+    const options = { query, page, limit, projection };
+    const [users, totalUsers] = await Promise.all([
+      userModel.searchUsers(options),
+      userModel.getTotalUsers(),
+    ]);
+    const pageSize = limit || userModel.USERS_DEFAULT_PAGE_SIZE;
+    const responseData = {
+      docs: users,
+      page: page || 1,
+      pageSize,
+      totalPages: Math.ceil(totalUsers / pageSize),
+      totalDocuments: totalUsers,
+    };
+    return res.send(responseData);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getUser(req, res, next) {
   try {
     const user = await userModel.getUserById(
@@ -43,13 +63,12 @@ async function getUser(req, res, next) {
     if (!user) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
-    return res.status(200).json(user);
+    return res.send(user);
   } catch (error) {
     next(error);
   }
 }
 
-// BOTH
 async function updateUser(req, res, next) {
   try {
     if (req.body.password) {
@@ -63,20 +82,19 @@ async function updateUser(req, res, next) {
     if (!updatedUser) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
-    return res.status(200).json(updatedUser);
+    return res.send(updatedUser);
   } catch (error) {
     next(error);
   }
 }
 
-// ADMIN
 async function deleteUser(req, res, next) {
   try {
     const deletedUser = await userModel.deleteUserByID(req.params.id);
     if (!deletedUser) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
-    return res.status(200).json(deletedUser);
+    return res.send(deletedUser);
   } catch (error) {
     next(error);
   }
@@ -85,6 +103,7 @@ async function deleteUser(req, res, next) {
 module.exports = {
   getUsers,
   getUser,
+  searchUsers,
   updateUser,
   deleteUser,
 };
