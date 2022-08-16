@@ -34,6 +34,11 @@ function getItemTypeOfEndpoint(url) {
   return url?.split("?")[0]?.split("/")[2].toUpperCase();
 }
 
+function isPositiveInteger(str) {
+  const n = Number(str);
+  return Number.isInteger(n) && n > 0;
+}
+
 module.exports = {
   TIMES_IN_DAY,
   getStartOfDay,
@@ -41,4 +46,5 @@ module.exports = {
   getSunday,
   isShortISOFormat,
   getItemTypeOfEndpoint,
+  isPositiveInteger,
 };

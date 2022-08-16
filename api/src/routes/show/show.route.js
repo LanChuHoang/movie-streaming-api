@@ -22,7 +22,7 @@ router.post(
 router.get(
   "/",
   routeValidator.parseGetItemsParams,
-  showController.validateGetShowParams,
+  showController.parseGetShowsParams,
   showController.getShows
 );
 

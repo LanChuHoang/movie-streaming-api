@@ -1,41 +1,31 @@
 const mongoose = require("mongoose");
-const {
-  errorResponse,
-  showSortOptions,
-} = require("../../configs/route.config");
+const { errorResponse } = require("../../configs/route.config");
 const showModel = require("../../models/show/show.model");
-const { SHOW_GENRES, COUNTRIES } = require("../../models/enum");
+const { SHOW_GENRES } = require("../../models/enum");
+const routeValidator = require("../../validators/route.validator");
 
-function validateGetShowParams(req, res, next) {
-  if (req.query.genre && !SHOW_GENRES.includes(req.query.genre)) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.country && !COUNTRIES.includes(req.query.country)) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
-  if (req.query.year) {
-    req.query.year = Number(req.query.year);
-    if (isNaN(req.query.year))
-      return res.status(400).json(errorResponse.INVALID_QUERY);
-  }
-
+function validateGenre(req, res, next) {
+  const { genre } = req.query;
+  if (genre && !SHOW_GENRES.includes(genre))
+    return res.status(400).send(errorResponse.INVALID_QUERY);
   next();
 }
 
-// ADMIN POST /Show - post new Show
-// input: {title: required, optionals}
+const parseGetShowsParams = [
+  validateGenre,
+  routeValidator.validateCountryParam,
+  routeValidator.parseYearParam,
+];
+
 async function postNewShow(req, res, next) {
   try {
     const createdShow = await showModel.addShow(req.body);
-    return res.status(201).json(createdShow);
+    return res.status(201).send(createdShow);
   } catch (error) {
     next(error);
   }
 }
 
-// BOTH GET /Show?genre & country & year & sort & page
 async function getShows(req, res, next) {
   try {
     const options = {
@@ -48,82 +38,77 @@ async function getShows(req, res, next) {
       projection: req.query.projection,
     };
     const response = await showModel.getShows(options);
-    return res.status(200).json(response);
+    return res.status(200).send(response);
   } catch (error) {
     next(error);
   }
 }
 
-// BOTH GET /show/search?query&page
 async function searchShows(req, res, next) {
   try {
-    const response = await showModel.getShowsByTitle(
-      req.query.query,
-      req.query.page,
-      rq.query.limit,
-      req.query.defaultProjection
-    );
-    return res.status(200).json(response);
+    const options = {
+      query: req.query.query,
+      page: req.query.page,
+      limit: req.query.limit,
+      projection: req.query.projection,
+    };
+    const response = await showModel.getShowsByTitle(options);
+    return res.status(200).send(response);
   } catch (error) {
     next(error);
   }
 }
 
-// USER GET /show/similar - get similar shows
 async function getSimilarShows(req, res, next) {
   try {
     const response = await showModel.getSimilarShows(req.params.id);
-    return res.status(200).json(response);
+    return res.status(200).send(response);
   } catch (error) {
     next(error);
   }
 }
 
-// BOTH GET /Show/:id/ - get Show detail
 async function getShow(req, res, next) {
   try {
     const show = await showModel.getShowByID(
       req.params.id,
       req.query.defaultProjection
     );
-    if (!show) return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(show);
+    if (!show) return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).send(show);
   } catch (error) {
     next(error);
   }
 }
 
-// USER GET /Show/random - get random Show
 async function getRandomShow(req, res, next) {
   try {
     const randomShow = await showModel.getRandomShow();
     if (!randomShow)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(randomShow);
+      return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).send(randomShow);
   } catch (error) {
     next(error);
   }
 }
 
-// PATCH /Show/:id - update Show
 async function updateShow(req, res, next) {
   try {
     const updatedShow = await showModel.updateShow(req.params.id, req.body);
     if (!updatedShow)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(updatedShow);
+      return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).send(updatedShow);
   } catch (error) {
     next(error);
   }
 }
 
-// DELETE /Show/:id - delete Show
 async function deleteShow(req, res, next) {
   try {
     const deletedShow = await showModel.deleteShowByID(req.params.id);
     if (!deletedShow)
-      return res.status(404).json(errorResponse.DEFAULT_404_ERROR);
-    return res.status(200).json(deletedShow);
+      return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.status(200).send(deletedShow);
   } catch (error) {
     next(error);
   }
@@ -132,32 +117,32 @@ async function deleteShow(req, res, next) {
 function updateShowErrorHandler(error, req, res, next) {
   console.log(error);
   if (error.code === 11000) {
-    return res.status(400).json({ error: "Show is already exist" });
+    return res.status(400).send({ error: "Show is already exist" });
   }
   if (error.errors?.title?.kind === "required") {
-    return res.status(400).json({ error: "Missing title field" });
+    return res.status(400).send({ error: "Missing title field" });
   }
   if (error.errors?.["genres.0"]?.kind === "enum") {
-    return res.status(400).json({ error: "Invalid genres" });
+    return res.status(400).send({ error: "Invalid genres" });
   }
   if (error.errors?.["countries.0"]?.kind === "enum") {
-    return res.status(400).json({ error: "Invalid countries" });
+    return res.status(400).send({ error: "Invalid countries" });
   }
   if (error.errors?.people) {
-    return res.status(400).json({ error: "Invalid people" });
+    return res.status(400).send({ error: "Invalid people" });
   }
   if (
     error instanceof mongoose.Error.CastError ||
     (error.errors &&
       Object.values(error.errors)[0] instanceof mongoose.Error.CastError)
   ) {
-    return res.status(400).json(errorResponse.INVALID_QUERY);
+    return res.status(400).send(errorResponse.INVALID_QUERY);
   }
-  return res.status(500).json(errorResponse.DEFAULT_500_ERROR);
+  return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
 }
 
 module.exports = {
-  validateGetShowParams,
+  parseGetShowsParams,
   postNewShow,
   getShows,
   searchShows,

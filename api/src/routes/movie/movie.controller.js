@@ -1,24 +1,21 @@
 const mongoose = require("mongoose");
 const { errorResponse } = require("../../configs/route.config");
 const movieModel = require("../../models/movie/movie.model");
-const { MOVIE_GENRES, COUNTRIES } = require("../../models/enum");
+const { MOVIE_GENRES } = require("../../models/enum");
+const routeValidator = require("../../validators/route.validator");
 
-// TODO:
-function parseGetMoviesParams(req, res, next) {
-  const { genre, country, year } = req.query;
-  if (genre && !MOVIE_GENRES.includes(genre)) {
+function validateGenreParam(req, res, next) {
+  const { genre } = req.query;
+  if (genre && !MOVIE_GENRES.includes(genre))
     return res.status(400).send(errorResponse.INVALID_QUERY);
-  }
-  if (country && !COUNTRIES.includes(country)) {
-    return res.status(400).send(errorResponse.INVALID_QUERY);
-  }
-  if (year) {
-    req.query.year = Number(year);
-    if (isNaN(req.query.year))
-      return res.status(400).send(errorResponse.INVALID_QUERY);
-  }
   next();
 }
+
+const parseGetMoviesParams = [
+  validateGenreParam,
+  routeValidator.validateCountryParam,
+  routeValidator.parseYearParam,
+];
 
 function parseUpcomingParam(req, res, next) {
   const { upcoming } = req.query;

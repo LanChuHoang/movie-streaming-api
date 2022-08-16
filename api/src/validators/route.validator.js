@@ -1,6 +1,10 @@
 const { ObjectId } = require("mongoose").Types;
 const { errorResponse, SORT, PROJECTION } = require("../configs/route.config");
-const { getItemTypeOfEndpoint } = require("../helpers/helper");
+const {
+  getItemTypeOfEndpoint,
+  isPositiveInteger,
+} = require("../helpers/helper");
+const { COUNTRIES } = require("../models/enum");
 
 function validateIDParam(req, res, next) {
   if (!ObjectId.isValid(req.params.id)) {
@@ -20,10 +24,9 @@ function parseDefaultProjection(req, res, next) {
 
 function validatePaginationParams(req, res, next) {
   const { page, limit, fields } = req.query;
-  const isPositiveNumber = (n) => Number.isInteger(Number(n)) && Number(n) > 0;
-  if (page && !isPositiveNumber(page))
+  if (page && !isPositiveInteger(page))
     return res.status(400).send(errorResponse.INVALID_QUERY);
-  if (limit && !isPositiveNumber(limit))
+  if (limit && !isPositiveInteger(limit))
     return res.status(400).send(errorResponse.INVALID_QUERY);
 
   if (fields) {
@@ -84,17 +87,27 @@ function parseSortParam(req, res, next) {
   next();
 }
 
-function validateQueryParam(req, res, next) {
+function parseQueryParam(req, res, next) {
   const { query } = req.query;
   if (!query || query.trim().length === 0) {
     return res.status(400).json(errorResponse.INVALID_QUERY);
   }
+  req.query.query = query.trim();
   next();
 }
 
-function parseQueryParam(req, res, next) {
-  const { query } = req.query;
-  req.query.query = query.trim();
+function validateCountryParam(req, res, next) {
+  const { country } = req.query;
+  if (country && !COUNTRIES.includes(country))
+    return res.status(400).send(errorResponse.INVALID_QUERY);
+  next();
+}
+
+function parseYearParam(req, res, next) {
+  const { year } = req.query;
+  if (year && !isPositiveInteger(year))
+    return res.status(400).json(errorResponse.INVALID_QUERY);
+  req.query.year = year ? Number(year) : undefined;
   next();
 }
 
@@ -108,7 +121,6 @@ const parseGetItemsParams = [
 const parseSearchItemsParams = [
   validatePaginationParams,
   parsePaginationParams,
-  validateQueryParam,
   parseQueryParam,
 ];
 
@@ -117,4 +129,6 @@ module.exports = {
   parseDefaultProjection,
   parseGetItemsParams,
   parseSearchItemsParams,
+  validateCountryParam,
+  parseYearParam,
 };

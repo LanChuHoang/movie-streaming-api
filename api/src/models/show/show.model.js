@@ -42,7 +42,6 @@ async function exists(title) {
 }
 
 // Add
-// ADMIN
 function addShow(show) {
   return Show.create(show);
 }
@@ -52,8 +51,7 @@ function getAllShows() {
   return Show.find();
 }
 
-// BOTH
-async function getShows({
+function getShows({
   genre = null,
   country = null,
   year = null,
@@ -70,28 +68,18 @@ async function getShows({
       $gte: new Date("2021-01-01"),
       $lte: new Date("2021-12-31"),
     };
-
-  try {
-    return await getPaginatedShows(filter, sort, page, limit, projection);
-  } catch (error) {
-    throw error;
-  }
+  return getPaginatedShows(filter, sort, page, limit, projection);
 }
 
-// BOTH
-async function getShowsByTitle(
+function getShowsByTitle({
   query,
   page = 1,
   limit = DEFAULT_PAGE_SIZE,
-  projection
-) {
-  try {
-    const filter = { $text: { $search: query } };
-    const sort = { score: { $meta: "textScore" } };
-    return await getPaginatedShows(filter, sort, page, limit, projection);
-  } catch (error) {
-    throw error;
-  }
+  projection,
+}) {
+  const filter = { $text: { $search: query } };
+  const sort = { score: { $meta: "textScore" } };
+  return getPaginatedShows(filter, sort, page, limit, projection);
 }
 
 async function getSimilarShows(id) {
@@ -119,8 +107,7 @@ async function getSimilarShows(id) {
   }
 }
 
-// Get Single Shows
-// BOTH
+// Get Single Show
 function getShowByID(id, projection) {
   return Show.findById(id, projection)
     .populate("cast", PROJECTION.CUSTOM.PERSON_BRIEF_INFO)
@@ -131,7 +118,6 @@ function getShowByTitle(title) {
   return Show.findOne({ title: title });
 }
 
-// USER
 function getRandomShow() {
   return Show.aggregate([
     { $sample: { size: 1 } },
@@ -140,7 +126,6 @@ function getRandomShow() {
 }
 
 // Update
-// ADMIN
 function updateShow(id, updateData) {
   return Show.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
@@ -150,7 +135,6 @@ function updateShow(id, updateData) {
 }
 
 // Delete
-// ADMIN
 function deleteShowByID(id) {
   return Show.findByIdAndDelete(id, {
     projection: PROJECTION.ADMIN.DEFAULT.SHOW,
