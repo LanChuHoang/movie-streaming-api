@@ -10,9 +10,7 @@ router.use(
   routeValidator.parseDefaultProjection
 );
 
-// GET All Users: GET /user
-// by Admin
-// Output user infor except password, __v, updateAt
+// GET /user
 router.get(
   "/",
   authorizerService.authorizeAdmin,
@@ -20,6 +18,7 @@ router.get(
   userController.getUsers
 );
 
+// GET /user/search
 router.get(
   "/search",
   authorizerService.authorizeAdmin,
@@ -27,9 +26,7 @@ router.get(
   userController.searchUsers
 );
 
-// GET Single User: GET /user/:id
-// by Admin or Owner User
-// Output user infor except password, __v, createdAt, updateAt
+// GET /user/:id
 router.get(
   "/:id",
   routeValidator.validateIDParam,
@@ -37,9 +34,7 @@ router.get(
   userController.getUser
 );
 
-// UPDATE User Profile: PATCH /user/:id
-// by Admin or Owner User
-// Output updated user infor except password, __v, createdAt, updateAt
+// PATCH /user/:id
 router.patch(
   "/:id",
   routeValidator.validateIDParam,
@@ -47,9 +42,7 @@ router.patch(
   userController.updateUser
 );
 
-// DELETE Single User: DELETE /user/:id
-// by Admin or Owner User
-// Output deleted user infor except password, __v, createdAt, updateAt
+// DELETE /user/:id
 router.delete(
   "/:id",
   routeValidator.validateIDParam,
