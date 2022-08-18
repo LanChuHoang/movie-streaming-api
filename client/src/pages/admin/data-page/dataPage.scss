@@ -47,11 +47,17 @@
           }
 
           &:hover {
+            border-color: rgba(0, 0, 0, 0.1);
             box-shadow: 0 0 0 3px rgba($color: $admin-main-color, $alpha: 0.2);
           }
 
-          &:focus {
-            border: 1px solid rgba($color: $admin-main-color, $alpha: 0.6);
+          &:active {
+            border-color: #e7e7e9;
+            box-shadow: none;
+          }
+
+          &:not(:active):focus {
+            border-color: rgba($color: $admin-main-color, $alpha: 0.6);
             box-shadow: 0 0 0 3px rgba($color: $admin-main-color, $alpha: 0.2);
           }
         }

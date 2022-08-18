@@ -97,14 +97,17 @@ const Dashboard = () => {
     const loadNewestAccounts = async () => {
       const createData = (id, username, email, joinDate, isAdmin) => {
         const formattedDate = toFullDateFormat(joinDate);
-        const role = <RoleCell isAdmin={isAdmin} />;
-        return { id, username, email, joinDate: formattedDate, role };
+        const role = isAdmin ? (
+          <RoleCell className="admin-cell align-right-cell">Admin</RoleCell>
+        ) : (
+          <RoleCell className="user-cell align-right-cell">User</RoleCell>
+        );
+        return { id, username, email, role, joinDate: formattedDate };
       };
 
       const response = (
-        await backendApi.getUsers({ limit: 5, sort_by: "createdAt:desc" })
+        await backendApi.getUsers({ limit: 5, sort: "createdAt:desc" })
       ).data;
-      console.log(response);
       const accounts = response.docs.map((a) =>
         createData(a._id, a.username, a.email, a.createdAt, a.isAdmin)
       );
@@ -131,7 +134,7 @@ const Dashboard = () => {
       </div>
       <TableListWidget
         title="Newest Accounts"
-        columns={["ID", "Username", "Email", "Join date", "Role"]}
+        columns={["ID", "Username", "Email", "Role", "Join date"]}
         rows={newestAccount}
       />
     </div>

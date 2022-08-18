@@ -1,0 +1,17 @@
+.circular-avatar {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+}
+
+.text-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f3f5f9;
+  color: #4d5663;
+}
+
+.normal-avatar {
+  object-fit: cover;
+}

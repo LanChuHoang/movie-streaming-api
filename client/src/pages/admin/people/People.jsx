@@ -2,36 +2,46 @@ import { toFullDateFormat } from "../../../api/helper";
 import useBackendApi from "../../../hooks/useBackendApi";
 
 import DataPage from "../data-page/DataPage";
-import StatusCell from "../../../components/table-cells/status-cell/StatusCell";
+import ProfileCell from "../../../components/table-cells/profile-cell/ProfileCell";
+import RoleCell from "../../../components/table-cells/role-cell/RoleCell";
+import "./people.scss";
 
 const columns = [
   { field: "_id", headerName: "ID", flex: 2.5, filterable: false },
-  { field: "title", headerName: "Title", flex: 3, filterable: false },
   {
-    field: "runtime",
-    headerName: "Runtime",
+    field: "name",
+    headerName: "Name",
+    flex: 2.5,
+    filterable: false,
+    renderCell: ({ row }) => (
+      <ProfileCell avatarUrl={row.avatarUrl} name={row.name} />
+    ),
+  },
+  {
+    field: "dob",
+    headerName: "Born",
+    type: "date",
+    flex: 3,
     filterable: false,
     valueGetter: (params) => {
-      const hours = Math.floor(params.row.runtime / 60);
-      const minutes = params.row.runtime % 60;
-      const hourPart = hours > 0 ? `${hours}h` : "";
-      const minutePart = minutes > 1 ? `${minutes}mins` : `${minutes}min`;
-      return `${hourPart} ${minutePart}`;
+      const dob = new Date(params.row.dob).toLocaleDateString("vi-VN", {
+        timeZone: "utc",
+      });
+      const pob = params.row.pob?.split(",").slice(-2).join(",") || "";
+      return `${dob} ${pob}`;
     },
   },
   {
-    field: "lastAirDate",
-    headerName: "Last air",
-    type: "date",
+    field: "job",
+    headerName: "Job",
     filterable: false,
-    valueGetter: (params) =>
-      new Date(params.row.lastAirDate).toLocaleDateString("vi-VN", {
-        timeZone: "utc",
-      }),
+    renderCell: ({ row }) => (
+      <RoleCell className={`${row.job.toLowerCase()}-cell`}>{row.job}</RoleCell>
+    ),
   },
   {
     field: "createdAt",
-    headerName: "Added at",
+    headerName: "Date added",
     type: "date",
     flex: 2,
     align: "right",
@@ -39,22 +49,14 @@ const columns = [
     filterable: false,
     valueGetter: (params) => toFullDateFormat(params.row.createdAt),
   },
-  {
-    field: "isUpcomming",
-    headerName: "Status",
-    flex: 1.2,
-    align: "right",
-    headerAlign: "right",
-    filterable: false,
-    renderCell: (params) => <StatusCell isUpcoming={params.row.isUpcomming} />,
-  },
 ];
 
 const People = () => {
   const backendApi = useBackendApi();
   const model = {
     addItem: (item) => {},
-    getItems: async (params) => {},
+    getItems: backendApi.getPeople,
+    searchItems: backendApi.searchPeople,
     updateItem: (id) => {
       console.log(id);
     },

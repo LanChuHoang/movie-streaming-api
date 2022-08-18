@@ -30,6 +30,35 @@ export const itemType = {
   show: "show",
 };
 
+const SHOW_BASE_FIELDS = [
+  "_id",
+  "posterUrl",
+  "title",
+  "firstAirDate",
+  "lastAirDate",
+  "createdAt",
+];
+
+const MOVIE_BASE_FIELDS = [
+  "_id",
+  "posterUrl",
+  "title",
+  "runtime",
+  "releaseDate",
+  "createdAt",
+  "isUpcoming",
+];
+
+const PERSON_BASE_FIELDS = [
+  "_id",
+  "avatarUrl",
+  "name",
+  "dob",
+  "pob",
+  "job",
+  "createdAt",
+];
+
 const backendApi = {
   // User
   registerUser: (username, email, password) => {
@@ -80,11 +109,19 @@ const backendApi = {
 
   // Item
   getItems: (itemType, params = {}) => {
+    params.fields =
+      itemType === "movie"
+        ? MOVIE_BASE_FIELDS.join(",")
+        : SHOW_BASE_FIELDS.join(",");
     const path = "/" + itemType;
     return axiosClient.get(path, { params });
   },
 
   searchItems: (itemType, params) => {
+    params.fields =
+      itemType === "movie"
+        ? MOVIE_BASE_FIELDS.join(",")
+        : SHOW_BASE_FIELDS.join(",");
     const path = `/${itemType}/search`;
     return axiosClient.get(path, { params });
   },
@@ -111,6 +148,16 @@ const backendApi = {
       items.push(data[0]);
     }
     return items;
+  },
+
+  getPeople: (params = {}) => {
+    params.fields = PERSON_BASE_FIELDS.join(",");
+    return axiosClient.get("/person", { params });
+  },
+
+  searchPeople: (params = {}) => {
+    params.fields = PERSON_BASE_FIELDS.join(",");
+    return axiosClient.get("/person/search", { params });
   },
 
   getCastDetail: (id) => {

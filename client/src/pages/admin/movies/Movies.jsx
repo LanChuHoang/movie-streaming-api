@@ -2,11 +2,21 @@ import { toFullDateFormat } from "../../../api/helper";
 import useBackendApi from "../../../hooks/useBackendApi";
 
 import DataPage from "../data-page/DataPage";
-import StatusCell from "../../../components/table-cells/status-cell/StatusCell";
+import RoleCell from "../../../components/table-cells/role-cell/RoleCell";
+import { RectangularProfileCell } from "../../../components/table-cells/profile-cell/ProfileCell";
+import "./movies.scss";
 
 const columns = [
   { field: "_id", headerName: "ID", flex: 2.5, filterable: false },
-  { field: "title", headerName: "Title", flex: 3, filterable: false },
+  {
+    field: "title",
+    headerName: "Title",
+    flex: 4,
+    filterable: false,
+    renderCell: ({ row }) => (
+      <RectangularProfileCell imgUrl={row.posterUrl} name={row.title} />
+    ),
+  },
   {
     field: "runtime",
     headerName: "Runtime",
@@ -30,8 +40,20 @@ const columns = [
       }),
   },
   {
+    field: "isUpcomming",
+    headerName: "Status",
+    flex: 1.2,
+    filterable: false,
+    renderCell: ({ row }) =>
+      row.isUpcoming ? (
+        <RoleCell className="upcoming-cell">Upcoming</RoleCell>
+      ) : (
+        <RoleCell className="released-cell">Released</RoleCell>
+      ),
+  },
+  {
     field: "createdAt",
-    headerName: "Added at",
+    headerName: "Date added",
     type: "date",
     flex: 2,
     align: "right",
@@ -39,24 +61,14 @@ const columns = [
     filterable: false,
     valueGetter: (params) => toFullDateFormat(params.row.createdAt),
   },
-  {
-    field: "isUpcomming",
-    headerName: "Status",
-    flex: 1.2,
-    align: "right",
-    headerAlign: "right",
-    filterable: false,
-    renderCell: (params) => <StatusCell isUpcoming={params.row.isUpcomming} />,
-  },
 ];
 
 const Movies = () => {
   const backendApi = useBackendApi();
   const model = {
     addItem: (item) => {},
-    getItems: async (params) => {
-      return (await backendApi.getItems("movie", params)).data;
-    },
+    getItems: (params) => backendApi.getItems("movie", params),
+    searchItems: (params) => backendApi.searchItems("movie", params),
     updateItem: (id) => {
       console.log(id);
     },

@@ -9,24 +9,31 @@
     float: right;
     display: flex;
     align-items: center;
-    font-size: 1.2rem;
     color: #b2b1b9;
 
-    img {
+    .circular-avatar {
       width: 30px;
       height: 30px;
-      border-radius: 50%;
     }
 
-    p {
+    .username {
       padding: 0 1.5rem 0 0.75rem;
       color: $admin-main-color;
+      font-size: 1.2rem;
     }
 
     svg {
-      transition: color 0.2s;
+      padding: 0.5rem;
+      border-radius: 5px;
+      transition: all 0.2s;
 
       &:hover {
+        background-color: rgba(255, 0, 0, 0.05);
+        color: #eb1d36;
+      }
+
+      &:active {
+        background-color: rgba(255, 0, 0, 0.15);
         color: #eb1d36;
       }
     }

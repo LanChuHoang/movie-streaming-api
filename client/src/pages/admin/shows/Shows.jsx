@@ -1,23 +1,29 @@
 import { toFullDateFormat } from "../../../api/helper";
+import { RectangularProfileCell } from "../../../components/table-cells/profile-cell/ProfileCell";
 import useBackendApi from "../../../hooks/useBackendApi";
 
 import DataPage from "../data-page/DataPage";
-import StatusCell from "../../../components/table-cells/status-cell/StatusCell";
 
 const columns = [
   { field: "_id", headerName: "ID", flex: 2.5, filterable: false },
-  { field: "title", headerName: "Title", flex: 3, filterable: false },
   {
-    field: "runtime",
-    headerName: "Runtime",
+    field: "title",
+    headerName: "Title",
+    flex: 4,
     filterable: false,
-    valueGetter: (params) => {
-      const hours = Math.floor(params.row.runtime / 60);
-      const minutes = params.row.runtime % 60;
-      const hourPart = hours > 0 ? `${hours}h` : "";
-      const minutePart = minutes > 1 ? `${minutes}mins` : `${minutes}min`;
-      return `${hourPart} ${minutePart}`;
-    },
+    renderCell: ({ row }) => (
+      <RectangularProfileCell imgUrl={row.posterUrl} name={row.title} />
+    ),
+  },
+  {
+    field: "firstAirDate",
+    headerName: "First air",
+    type: "date",
+    filterable: false,
+    valueGetter: (params) =>
+      new Date(params.row.firstAirDate).toLocaleDateString("vi-VN", {
+        timeZone: "utc",
+      }),
   },
   {
     field: "lastAirDate",
@@ -31,7 +37,7 @@ const columns = [
   },
   {
     field: "createdAt",
-    headerName: "Added at",
+    headerName: "Date added",
     type: "date",
     flex: 2,
     align: "right",
@@ -39,26 +45,14 @@ const columns = [
     filterable: false,
     valueGetter: (params) => toFullDateFormat(params.row.createdAt),
   },
-  {
-    field: "isUpcomming",
-    headerName: "Status",
-    flex: 1.2,
-    align: "right",
-    headerAlign: "right",
-    filterable: false,
-    renderCell: (params) => <StatusCell isUpcoming={params.row.isUpcomming} />,
-  },
 ];
 
 const Shows = () => {
   const backendApi = useBackendApi();
   const model = {
     addItem: (item) => {},
-    getItems: async (params) => {
-      const items = (await backendApi.getItems("show", params)).data;
-      console.log(items);
-      return items;
-    },
+    getItems: (params) => backendApi.getItems("show", params),
+    searchItems: (params) => backendApi.searchItems("show", params),
     updateItem: (id) => {
       console.log(id);
     },

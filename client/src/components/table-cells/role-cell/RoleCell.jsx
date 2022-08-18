@@ -1,11 +1,7 @@
 import "./roleCell.scss";
 
-const RoleCell = (props) => {
-  return props.isAdmin ? (
-    <div className="admin-role-cell">Admin</div>
-  ) : (
-    <div className="user-role-cell">User</div>
-  );
+const RoleCell = ({ children, className }) => {
+  return <div className={`role-cell-root ${className}`}>{children}</div>;
 };
 
 export default RoleCell;

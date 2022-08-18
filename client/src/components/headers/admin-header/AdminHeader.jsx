@@ -6,7 +6,7 @@ import useBackendApi from "../../../hooks/useBackendApi";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import defaultAvatar from "../../../assets/defaultAvatar.jpg";
+import CircularAvatar from "../../circular-avatar/CircularAvatar";
 import "./adminHeader.scss";
 
 const AdminHeader = () => {
@@ -34,12 +34,8 @@ const AdminHeader = () => {
   return (
     <div className="admin-header-container">
       <div className="profile">
-        <img
-          src={user?.profileImage || defaultAvatar}
-          alt=""
-          className="avatar"
-        />
-        <p>{user?.username}</p>
+        <CircularAvatar avatarUrl={user?.profileImage} name={user?.username} />
+        <p className="username">{user?.username}</p>
         <FontAwesomeIcon
           icon={faArrowRightFromBracket}
           onClick={handleLogout}
