@@ -44,7 +44,6 @@ const columns = [
 const Users = () => {
   const backendApi = useBackendApi();
   const model = {
-    addItem: () => {},
     getItems: backendApi.getUsers,
     searchItems: backendApi.searchUsers,
     updateItem: (id) => {

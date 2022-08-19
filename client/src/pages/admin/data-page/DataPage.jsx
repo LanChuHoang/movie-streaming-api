@@ -6,8 +6,6 @@ import ActionCell from "../../../components/table-cells/action-cell/ActionCell";
 import { ConfirmModal, MessageModal } from "../../../components/modals/Modals";
 import "./dataPage.scss";
 import AddButton from "../../../components/buttons/add-button/AddButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const DataPage = (props) => {
   const [items, setItems] = useState([]);
@@ -103,7 +101,7 @@ const DataPage = (props) => {
         <div className="data-page-tool-bar">
           <form onSubmit={handleSearchItems}>
             <div className="search-icon-wrapper">
-              <FontAwesomeIcon icon={faSearch} />
+              <i className="bx bx-search"></i>
             </div>
             <input
               onInput={(e) => {

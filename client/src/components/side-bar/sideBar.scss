@@ -68,6 +68,11 @@
           color: $admin-text-color;
         }
 
+        &:active {
+          background-color: rgba($color: $admin-main-color, $alpha: 0.2);
+          color: $admin-text-color;
+        }
+
         svg {
           margin-right: 10px;
           width: 1em;

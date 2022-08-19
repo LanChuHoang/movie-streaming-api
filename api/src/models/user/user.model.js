@@ -105,7 +105,7 @@ function getTotalUsers() {
 }
 
 function countUsers(startDate = null, endDate = null) {
-  const filter = { isAdmin: false };
+  const filter = {};
   if (startDate && endDate)
     filter.createdAt = { $gte: startDate, $lte: endDate };
   return User.find(filter).count();
@@ -113,42 +113,28 @@ function countUsers(startDate = null, endDate = null) {
 
 function countUsersDaily(startDate, endDate) {
   return User.aggregate([
-    {
-      $match: {
-        createdAt: { $gte: startDate, $lte: endDate },
-        isAdmin: false,
-      },
-    },
+    { $match: { createdAt: { $gte: startDate, $lte: endDate } } },
     {
       $group: {
         _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
         totalUsers: { $sum: 1 },
       },
     },
-    {
-      $project: { _id: 0, date: "$_id", totalUsers: 1 },
-    },
+    { $project: { _id: 0, date: "$_id", totalUsers: 1 } },
     { $sort: { date: 1 } },
   ]);
 }
 
 function countUsersMonthly(startDate, endDate) {
   return User.aggregate([
-    {
-      $match: {
-        createdAt: { $gte: startDate, $lte: endDate },
-        isAdmin: false,
-      },
-    },
+    { $match: { createdAt: { $gte: startDate, $lte: endDate } } },
     {
       $group: {
         _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
         totalUsers: { $sum: 1 },
       },
     },
-    {
-      $project: { _id: 0, month: "$_id", totalUsers: 1 },
-    },
+    { $project: { _id: 0, month: "$_id", totalUsers: 1 } },
     { $sort: { month: 1 } },
   ]);
 }
