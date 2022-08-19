@@ -40,7 +40,7 @@ const columns = [
       }),
   },
   {
-    field: "isUpcomming",
+    field: "isUpcoming",
     headerName: "Status",
     flex: 1.2,
     filterable: false,

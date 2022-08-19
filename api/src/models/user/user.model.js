@@ -2,6 +2,41 @@ const { PROJECTION } = require("../../configs/route.config");
 const { USERS_DEFAULT_PAGE_SIZE } = require("../../configs/route.config.user");
 const User = require("./User");
 
+async function getPaginatedUsers(filter = null, sort, page, limit, projection) {
+  try {
+    const docsPipeline = [
+      { $skip: limit * (page - 1) },
+      { $limit: limit },
+      { $project: projection },
+    ];
+    if (sort) docsPipeline.unshift({ $sort: sort });
+    console.log(docsPipeline);
+    const [result] = await User.aggregate([
+      { $match: filter },
+      {
+        $facet: {
+          docs: docsPipeline,
+          meta: [{ $count: "total_documents" }],
+        },
+      },
+      { $unwind: "$meta" },
+    ]);
+
+    const totalDocs = result?.meta.total_documents || 0;
+    const output = {
+      docs: result?.docs || [],
+      page: page,
+      pageSize: limit,
+      totalPages: Math.ceil(totalDocs / limit),
+      totalDocuments: totalDocs,
+    };
+
+    return output;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function exists(username, email) {
   return (
     (await User.exists({
@@ -40,9 +75,7 @@ function searchUsers({
 }) {
   const regExp = new RegExp(query, "gi");
   const filter = { $or: [{ username: regExp }, { email: regExp }] };
-  return User.find(filter, projection)
-    .skip((page - 1) * limit)
-    .limit(limit);
+  return getPaginatedUsers(filter, null, page, limit, projection);
 }
 
 function getUserById(id, projection) {

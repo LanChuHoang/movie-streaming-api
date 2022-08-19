@@ -19,9 +19,18 @@ const parseGetMoviesParams = [
 
 function parseUpcomingParam(req, res, next) {
   const { upcoming } = req.query;
-  if (upcoming && upcoming !== "true" && upcoming !== "false")
-    return res.status(400).send(errorResponse.INVALID_QUERY);
-  req.query.upcoming = upcoming === "true" ? true : false;
+  switch (upcoming) {
+    case "true":
+      req.query.upcoming = true;
+      break;
+    case "false":
+      req.query.upcoming = false;
+      break;
+    default:
+      if (upcoming) return res.status(400).send(errorResponse.INVALID_QUERY);
+      req.query.upcoming = undefined;
+      break;
+  }
   next();
 }
 

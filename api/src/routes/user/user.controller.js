@@ -36,19 +36,8 @@ async function searchUsers(req, res, next) {
   try {
     const { query, page, limit, projection } = req.query;
     const options = { query, page, limit, projection };
-    const [users, totalUsers] = await Promise.all([
-      userModel.searchUsers(options),
-      userModel.getTotalUsers(),
-    ]);
-    const pageSize = limit || userModel.USERS_DEFAULT_PAGE_SIZE;
-    const responseData = {
-      docs: users,
-      page: page || 1,
-      pageSize,
-      totalPages: Math.ceil(totalUsers / pageSize),
-      totalDocuments: totalUsers,
-    };
-    return res.send(responseData);
+    const response = await userModel.searchUsers(options);
+    return res.send(response);
   } catch (error) {
     next(error);
   }

@@ -61,13 +61,13 @@ function getMovies({
   genre = null,
   country = null,
   year = null,
-  isUpcoming = false,
+  isUpcoming,
   sort = DEFAULT_SORT_OPTION,
   page = 1,
   limit = DEFAULT_PAGE_SIZE,
   projection = PROJECTION.USER.DEFAULT.MOVIE,
 }) {
-  const filter = { isUpcoming };
+  const filter = {};
   if (genre) filter.genres = { $all: [genre] };
   if (country) filter.countries = { $all: [country] };
   if (year)
@@ -75,6 +75,7 @@ function getMovies({
       $gte: new Date(`${year}-01-01`),
       $lte: new Date(`${year}-12-31`),
     };
+  if (isUpcoming) filter.isUpcoming = isUpcoming;
   return getPaginatedMovies(filter, sort, page, limit, projection);
 }
 
