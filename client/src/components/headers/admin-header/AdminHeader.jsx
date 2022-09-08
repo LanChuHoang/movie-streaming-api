@@ -34,7 +34,11 @@ const AdminHeader = () => {
   return (
     <div className="admin-header-container">
       <div className="profile">
-        <CircularAvatar avatarUrl={user?.profileImage} name={user?.username} />
+        <CircularAvatar
+          avatarUrl={user?.profileImage}
+          name={user?.username}
+          size="small"
+        />
         <p className="username">{user?.username}</p>
         <FontAwesomeIcon
           icon={faArrowRightFromBracket}

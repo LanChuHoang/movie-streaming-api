@@ -1,12 +1,14 @@
 import "./profileCell.scss";
+import { CardHeader } from "@mui/material";
 import CircularAvatar from "../../circular-avatar/CircularAvatar";
 
-const ProfileCell = ({ avatarUrl, name }) => {
+const ProfileCell = ({ avatarUrl, name, avatarSize: size }) => {
   return (
-    <div className="profile-cell">
-      <CircularAvatar avatarUrl={avatarUrl} name={name} />
-      <span>{name}</span>
-    </div>
+    <CardHeader
+      className="profile-cell-card-header"
+      avatar={<CircularAvatar {...{ avatarUrl, name, size }} />}
+      title={name}
+    />
   );
 };
 

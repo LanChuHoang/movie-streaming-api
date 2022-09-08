@@ -1,10 +1,9 @@
 import { toFullDateFormat } from "../../../api/helper";
 import useBackendApi from "../../../hooks/useBackendApi";
-
 import DataPage from "../data-page/DataPage";
-import RoleCell from "../../../components/table-cells/role-cell/RoleCell";
 import { RectangularProfileCell } from "../../../components/table-cells/profile-cell/ProfileCell";
 import "./movies.scss";
+import { Chip } from "@mui/material";
 
 const columns = [
   { field: "_id", headerName: "ID", flex: 2.5, filterable: false },
@@ -46,9 +45,9 @@ const columns = [
     filterable: false,
     renderCell: ({ row }) =>
       row.isUpcoming ? (
-        <RoleCell className="upcoming-cell">Upcoming</RoleCell>
+        <Chip size="small" className="upcoming-cell" label="Upcoming" />
       ) : (
-        <RoleCell className="released-cell">Released</RoleCell>
+        <Chip size="small" className="released-cell" label="Released" />
       ),
   },
   {
@@ -78,7 +77,14 @@ const Movies = () => {
   };
 
   return (
-    <DataPage title="Movies" itemType="movie" columns={columns} model={model} />
+    <DataPage
+      model={model}
+      title="Movies"
+      itemType="movie"
+      columns={columns}
+      addable
+      editable
+    />
   );
 };
 

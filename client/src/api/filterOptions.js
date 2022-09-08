@@ -1,4 +1,4 @@
-const apiOptions = {
+export const apiOptions = {
   MOVIE_GENRES: [
     "Action",
     "Adventure",
@@ -290,6 +290,10 @@ const apiOptions = {
     "ZW",
   ],
 };
+
+export const GENDERS = ["male", "female"];
+export const JOBS = ["Actor", "Director"];
+
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 
 const getOptions = (options, sort = "asc") => {

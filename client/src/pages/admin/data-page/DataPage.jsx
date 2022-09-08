@@ -6,8 +6,17 @@ import ActionCell from "../../../components/table-cells/action-cell/ActionCell";
 import { ConfirmModal, MessageModal } from "../../../components/modals/Modals";
 import "./dataPage.scss";
 import AddButton from "../../../components/buttons/add-button/AddButton";
+import AdminSearchBar from "../../../components/search-bar/AdminSearchBar";
+import { useNavigate } from "react-router-dom";
 
-const DataPage = (props) => {
+const DataPage = ({
+  model,
+  title,
+  itemType,
+  columns,
+  addable = false,
+  editable = false,
+}) => {
   const [items, setItems] = useState([]);
   const [query, setQuery] = useState();
   const [totalItems, setTotalItems] = useState();
@@ -20,7 +29,7 @@ const DataPage = (props) => {
   const [confirmModalActive, setConfirmModalActive] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
   const [messageModalActive, setMessageModalActive] = useState(false);
-  const { model, itemType } = props;
+  const navigate = useNavigate();
 
   const loadItems = async () => {
     try {
@@ -31,7 +40,6 @@ const DataPage = (props) => {
       } else {
         const params = { page: selectedPage };
         sortModel.forEach((o) => (params.sort = o.field + ":" + o.sort));
-        console.log(params);
         response = (await model.getItems(params)).data;
       }
       setItems(response.docs);
@@ -47,9 +55,11 @@ const DataPage = (props) => {
     loadItems();
   }, [selectedPage, sortModel]);
 
-  const handleSearchItems = async (e) => {
-    e.preventDefault();
-    const query = e.target.searchInput.value;
+  const handleAddItem = () => {
+    navigate(`/admin/${itemType}`);
+  };
+
+  const handleSearchItems = async (query) => {
     if (!query) return;
     setQuery(query);
     setSelectedPage(1);
@@ -57,7 +67,7 @@ const DataPage = (props) => {
   };
 
   const handleEditItem = (id) => {
-    console.log("view", id);
+    navigate(`/admin/${itemType}/${id}`);
   };
 
   const handleDeleteItem = async (id) => {
@@ -82,13 +92,15 @@ const DataPage = (props) => {
       align: "right",
       disableColumnMenu: true,
       sortable: false,
-      renderCell: (params) => (
+      renderCell: ({ row }) => (
         <ActionCell
           onDelete={() => {
             setConfirmModalActive(true);
-            setToDeleteId(params.row._id);
+            setToDeleteId(row._id);
           }}
-          onEdit={() => handleEditItem(params.row._id)}
+          onEdit={() => {
+            editable && handleEditItem(row._id);
+          }}
         />
       ),
     },
@@ -97,32 +109,31 @@ const DataPage = (props) => {
   return (
     <div className="data-page-container">
       <div className="data-page-top-container">
-        <h1>{props.title}</h1>
+        <h1>{title}</h1>
         <div className="data-page-tool-bar">
-          <form onSubmit={handleSearchItems}>
-            <div className="search-icon-wrapper">
-              <i className="bx bx-search"></i>
-            </div>
-            <input
-              onInput={(e) => {
-                if (!e.target.value && query) {
-                  setQuery("");
-                  setSelectedPage(1);
-                  setSortModel([{ field: "createdAt", sort: "desc" }]);
-                }
-              }}
-              name="searchInput"
-              placeholder="Search"
-            />
-          </form>
-          {model.addItem && <AddButton>Add {itemType}</AddButton>}
+          <AdminSearchBar
+            className="view-items-search-bar"
+            onInputValue={(inputValue) => {
+              if (!inputValue && query) {
+                setQuery("");
+                setSelectedPage(1);
+                setSortModel([{ field: "createdAt", sort: "desc" }]);
+              }
+            }}
+            onSearch={handleSearchItems}
+          />
+          {addable && (
+            <AddButton onClick={() => handleAddItem()}>
+              Add {itemType}
+            </AddButton>
+          )}
         </div>
       </div>
 
       <div className="data-page-table-container">
         <DataTable
           rows={items}
-          columns={[...props.columns, ...actionColumn]}
+          columns={[...columns, ...actionColumn]}
           getRowId={(r) => r._id}
           totalRows={totalItems || 0}
           sortModel={sortModel}
@@ -164,6 +175,8 @@ DataPage.propTypes = {
   title: PropTypes.string,
   itemType: PropTypes.string,
   columns: PropTypes.array,
+  AddModal: PropTypes.elementType,
+  EditModal: PropTypes.elementType,
 };
 
 export default DataPage;

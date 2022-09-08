@@ -17,6 +17,7 @@ import Users from "./pages/admin/users/Users";
 import Movies from "./pages/admin/movies/Movies";
 import Shows from "./pages/admin/shows/Shows";
 import People from "./pages/admin/people/People";
+import UpsertMovie from "./pages/admin/upsert-movie/UpsertMovie";
 
 function App() {
   return (
@@ -33,12 +34,29 @@ function App() {
         </Route>
 
         <Route element={<RequireAuth forAdmin={true} />}>
-          <Route element={<AdminLayout />}>
-            <Route path="/admin" element={<Dashboard />} />
-            <Route path="/admin/users" element={<Users />} />
-            <Route path="/admin/movies" element={<Movies />} />
-            <Route path="/admin/shows" element={<Shows />} />
-            <Route path="/admin/people" element={<People />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="users" element={<Users />} />
+            <Route path="movies" element={<Movies />} />
+            <Route path="shows" element={<Shows />} />
+            <Route path="people" element={<People />} />
+
+            <Route path="user">
+              <Route index element={<p>Add user</p>} />
+              <Route path=":id" element={<p>Edit user</p>} />
+            </Route>
+            <Route path="movie">
+              <Route index element={<UpsertMovie />} />
+              <Route path=":id" element={<UpsertMovie />} />
+            </Route>
+            <Route path="show">
+              <Route index element={<p>Add show</p>} />
+              <Route path=":id" element={<p>Edit show</p>} />
+            </Route>
+            <Route path="person">
+              <Route index element={<p>Add person</p>} />
+              <Route path=":id" element={<p>Edit person</p>} />
+            </Route>
           </Route>
         </Route>
       </Route>

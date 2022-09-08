@@ -1,6 +1,18 @@
 import PropTypes from "prop-types";
 import "./modals.scss";
 
+const Modal = ({ active, children }) => {
+  return (
+    <div className={`modal-container ${active ? "modal-active" : ""}`}>
+      {children}
+    </div>
+  );
+};
+
+Modal.propTypes = {
+  active: PropTypes.bool,
+};
+
 export const ConfirmModal = (props) => {
   return (
     <div
@@ -54,3 +66,5 @@ MessageModal.propTypes = {
   confirmButtonTitle: PropTypes.string,
   onConfirm: PropTypes.func,
 };
+
+export default Modal;

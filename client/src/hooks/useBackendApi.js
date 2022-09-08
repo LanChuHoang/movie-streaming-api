@@ -28,7 +28,7 @@ const useBackendApi = () => {
           // resent prev request
           return backendApi.axiosPrivateClient(prevConfig);
         }
-        Promise.reject(error);
+        return Promise.reject(error);
       }
     );
 

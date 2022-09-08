@@ -129,3 +129,22 @@
     }
   }
 }
+
+.modal-container {
+  @include flex(center, center);
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  background-color: rgba($color: $black, $alpha: 0.4);
+  opacity: 0;
+  visibility: hidden;
+
+  &.modal-active {
+    opacity: 1;
+    visibility: visible;
+  }
+}

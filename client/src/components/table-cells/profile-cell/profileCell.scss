@@ -2,10 +2,6 @@
   display: flex;
   align-items: center;
 
-  .circular-avatar {
-    flex-shrink: 0;
-  }
-
   .rect-image {
     height: 2.5rem;
     width: 2rem;
@@ -25,4 +21,8 @@
   span {
     margin-left: 1rem;
   }
+}
+
+.profile-cell-card-header {
+  padding: 0;
 }

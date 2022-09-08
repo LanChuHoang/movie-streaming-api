@@ -18,50 +18,8 @@
       margin-top: 1.5rem;
       position: relative;
 
-      form {
-        position: relative;
+      .view-items-search-bar {
         width: 25%;
-
-        .search-icon-wrapper {
-          color: #9e9ea7;
-          i {
-            font-size: 1.1rem;
-            position: absolute;
-            top: 50%;
-            transform: translate(11px, -50%);
-          }
-        }
-
-        input {
-          width: 100%;
-          padding: 0.4rem 1rem 0.4rem 36px;
-          border-radius: 0.5rem;
-          border: 1px solid transparent;
-          background-color: #f3f3f4;
-          font-family: "Nunito", sans-serif;
-          font-size: 0.9rem;
-          color: #0d0c22;
-          transition: all 0.2s;
-
-          &::placeholder {
-            color: #9e9ea7;
-          }
-
-          &:hover {
-            border-color: rgba(0, 0, 0, 0.1);
-            box-shadow: 0 0 0 3px rgba($color: $admin-main-color, $alpha: 0.2);
-          }
-
-          &:active {
-            border-color: #e7e7e9;
-            box-shadow: none;
-          }
-
-          &:not(:active):focus {
-            border-color: rgba($color: $admin-main-color, $alpha: 0.6);
-            box-shadow: 0 0 0 3px rgba($color: $admin-main-color, $alpha: 0.2);
-          }
-        }
       }
 
       button {

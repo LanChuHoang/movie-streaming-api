@@ -20,27 +20,33 @@ const sideBarItems = [
   {
     display: "Users",
     path: "/admin/users",
+    subPath: "/admin/user",
     icon: faCircleUser,
   },
   {
     display: "Movies",
     path: "/admin/movies",
+    subPath: "/admin/movie",
     icon: faFilm,
   },
   {
     display: "Shows",
     path: "/admin/shows",
+    subPath: "/admin/show",
     icon: faTv,
   },
   {
     display: "People",
     path: "/admin/people",
+    subPath: "/admin/person",
     icon: faPerson,
   },
 ];
 
 function findSelectedIndex(path) {
-  const index = sideBarItems.findIndex((i) => i.path === path);
+  const index = sideBarItems.findIndex(
+    (i) => i.path === path || path.startsWith(i.subPath)
+  );
   return index !== -1 ? index : 0;
 }
 

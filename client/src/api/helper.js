@@ -1,3 +1,5 @@
+import { isEmpty, isEqual, xorWith } from "lodash";
+
 export const TIMES_IN_DAY = 24 * 60 * 60 * 1000;
 
 function parseJwt(token) {
@@ -49,6 +51,17 @@ export function toShortDateFormat(shortISOStr) {
   return day ? day + "/" + month : month + "/" + year;
 }
 
+export function toBritishDate(utcDateString) {
+  return utcDateString
+    ? new Date(utcDateString).toLocaleDateString("en-GB", {
+        timezone: "UTC",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    : "";
+}
+
 export function fillMissingDailyStats(startDate, endDate, data) {
   const length = (endDate.getTime() - startDate.getTime()) / TIMES_IN_DAY;
   return Array.from({ length }, (_, i) => {
@@ -78,5 +91,7 @@ export function fillMissingMonthlyStats(startDate, endDate, data) {
     };
   });
 }
+
+export const isArrayEqual = (x, y) => isEmpty(xorWith(x, y, isEqual));
 
 export default parseJwt;

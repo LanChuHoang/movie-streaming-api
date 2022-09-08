@@ -109,10 +109,6 @@ const backendApi = {
 
   // Item
   getItems: (itemType, params = {}) => {
-    params.fields =
-      itemType === "movie"
-        ? MOVIE_BASE_FIELDS.join(",")
-        : SHOW_BASE_FIELDS.join(",");
     const path = "/" + itemType;
     return axiosClient.get(path, { params });
   },
@@ -141,6 +137,11 @@ const backendApi = {
     return axiosClient.get(path, { params });
   },
 
+  // Movie
+  addMovie: (movieData) => {
+    return axiosClient.post("/movie", movieData);
+  },
+
   getRandomMovies: async () => {
     const items = [];
     for (let i = 0; i < 3; i++) {
@@ -150,14 +151,31 @@ const backendApi = {
     return items;
   },
 
+  updateMovie: (id, movieData) => {
+    return axiosClient.patch(`/movie/${id}`, movieData);
+  },
+
+  // People
+  addPerson: (personData) => {
+    return axiosClient.post("/person", personData);
+  },
+
   getPeople: (params = {}) => {
-    params.fields = PERSON_BASE_FIELDS.join(",");
+    if (params.fields) params.fields = params.fields.join(",");
     return axiosClient.get("/person", { params });
   },
 
   searchPeople: (params = {}) => {
-    params.fields = PERSON_BASE_FIELDS.join(",");
+    if (params.fields) params.fields = params.fields.join(",");
     return axiosClient.get("/person/search", { params });
+  },
+
+  getPerson: (id) => {
+    return axiosClient.get(`/person/${id}`);
+  },
+
+  updatePerson: (id, personData) => {
+    return axiosClient.patch(`/person/${id}`, personData);
   },
 
   getCastDetail: (id) => {

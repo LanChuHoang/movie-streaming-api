@@ -1,0 +1,40 @@
+@use "../../scss/" as *;
+
+.admin-person-grid-container {
+  .MuiCircularProgress-root {
+    color: $admin-main-color;
+  }
+
+  .MuiChip-root {
+    // height: fit-content;
+    // width: fit-content;
+    // padding: 0.15rem 0.75rem;
+  }
+
+  .stored-chip {
+    background-color: #ecfdf3;
+    color: #3c7f66;
+
+    i {
+      color: #3c7f66;
+    }
+  }
+
+  .edited-chip {
+    background-color: rgba(189, 189, 3, 0.103);
+    color: goldenrod;
+
+    i {
+      color: goldenrod;
+    }
+  }
+
+  .new-chip {
+    background-color: rgba(189, 189, 3, 0.103);
+    color: goldenrod;
+
+    i {
+      color: goldenrod;
+    }
+  }
+}
