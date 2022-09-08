@@ -10,7 +10,7 @@ const SIZE = {
 const AdminLogo = ({ className, size = "standard" }) => {
   return (
     <Link to="/">
-      <span className={`logo ${SIZE[size]} ${className}`}>tMovie</span>
+      <span className={`admin-logo ${SIZE[size]} ${className}`}>tMovie</span>
     </Link>
   );
 };

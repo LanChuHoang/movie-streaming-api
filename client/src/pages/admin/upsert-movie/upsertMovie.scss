@@ -62,6 +62,10 @@
     }
   }
 
+  .MuiBackdrop-root {
+    z-index: 1000;
+  }
+
   .MuiCircularProgress-root {
     color: $admin-main-color;
   }
