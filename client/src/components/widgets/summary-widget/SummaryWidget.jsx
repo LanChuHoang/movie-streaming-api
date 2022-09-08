@@ -38,10 +38,10 @@ const SummaryWidget = (props) => {
         <div className="summary-items-container">
           {props.summaryItems.map((item, i) => {
             return i !== props.mainItemIndex ? (
-              <>
+              <div key={i}>
                 <div className="summary-item title-item">{item.label}</div>
                 <AmountItem increased={item.increased} amount={item.amount} />
-              </>
+              </div>
             ) : null;
           })}
         </div>

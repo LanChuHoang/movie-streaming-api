@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import CircularAvatar from "../../circular-avatar/CircularAvatar";
 import "./adminHeader.scss";
+import AdminLogo from "../../admin-logo/AdminLogo";
 
 const AdminHeader = () => {
   const [user, setUser] = useState();
@@ -33,6 +34,7 @@ const AdminHeader = () => {
 
   return (
     <div className="admin-header-container">
+      <AdminLogo className="admin-header-mobile-logo" size="small" />
       <div className="profile">
         <CircularAvatar
           avatarUrl={user?.profileImage}

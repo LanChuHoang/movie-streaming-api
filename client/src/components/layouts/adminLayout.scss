@@ -1,16 +1,33 @@
 @use "../../scss/" as *;
 
 .admin-layout-container {
-  display: flex;
-  // height: 100%;
+  position: relative;
   font-family: "Nunito", sans-serif;
   color: $admin-text-color;
 
-  .right-side-container {
-    flex: 6;
+  .admin-layout-content-container {
+    margin-top: $admin-header-height;
+    margin-left: $admin-sidebar-desktop-width;
+    height: fit-content;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+  }
+}
+
+@include tablet {
+  .admin-layout-container {
+    .admin-layout-content-container {
+      margin-left: $admin-sidebar-tablet-width;
+    }
+  }
+}
+
+@include mobile {
+  .admin-layout-container {
+    .admin-layout-content-container {
+      margin-bottom: $admin-sidebar-mobile-height;
+      margin-left: 0;
+    }
   }
 }
 

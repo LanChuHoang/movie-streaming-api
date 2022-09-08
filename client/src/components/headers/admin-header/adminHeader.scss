@@ -1,19 +1,32 @@
 @use "../../../scss/" as *;
 
 .admin-header-container {
-  flex: 0 1 auto;
-  background-color: white;
+  position: fixed;
+  top: 0;
+  left: 13rem;
+  right: 0;
+  z-index: 100;
+  height: $admin-header-height;
   padding: 1rem 2rem;
+  backdrop-filter: blur(10px);
+  background: $admin-transparent-background;
+  border-bottom: $admin-divider-border;
+  display: flex;
+  flex-direction: row;
+
+  .admin-header-mobile-logo {
+    display: none;
+  }
 
   .profile {
-    float: right;
+    margin-left: auto;
     display: flex;
     align-items: center;
     color: #b2b1b9;
 
     .circular-avatar {
-      width: 30px;
-      height: 30px;
+      width: 2rem;
+      height: 2rem;
     }
 
     .username {
@@ -36,6 +49,26 @@
         background-color: rgba(255, 0, 0, 0.15);
         color: #eb1d36;
       }
+    }
+  }
+}
+
+@include tablet {
+  .admin-header-container {
+    left: $admin-sidebar-tablet-width;
+
+    .admin-header-mobile-logo {
+      display: block;
+    }
+  }
+}
+
+@include mobile {
+  .admin-header-container {
+    left: 0;
+
+    .admin-header-mobile-logo {
+      display: block;
     }
   }
 }

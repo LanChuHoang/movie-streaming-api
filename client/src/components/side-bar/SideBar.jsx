@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faRectangleList } from "@fortawesome/free-regular-svg-icons";
 import "./sideBar.scss";
+import AdminLogo from "../admin-logo/AdminLogo";
 
 const sideBarItems = [
   {
@@ -61,11 +62,8 @@ const SideBar = () => {
   return (
     <div className="sidebar-container">
       <div className="logo-section">
-        <Link to="/">
-          <span className="logo">tMovie</span>
-        </Link>
+        <AdminLogo />
       </div>
-      <hr />
       <div className="main-section">
         <ul>
           <h2 className="group-header">Monitor</h2>
@@ -94,7 +92,7 @@ const SideBarItem = (props) => {
     <Link to={props.item.path}>
       <li className={props.selected ? "selected" : ""} onClick={props.onClick}>
         <FontAwesomeIcon icon={props.item.icon} />
-        {props.item.display}
+        <p className="sidebar-item-name">{props.item.display}</p>
       </li>
     </Link>
   );
