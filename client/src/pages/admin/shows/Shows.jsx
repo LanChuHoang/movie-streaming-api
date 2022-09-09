@@ -4,6 +4,28 @@ import useBackendApi from "../../../hooks/useBackendApi";
 
 import DataPage from "../data-page/DataPage";
 
+const Shows = () => {
+  const showApi = useBackendApi().show;
+  const model = {
+    getItems: (params) =>
+      showApi.getShows({ ...params, fields: showApi.adminBaseFields }),
+    searchItems: (params) =>
+      showApi.searchShows({ ...params, fields: showApi.adminBaseFields }),
+    deleteItem: showApi.deleteShow,
+  };
+
+  return (
+    <DataPage
+      model={model}
+      title="Shows"
+      itemType="show"
+      columns={columns}
+      addable
+      editable
+    />
+  );
+};
+
 const columns = [
   { field: "_id", headerName: "ID", flex: 2.5, filterable: false },
   {
@@ -46,24 +68,5 @@ const columns = [
     valueGetter: (params) => toFullDateFormat(params.row.createdAt),
   },
 ];
-
-const Shows = () => {
-  const backendApi = useBackendApi();
-  const model = {
-    addItem: (item) => {},
-    getItems: (params) => backendApi.getItems("show", params),
-    searchItems: (params) => backendApi.searchItems("show", params),
-    updateItem: (id) => {
-      console.log(id);
-    },
-    deleteItem: (id) => {
-      console.log(id);
-    },
-  };
-
-  return (
-    <DataPage title="Shows" itemType="show" columns={columns} model={model} />
-  );
-};
 
 export default Shows;

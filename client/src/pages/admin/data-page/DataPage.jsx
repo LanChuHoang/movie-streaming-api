@@ -200,15 +200,15 @@ const MESSAGE = {
 
 DataPage.propTypes = {
   model: PropTypes.shape({
-    addItem: PropTypes.func,
     getItems: PropTypes.func,
+    searchItems: PropTypes.func,
     deleteItem: PropTypes.func,
   }),
   title: PropTypes.string,
   itemType: PropTypes.string,
   columns: PropTypes.array,
-  addable: Boolean,
-  editable: Boolean,
+  addable: PropTypes.bool,
+  editable: PropTypes.bool,
 };
 
 const ConfirmModal = ({ open, onClose, itemType = "item" }) => {

@@ -11,6 +11,11 @@ const endpoint = {
   randomMovie: "/movie/random",
   userOverallStats: "/statistic/user/overall",
   userDetailStats: "/statistic/user/detail",
+
+  show: {
+    base: "/show",
+    search: "/show/search",
+  },
 };
 
 export const statType = {
@@ -58,6 +63,36 @@ const PERSON_BASE_FIELDS = [
   "job",
   "createdAt",
 ];
+
+const parseFieldsParam = (params) =>
+  params.fields
+    ? { ...params, fields: params.fields.join(",") }
+    : { ...params };
+
+const showApi = {
+  adminBaseFields: [
+    "_id",
+    "posterUrl",
+    "title",
+    "firstAirDate",
+    "lastAirDate",
+    "createdAt",
+  ],
+
+  getShows: (params = {}) => {
+    const parsedParams = parseFieldsParam(params);
+    return axiosClient.get(endpoint.show.base, { params: parsedParams });
+  },
+
+  searchShows: (params = {}) => {
+    const parsedParams = parseFieldsParam(params);
+    return axiosClient.get(endpoint.show.search, { params: parsedParams });
+  },
+
+  deleteShow: (id) => {
+    return axiosClient.delete(`${endpoint.show.base}/${id}`);
+  },
+};
 
 const backendApi = {
   // User
@@ -158,6 +193,9 @@ const backendApi = {
   deleteMovie: (id) => {
     return axiosClient.delete(`/movie/${id}`);
   },
+
+  // Show
+  show: showApi,
 
   // People
   addPerson: (personData) => {
