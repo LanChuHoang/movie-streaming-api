@@ -1,38 +1,30 @@
 @use "../../../scss/" as *;
 
-.action-cell-container {
-  width: 100%;
-  padding-right: 0.5rem;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  transition: all 0.2s;
-
-  i {
+.MuiDataGrid-actionsCell {
+  .MuiIconButton-root {
     padding: 0.5rem;
-    border: 1px solid transparent;
     border-radius: 8px;
     font-size: 1.2rem;
     color: #90949e;
 
-    &.delete-icon {
+    &,
+    &:active,
+    &:focus {
+      span {
+        border-radius: 8px;
+      }
+    }
+
+    &.delete-action-button {
       &:hover {
         background-color: rgba(255, 0, 0, 0.05);
         color: crimson;
       }
-      &:active {
-        background-color: rgba(255, 0, 0, 0.2);
-        color: crimson;
-      }
     }
 
-    &.edit-icon {
+    &.edit-action-button {
       &:hover {
         background-color: $admin-hover-color;
-        color: $admin-main-color;
-      }
-      &:active {
-        background-color: rgba($color: $admin-main-color, $alpha: 0.3);
         color: $admin-main-color;
       }
     }

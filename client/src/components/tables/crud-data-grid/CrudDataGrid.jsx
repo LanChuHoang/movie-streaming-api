@@ -1,6 +1,7 @@
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import "./crudDataGrid.scss";
 import { useMemo } from "react";
+import { DeleteActionCell } from "../../table-cells/action-cell/ActionCell";
 
 export default function CrudDataGrid({
   rows,
@@ -20,11 +21,7 @@ export default function CrudDataGrid({
         type: "actions",
         width: 80,
         getActions: (params) => [
-          <GridActionsCellItem
-            icon={<i className="bx bx-trash"></i>}
-            label="Delete"
-            onClick={() => onDeleteRow(params.id)}
-          />,
+          <DeleteActionCell onClick={() => onDeleteRow(params.id)} />,
         ],
       },
     ],

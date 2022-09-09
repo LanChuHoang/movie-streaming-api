@@ -1,19 +1,23 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-
 import DataTable from "../../../components/tables/data-table/DataTable";
-import ActionCell from "../../../components/table-cells/action-cell/ActionCell";
+import {
+  DeleteActionCell,
+  EditActionCell,
+} from "../../../components/table-cells/action-cell/ActionCell";
 import { ConfirmModal, MessageModal } from "../../../components/modals/Modals";
 import "./dataPage.scss";
 import AddButton from "../../../components/buttons/add-button/AddButton";
 import AdminSearchBar from "../../../components/search-bar/AdminSearchBar";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { useCallback } from "react";
 
 const DataPage = ({
   model,
   title,
   itemType,
-  columns,
+  columns: initialColumns,
   addable = false,
   editable = false,
 }) => {
@@ -66,9 +70,12 @@ const DataPage = ({
     setSortModel([]);
   };
 
-  const handleEditItem = (id) => {
-    navigate(`/admin/${itemType}/${id}`);
-  };
+  const handleEditItem = useCallback(
+    (id) => {
+      navigate(`/admin/${itemType}/${id}`);
+    },
+    [navigate, itemType]
+  );
 
   const handleDeleteItem = async (id) => {
     try {
@@ -84,27 +91,35 @@ const DataPage = ({
     }
   };
 
-  const actionColumn = [
-    {
-      field: "action",
-      headerName: "",
-      flex: 1.2,
-      align: "right",
-      disableColumnMenu: true,
-      sortable: false,
-      renderCell: ({ row }) => (
-        <ActionCell
-          onDelete={() => {
-            setConfirmModalActive(true);
-            setToDeleteId(row._id);
-          }}
-          onEdit={() => {
-            editable && handleEditItem(row._id);
-          }}
-        />
-      ),
-    },
-  ];
+  const handleDeleteRowClick = useCallback((id) => {
+    setConfirmModalActive(true);
+    setToDeleteId(id);
+  }, []);
+
+  const columns = useMemo(
+    () => [
+      ...initialColumns,
+      {
+        field: "actions",
+        type: "actions",
+        flex: 1.2,
+        getActions: (params) =>
+          editable
+            ? [
+                <DeleteActionCell
+                  onClick={() => handleDeleteRowClick(params.id)}
+                />,
+                <EditActionCell onClick={() => handleEditItem(params.id)} />,
+              ]
+            : [
+                <DeleteActionCell
+                  onClick={() => handleDeleteRowClick(params.id)}
+                />,
+              ],
+      },
+    ],
+    [initialColumns, editable, handleDeleteRowClick, handleEditItem]
+  );
 
   return (
     <div className="data-page-container">
@@ -133,7 +148,7 @@ const DataPage = ({
       <div className="data-page-table-container">
         <DataTable
           rows={items}
-          columns={[...columns, ...actionColumn]}
+          columns={columns}
           getRowId={(r) => r._id}
           totalRows={totalItems || 0}
           sortModel={sortModel}
