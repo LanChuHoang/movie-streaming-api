@@ -81,6 +81,7 @@ const toSeasonModel = (tmdbSeason) => {
 
 const toEpisodeModel = (tmdbEpisode) => {
   return {
+    _id: `new-episode-${tmdbEpisode.episode_number}`,
     title: tmdbEpisode.name,
     episodeNumber: tmdbEpisode.episode_number,
     airDate: tmdbEpisode.air_date,

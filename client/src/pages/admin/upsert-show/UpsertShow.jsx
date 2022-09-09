@@ -15,6 +15,7 @@ import {
   CircularProgress,
   Snackbar,
 } from "@mui/material";
+import AdminSeasonGrid from "../../../components/admin-season-grid/AdminSeasonGrid";
 
 const MESSAGE = {
   loadingFail: { type: "error", label: "Failed to load resource" },
@@ -161,6 +162,8 @@ const UpsertShow = () => {
           </div>
         </div>
         <div className="bottom-container">
+          <p className="group-title">Seasons</p>
+          <AdminSeasonGrid seasons={show.seasons} />
           <p className="group-title">Cast</p>
           <AdminPersonGrid
             personType="cast"
