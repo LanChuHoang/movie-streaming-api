@@ -68,12 +68,7 @@ const Movies = () => {
     addItem: (item) => {},
     getItems: (params) => backendApi.getItems("movie", params),
     searchItems: (params) => backendApi.searchItems("movie", params),
-    updateItem: (id) => {
-      console.log(id);
-    },
-    deleteItem: (id) => {
-      console.log(id);
-    },
+    deleteItem: backendApi.deleteMovie,
   };
 
   return (

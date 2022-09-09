@@ -37,3 +37,32 @@
     border-radius: 0.25rem;
   }
 }
+
+.confirm-modal-container {
+  padding: 2rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: $admin-text-color;
+  text-align: center;
+
+  .confirm-modal-buttons {
+    margin-top: 1rem;
+
+    button {
+      text-transform: capitalize;
+      margin: 0 10px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: normal;
+      font-family: "Nunito", sans-serif;
+    }
+
+    .cancel-button {
+      color: gray;
+
+      &:hover {
+        background-color: rgba(211, 211, 211, 0.2);
+      }
+    }
+  }
+}

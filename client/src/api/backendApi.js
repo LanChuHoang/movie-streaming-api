@@ -155,6 +155,10 @@ const backendApi = {
     return axiosClient.patch(`/movie/${id}`, movieData);
   },
 
+  deleteMovie: (id) => {
+    return axiosClient.delete(`/movie/${id}`);
+  },
+
   // People
   addPerson: (personData) => {
     return axiosClient.post("/person", personData);

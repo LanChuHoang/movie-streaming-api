@@ -65,42 +65,42 @@
   }
 }
 
-.confirm-modal-container {
-  .confirm-modal {
-    width: 25%;
-    background-color: white;
-    border-radius: 0.5rem;
-    text-align: center;
+// .confirm-modal-container {
+//   .confirm-modal {
+//     width: 25%;
+//     background-color: white;
+//     border-radius: 0.5rem;
+//     text-align: center;
 
-    @include tablet {
-      width: 30%;
-    }
+//     @include tablet {
+//       width: 30%;
+//     }
 
-    @include mobile {
-      width: 50%;
-    }
+//     @include mobile {
+//       width: 50%;
+//     }
 
-    .confirm-buttons {
-      margin-top: 1rem;
+//     .confirm-buttons {
+//       margin-top: 1rem;
 
-      button {
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.25rem;
-      }
+//       button {
+//         padding: 0.5rem 0.75rem;
+//         border-radius: 0.25rem;
+//       }
 
-      .cancel-button {
-        background-color: rgba(211, 211, 211, 0.441);
-        color: $admin-header-color;
-        margin-right: 1rem;
-      }
+//       .cancel-button {
+//         background-color: rgba(211, 211, 211, 0.441);
+//         color: $admin-header-color;
+//         margin-right: 1rem;
+//       }
 
-      .confirm-button {
-        background-color: rgba(252, 19, 19, 0.817);
-        color: white;
-      }
-    }
-  }
-}
+//       .confirm-button {
+//         background-color: rgba(252, 19, 19, 0.817);
+//         color: white;
+//       }
+//     }
+//   }
+// }
 
 .message-modal-container {
   .message-modal {

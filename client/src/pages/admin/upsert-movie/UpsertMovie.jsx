@@ -183,6 +183,7 @@ const UpsertMovie = () => {
         <CircularProgress />
       </Backdrop>
       <Snackbar
+        autoHideDuration={4000}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}

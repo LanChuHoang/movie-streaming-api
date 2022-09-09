@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import DataTable from "../../../components/tables/data-table/DataTable";
 import {
   DeleteActionCell,
   EditActionCell,
 } from "../../../components/table-cells/action-cell/ActionCell";
-import { ConfirmModal, MessageModal } from "../../../components/modals/Modals";
 import "./dataPage.scss";
 import AddButton from "../../../components/buttons/add-button/AddButton";
 import AdminSearchBar from "../../../components/search-bar/AdminSearchBar";
 import { useNavigate } from "react-router-dom";
-import { useMemo } from "react";
-import { useCallback } from "react";
+import { Alert, Button, Snackbar } from "@mui/material";
+import CenterModal from "../../../components/modals/center-modal/CenterModal";
 
 const DataPage = ({
   model,
@@ -30,9 +29,9 @@ const DataPage = ({
     { field: "createdAt", sort: "desc" },
   ]);
   const [toDeleteId, setToDeleteId] = useState();
-  const [confirmModalActive, setConfirmModalActive] = useState(false);
-  const [errorMessage, setErrorMessage] = useState();
-  const [messageModalActive, setMessageModalActive] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [message, setMessage] = useState();
+  const [messageAlertOpen, setMessageAlertOpen] = useState(false);
   const navigate = useNavigate();
 
   const loadItems = async () => {
@@ -51,7 +50,8 @@ const DataPage = ({
       setTotalItems(response.totalDocuments);
     } catch (error) {
       console.log(error);
-      setErrorMessage(`Something went wrong. Load ${itemType} failed`);
+      setMessageAlertOpen(true);
+      setMessage(MESSAGE.loadItemsFailed);
     }
   };
 
@@ -79,20 +79,22 @@ const DataPage = ({
 
   const handleDeleteItem = async (id) => {
     try {
-      console.log("delete", id);
       const deletedItem = (await model.deleteItem(id)).data;
+      console.log("deleted", deletedItem);
+      setMessageAlertOpen(true);
+      setMessage(MESSAGE.deleteSuccess);
       loadItems();
     } catch (error) {
       console.log(error);
-      setErrorMessage(`Something went wrong. Delete ${itemType} failed`);
-      setMessageModalActive(true);
+      setMessageAlertOpen(true);
+      setMessage(MESSAGE.deleteFailed);
     } finally {
-      setConfirmModalActive(false);
+      setConfirmModalOpen(false);
     }
   };
 
   const handleDeleteRowClick = useCallback((id) => {
-    setConfirmModalActive(true);
+    setConfirmModalOpen(true);
     setToDeleteId(id);
   }, []);
 
@@ -160,38 +162,77 @@ const DataPage = ({
       </div>
 
       <ConfirmModal
-        active={confirmModalActive}
-        confirmButtonTitle="Delete"
-        onCancel={() => setConfirmModalActive(false)}
-        onConfirm={() => handleDeleteItem(toDeleteId)}
-      >
-        Are you sure you want to delete this {itemType}?
-      </ConfirmModal>
-      <MessageModal
-        active={messageModalActive}
-        onConfirm={() => {
-          setMessageModalActive(false);
-          setErrorMessage(undefined);
+        open={confirmModalOpen}
+        onClose={(agreed) => {
+          setConfirmModalOpen(false);
+          agreed && handleDeleteItem(toDeleteId);
         }}
+        itemType={itemType}
+      />
+      <Snackbar
+        autoHideDuration={4000}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={messageAlertOpen}
+        onClose={() => setMessageAlertOpen(false)}
       >
-        {errorMessage}
-      </MessageModal>
+        <Alert severity={message?.type === "success" ? "success" : "error"}>
+          {message?.label}
+        </Alert>
+      </Snackbar>
     </div>
   );
+};
+
+const MESSAGE = {
+  deleteSuccess: {
+    type: "success",
+    label: "Deleted successfully!",
+  },
+  deleteFailed: {
+    type: "error",
+    label: "Failed to delete item",
+  },
+  loadItemsFailed: {
+    type: "error",
+    label: "Failed to load resource",
+  },
 };
 
 DataPage.propTypes = {
   model: PropTypes.shape({
     addItem: PropTypes.func,
     getItems: PropTypes.func,
-    updateItem: PropTypes.func,
     deleteItem: PropTypes.func,
   }),
   title: PropTypes.string,
   itemType: PropTypes.string,
   columns: PropTypes.array,
-  AddModal: PropTypes.elementType,
-  EditModal: PropTypes.elementType,
+  addable: Boolean,
+  editable: Boolean,
+};
+
+const ConfirmModal = ({ open, onClose, itemType = "item" }) => {
+  return (
+    <CenterModal
+      open={open}
+      onClose={() => onClose(false)}
+      className="confirm-modal-container"
+    >
+      <p>Are you sure you want to delete this {itemType}?</p>
+      <div className="confirm-modal-buttons">
+        <Button className="cancel-button" onClick={() => onClose(false)}>
+          Cancel
+        </Button>
+        <Button
+          className="delete-button"
+          color="error"
+          onClick={() => onClose(true)}
+        >
+          Delete
+        </Button>
+      </div>
+    </CenterModal>
+  );
 };
 
 export default DataPage;
