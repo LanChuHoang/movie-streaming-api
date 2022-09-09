@@ -79,6 +79,10 @@ const showApi = {
     "createdAt",
   ],
 
+  addShow: (showData) => {
+    return axiosClient.post(endpoint.show.base, showData);
+  },
+
   getShows: (params = {}) => {
     const parsedParams = parseFieldsParam(params);
     return axiosClient.get(endpoint.show.base, { params: parsedParams });
@@ -87,6 +91,18 @@ const showApi = {
   searchShows: (params = {}) => {
     const parsedParams = parseFieldsParam(params);
     return axiosClient.get(endpoint.show.search, { params: parsedParams });
+  },
+
+  getShow: (id) => {
+    return axiosClient.get(`${endpoint.show.base}/${id}`);
+  },
+
+  getCredits: (id) => {
+    return axiosClient.get(`${endpoint.show.base}/${id}`);
+  },
+
+  updateShow: (id, showData) => {
+    return axiosClient.patch(`${endpoint.show.base}/${id}`, showData);
   },
 
   deleteShow: (id) => {

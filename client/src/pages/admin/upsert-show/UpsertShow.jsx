@@ -1,4 +1,4 @@
-import "./upsertMovie.scss";
+import "./upsertShow.scss";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import tmdbApi from "../../../api/tmdb/tmdbApi";
@@ -7,7 +7,7 @@ import AdminImportBar from "../../../components/admin-import-bar/AdminImportBar"
 import { apiOptions } from "../../../api/filterOptions";
 import UpsertInput from "../../../components/inputs/upsert-input/UpsertInput";
 import AdminPersonGrid from "../../../components/admin-person-grid/AdminPersonGrid";
-import { toMovieModel } from "../../../api/tmdb/tmdbApi.helper";
+import { toShowModel } from "../../../api/tmdb/tmdbApi.helper";
 import {
   Alert,
   Backdrop,
@@ -25,29 +25,29 @@ const MESSAGE = {
   invalidId: { type: "error", label: "Invalid movie ID" },
 };
 
-const UpsertMovie = () => {
+const UpsertShow = () => {
   const { id } = useParams();
-  const [movie, setMovie] = useState(defaultMovie);
-  const [toEditMovieId, setToEditMovieId] = useState({
+  const [show, setShow] = useState(defaultMovie);
+  const [toEditShowId, setToEditShowId] = useState({
     value: "",
     source: "", // backend-api or tmdb-api
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState();
   const [alertOpen, setAlertOpen] = useState(false);
-  const backendApi = useBackendApi();
+  const backendApi = useBackendApi().show;
 
-  const mergeMovieState = (field, value) => {
-    setMovie({ ...movie, [field]: value });
+  const mergeShowState = (field, value) => {
+    setShow({ ...show, [field]: value });
   };
 
   useEffect(() => {
-    const loadToEditMovie = async (id) => {
+    const loadToEditShow = async (id) => {
       setIsLoading(true);
       try {
-        const toEditMovie = (await backendApi.getItemDetail("movie", id)).data;
-        setMovie(toEditMovie);
-        setToEditMovieId({ value: toEditMovie._id, source: "backend-api" });
+        const toEditShow = (await backendApi.getShow(id)).data;
+        setShow(toEditShow);
+        setToEditShowId({ value: toEditShow._id, source: "backend-api" });
       } catch (error) {
         console.log(error);
         setAlertOpen(true);
@@ -56,17 +56,17 @@ const UpsertMovie = () => {
         setIsLoading(false);
       }
     };
-    id && loadToEditMovie(id);
+    id && loadToEditShow(id);
   }, [id, backendApi]);
 
-  const handleMovieSelect = async (tmdbMovie) => {
+  const handleShowSelect = async (tmdbShow) => {
     setIsLoading(true);
     let resultMessage;
     try {
-      const tmdbMovieDetail = await tmdbApi.movie.getMovie(tmdbMovie.id);
-      const newMovie = toMovieModel(tmdbMovieDetail);
-      setMovie(newMovie);
-      setToEditMovieId({ value: tmdbMovie.id, source: "tmdb-api" });
+      const tmdbShowDetail = await tmdbApi.show.getShow(tmdbShow.id);
+      const newShow = toShowModel(tmdbShowDetail);
+      setShow(newShow);
+      setToEditShowId({ value: tmdbShow.id, source: "tmdb-api" });
       resultMessage = MESSAGE.importTmdbSuccess;
     } catch (error) {
       console.log(error);
@@ -83,12 +83,12 @@ const UpsertMovie = () => {
     setIsLoading(true);
     let resultMessage;
     try {
-      const { _id, _createdAt, _updatedAt, ...movieData } = movie;
-      const upsertedMovie = id
-        ? (await backendApi.updateMovie(id, movieData)).data
-        : (await backendApi.addMovie(movieData)).data;
+      const { _id, _createdAt, _updatedAt, ...showData } = show;
+      const upsertedShow = id
+        ? (await backendApi.updateShow(id, showData)).data
+        : (await backendApi.addShow(showData)).data;
       resultMessage = MESSAGE.saveSuccess;
-      console.log(upsertedMovie);
+      console.log(upsertedShow);
     } catch (error) {
       switch (error.response?.status) {
         case 400:
@@ -112,11 +112,11 @@ const UpsertMovie = () => {
   return (
     <form className="upsert-movie-container" onSubmit={handleFormSubmit}>
       <AdminImportBar
-        title={id ? `Edit ${id?.slice(-4) || "movie"}` : "Add movie"}
-        searchItems={tmdbApi.movie.searchMovies}
-        getOptionLabel={(option) => option.title}
-        renderOption={(option) => <p>{option.title}</p>}
-        onItemSelect={handleMovieSelect}
+        title={id ? `Edit ${id?.slice(-4) || "show"}` : "Add show"}
+        searchItems={tmdbApi.show.searchShows}
+        getOptionLabel={(option) => option.name}
+        renderOption={(option) => <p>{option.name}</p>}
+        onItemSelect={handleShowSelect}
       />
       <div className="upsert-movie-inputs-wrapper">
         <p className="group-title">Basic Info</p>
@@ -126,38 +126,26 @@ const UpsertMovie = () => {
               <UpsertInput
                 key={input.field}
                 input={input}
-                value={movie[input.field]}
-                onChange={(e) => mergeMovieState(input.field, e.target.value)}
+                value={show[input.field]}
+                onChange={(e) => mergeShowState(input.field, e.target.value)}
               />
             ))}
             <div className="two-column-grid">
-              {topRightInputs.slice(2, 5).map((input) => (
+              {topRightInputs.slice(2, 6).map((input) => (
                 <UpsertInput
                   key={input.field}
                   input={input}
-                  value={movie[input.field]}
-                  onChange={(e) => mergeMovieState(input.field, e.target.value)}
+                  value={show[input.field]}
+                  onChange={(e) => mergeShowState(input.field, e.target.value)}
                 />
               ))}
-              <div className="two-column-grid">
-                {topRightInputs.slice(5, 7).map((input) => (
-                  <UpsertInput
-                    key={input.field}
-                    input={input}
-                    value={movie[input.field]}
-                    onChange={(e) =>
-                      mergeMovieState(input.field, e.target.value)
-                    }
-                  />
-                ))}
-              </div>
             </div>
             {topRightInputs.slice(-1).map((input) => (
               <UpsertInput
                 key={input.field}
                 input={input}
-                value={movie[input.field]}
-                onChange={(e) => mergeMovieState(input.field, e.target.value)}
+                value={show[input.field]}
+                onChange={(e) => mergeShowState(input.field, e.target.value)}
               />
             ))}
           </div>
@@ -166,8 +154,8 @@ const UpsertMovie = () => {
               <UpsertInput
                 key={input.field}
                 input={input}
-                value={movie[input.field]}
-                onChange={(e) => mergeMovieState(input.field, e.target.value)}
+                value={show[input.field]}
+                onChange={(e) => mergeShowState(input.field, e.target.value)}
               />
             ))}
           </div>
@@ -176,21 +164,21 @@ const UpsertMovie = () => {
           <p className="group-title">Cast</p>
           <AdminPersonGrid
             personType="cast"
-            itemType="movie"
-            itemId={toEditMovieId}
+            itemType="show"
+            itemId={toEditShowId}
             onPersonIdsChange={(ids) => {
               console.log("cast changed", ids);
-              mergeMovieState("cast", ids);
+              mergeShowState("cast", ids);
             }}
           />
           <p className="group-title directors">Directors</p>
           <AdminPersonGrid
             personType="director"
-            itemType="movie"
-            itemId={toEditMovieId}
+            itemType="show"
+            itemId={toEditShowId}
             onPersonIdsChange={(ids) => {
               console.log("directors changed", ids);
-              mergeMovieState("directors", ids);
+              mergeShowState("directors", ids);
             }}
           />
         </div>
@@ -253,21 +241,14 @@ const topRightInputs = [
   { field: "title", label: "Title" },
   { field: "tagline", label: "Tagline" },
   {
-    field: "runtime",
-    label: "Runtime",
-    adornment: { position: "end", unit: "min" },
+    field: "firstAirDate",
+    label: "First air date",
   },
-  { field: "releaseDate", label: "Release date" },
+  { field: "lastAirDate", label: "Last air date" },
   { field: "imdbID", label: "IMDB ID" },
   {
     field: "adult",
     label: "Adult",
-    type: "select",
-    options: TRUE_FALSE,
-  },
-  {
-    field: "isUpcoming",
-    label: "Upcoming",
     type: "select",
     options: TRUE_FALSE,
   },
@@ -299,4 +280,4 @@ const topLeftInputs = [
   { field: "videoUrl", label: "Video URL" },
 ];
 
-export default UpsertMovie;
+export default UpsertShow;

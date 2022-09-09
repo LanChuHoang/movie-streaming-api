@@ -18,6 +18,7 @@ import Movies from "./pages/admin/movies/Movies";
 import Shows from "./pages/admin/shows/Shows";
 import People from "./pages/admin/people/People";
 import UpsertMovie from "./pages/admin/upsert-movie/UpsertMovie";
+import UpsertShow from "./pages/admin/upsert-show/UpsertShow";
 
 function App() {
   return (
@@ -50,8 +51,8 @@ function App() {
               <Route path=":id" element={<UpsertMovie />} />
             </Route>
             <Route path="show">
-              <Route index element={<p>Add show</p>} />
-              <Route path=":id" element={<p>Edit show</p>} />
+              <Route index element={<UpsertShow />} />
+              <Route path=":id" element={<UpsertShow />} />
             </Route>
             <Route path="person">
               <Route index element={<p>Add person</p>} />

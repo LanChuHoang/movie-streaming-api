@@ -1,5 +1,4 @@
 import axios from "axios";
-import { isDirector } from "./tmdbApi.helper";
 
 const axiosClient = axios.create({
   baseURL: "https://api.themoviedb.org/3",
@@ -9,34 +8,79 @@ const axiosClient = axios.create({
 const endpoint = {
   movie: {
     base: "/movie",
-    searchMovie: "/search/movie",
+    search: "/search/movie",
+  },
+  show: {
+    base: "/tv",
+    search: "/search/tv",
   },
   person: {
     base: "/person",
   },
 };
 
-function searchMovie({ query, page = 1 }) {
-  const params = { query, page };
-  return axiosClient.get(endpoint.movie.searchMovie, { params });
-}
+const movieApi = {
+  searchMovies: ({ query, page = 1 }) => {
+    const params = { query, page };
+    return axiosClient.get(endpoint.movie.search, { params });
+  },
 
-async function getMovie(id) {
-  const baseUrl = `${endpoint.movie.base}/${id}`;
-  const [{ data: movie }, { data: videos }] = await Promise.all([
-    axiosClient.get(baseUrl),
-    axiosClient.get(`${baseUrl}/videos`),
-  ]);
-  return { ...movie, videos: videos.results };
-}
+  getMovie: async (id) => {
+    const baseUrl = `${endpoint.movie.base}/${id}`;
+    const [{ data: movie }, { data: videos }] = await Promise.all([
+      axiosClient.get(baseUrl),
+      axiosClient.get(`${baseUrl}/videos`),
+    ]);
+    return { ...movie, videos: videos.results };
+  },
 
-function getCastAndCrew(movieId) {
-  return axiosClient.get(`${endpoint.movie.base}/${movieId}/credits`);
-}
+  getCredits: (movieId) => {
+    return axiosClient.get(`${endpoint.movie.base}/${movieId}/credits`);
+  },
+};
 
-function getPerson(id) {
-  return axiosClient.get(`${endpoint.person.base}/${id}`);
-}
+const getSeason = (showId, seasonNumber) => {
+  return axiosClient.get(
+    `${endpoint.show.base}/${showId}/season/${seasonNumber}`
+  );
+};
 
-const tmdbApi = { searchMovie, getMovie, getCastAndCrew, getPerson };
+const showApi = {
+  searchShows: ({ query, page = 1 }) => {
+    const params = { query, page };
+    return axiosClient.get(endpoint.show.search, { params });
+  },
+
+  getShow: async (id) => {
+    const baseUrl = `${endpoint.show.base}/${id}`;
+    const [{ data: baseDetail }, { data: videos }] = await Promise.all([
+      axiosClient.get(baseUrl),
+      axiosClient.get(`${baseUrl}/videos`),
+    ]);
+    const seasons = (
+      await Promise.all(
+        baseDetail.seasons.map((s) => getSeason(id, s.season_number))
+      )
+    ).map((s) => s.data);
+    return { ...baseDetail, videos: videos.results, seasons };
+  },
+
+  getSeason: (showId, seasonNumber) => {
+    return axiosClient.get(
+      `${endpoint.show.base}/${showId}/season/${seasonNumber}`
+    );
+  },
+
+  getCredits: (showId) => {
+    return axiosClient.get(`${endpoint.show.base}/${showId}/credits`);
+  },
+};
+
+const personApi = {
+  getPerson: (id) => {
+    return axiosClient.get(`${endpoint.person.base}/${id}`);
+  },
+};
+
+const tmdbApi = { movie: movieApi, show: showApi, person: personApi };
 export default tmdbApi;

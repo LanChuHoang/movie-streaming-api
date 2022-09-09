@@ -32,7 +32,12 @@ const countNumStoredRow = (rows) =>
     0
   ) || 0;
 
-const AdminPersonGrid = ({ personType, movieId, onPersonIdsChange }) => {
+const AdminPersonGrid = ({
+  personType,
+  itemType,
+  itemId,
+  onPersonIdsChange,
+}) => {
   const [rows, setRows] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const backendApi = useBackendApi();
@@ -48,19 +53,26 @@ const AdminPersonGrid = ({ personType, movieId, onPersonIdsChange }) => {
   useEffect(() => {
     const loadStoredPeople = async (id) => {
       setIsLoading(true);
-      const { cast, directors } = (await backendApi.getItemDetail("movie", id))
-        .data;
-      const storedPeople = (personType === "cast" ? cast : directors).map(
-        toStoredRow
-      );
-      console.log("Load Stored people");
-      setRows(storedPeople);
-      setIsLoading(false);
+      try {
+        const { cast, directors } =
+          itemType === "movie"
+            ? (await backendApi.getItemDetail("movie", id)).data
+            : (await backendApi.show.getCredits(id)).data;
+        const storedPeople = (personType === "cast" ? cast : directors).map(
+          toStoredRow
+        );
+        console.log("Load Stored people", storedPeople);
+        setRows(storedPeople);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    movieId?.value &&
-      movieId.source === "backend-api" &&
-      loadStoredPeople(movieId.value);
-  }, [movieId, personType, backendApi]);
+    itemId?.value &&
+      itemId.source === "backend-api" &&
+      loadStoredPeople(itemId.value);
+  }, [itemId, itemType, personType, backendApi]);
 
   useEffect(() => {
     const fillStoredPeople = (tmdbPeople, job) =>
@@ -74,7 +86,8 @@ const AdminPersonGrid = ({ personType, movieId, onPersonIdsChange }) => {
               });
               const storedPerson = results.docs.find((d) => d.name === p.name);
               if (storedPerson) resolve(toStoredRow(storedPerson));
-              const notStoredPerson = (await tmdbApi.getPerson(p.id)).data;
+              const notStoredPerson = (await tmdbApi.person.getPerson(p.id))
+                .data;
               resolve(toNewRow(toPersonModel(notStoredPerson, job)));
             } catch (error) {
               reject(error);
@@ -84,24 +97,29 @@ const AdminPersonGrid = ({ personType, movieId, onPersonIdsChange }) => {
 
     const loadCastAndCrew = async (id) => {
       setIsLoading(true);
-      const { cast, crew } = (await tmdbApi.getCastAndCrew(id)).data;
-      let people;
-      if (personType === "cast") {
-        people = await Promise.all(fillStoredPeople(cast, personJob.actor));
-      } else {
-        people = await Promise.all(
-          fillStoredPeople(crew.filter(isDirector), personJob.director)
-        );
+      try {
+        const fetcher = itemType === "movie" ? tmdbApi.movie : tmdbApi.show;
+        const { cast, crew } = (await fetcher.getCredits(id)).data;
+        let people;
+        if (personType === "cast") {
+          people = await Promise.all(fillStoredPeople(cast, personJob.actor));
+        } else {
+          people = await Promise.all(
+            fillStoredPeople(crew.filter(isDirector), personJob.director)
+          );
+        }
+        console.log("Load Tmdb people", people);
+        setRows(people);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
       }
-      console.log(people);
-      console.log("Load Tmdb people");
-      setRows(people);
-      setIsLoading(false);
     };
-    movieId?.value &&
-      movieId.source === "tmdb-api" &&
-      loadCastAndCrew(movieId.value);
-  }, [movieId, personType, backendApi]);
+    itemId?.value &&
+      itemId.source === "tmdb-api" &&
+      loadCastAndCrew(itemId.value);
+  }, [itemId, itemType, personType, backendApi]);
 
   const handlePersonDelete = useCallback((id) => {
     setRows((prevRows) => prevRows.filter((r) => r._id !== id));
