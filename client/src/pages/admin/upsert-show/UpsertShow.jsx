@@ -1,6 +1,6 @@
 import "./upsertShow.scss";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import tmdbApi from "../../../api/tmdb/tmdbApi";
 import useBackendApi from "../../../hooks/useBackendApi";
 import AdminImportBar from "../../../components/admin-import-bar/AdminImportBar";
@@ -28,7 +28,7 @@ const MESSAGE = {
 
 const UpsertShow = () => {
   const { id } = useParams();
-  const [show, setShow] = useState(defaultMovie);
+  const [show, setShow] = useState(defaultShow);
   const [toEditShowId, setToEditShowId] = useState({
     value: "",
     source: "", // backend-api or tmdb-api
@@ -81,6 +81,7 @@ const UpsertShow = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    console.log("handle submit");
     setIsLoading(true);
     let resultMessage;
     try {
@@ -109,6 +110,10 @@ const UpsertShow = () => {
       setMessage(resultMessage);
     }
   };
+
+  const handleSeasonsChange = useCallback((newSeasons) => {
+    setShow((prevShow) => ({ ...prevShow, seasons: newSeasons }));
+  }, []);
 
   return (
     <form className="upsert-movie-container" onSubmit={handleFormSubmit}>
@@ -163,7 +168,10 @@ const UpsertShow = () => {
         </div>
         <div className="bottom-container">
           <p className="group-title">Seasons</p>
-          <AdminSeasonGrid seasons={show.seasons} />
+          <AdminSeasonGrid
+            seasons={show.seasons}
+            onChange={handleSeasonsChange}
+          />
           <p className="group-title">Cast</p>
           <AdminPersonGrid
             personType="cast"
@@ -209,13 +217,13 @@ const UpsertShow = () => {
   );
 };
 
-const defaultMovie = {
+const defaultShow = {
   title: "",
   tagline: "",
   overview: "",
   adult: false,
-  runtime: "",
-  releaseDate: "",
+  firstAirDate: "",
+  lastAirDate: "",
   imdbID: "",
   genres: [],
   countries: [],
@@ -226,7 +234,7 @@ const defaultMovie = {
   backdropUrl: "",
   thumbnailUrl: "",
   videoUrl: "",
-  isUpcoming: false,
+  seasons: [],
 };
 
 const TRUE_FALSE = [
@@ -263,7 +271,7 @@ const topLeftInputs = [
     field: "genres",
     label: "Genres",
     type: "multiselect",
-    options: apiOptions.MOVIE_GENRES,
+    options: apiOptions.SHOW_GENRES,
   },
   {
     field: "countries",

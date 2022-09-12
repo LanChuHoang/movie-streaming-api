@@ -2,14 +2,65 @@ import "./adminSeasonGrid.scss";
 import { toBritishDate } from "../../api/helper";
 import CrudDataGrid from "../tables/crud-data-grid/CrudDataGrid";
 import { Avatar, CardHeader } from "@mui/material";
+import AdminSeasonGridToolbar from "./AdminSeasonGridToolbar";
+import { useState, useCallback } from "react";
 
-const AdminSeasonGrid = ({ seasons = [] }) => {
+const AdminSeasonGrid = ({ seasons = [], onChange }) => {
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const handleEpisodeDelete = useCallback(
+    (id) => {
+      const episodes = seasons[selectedTab].episodes.filter(
+        (ep) => ep._id !== id
+      );
+      const newSeasons = seasons.map((s, i) =>
+        i === selectedTab ? { ...s, episodes } : s
+      );
+      onChange && onChange(newSeasons);
+    },
+    [seasons, selectedTab, onChange]
+  );
+
+  const handleEpisodeEdit = useCallback(
+    ({ row }) => {
+      const episodes = seasons[selectedTab].episodes.map((ep) =>
+        ep._id === row._id ? row : ep
+      );
+      const newSeasons = seasons.map((s, i) =>
+        i === selectedTab ? { ...s, episodes } : s
+      );
+      onChange && onChange(newSeasons);
+    },
+    [seasons, selectedTab, onChange]
+  );
+
+  const handleSeasonDetailChange = useCallback(
+    (fieldName, value) => {
+      const newSeasons = seasons.map((s, i) =>
+        i === selectedTab ? { ...s, [fieldName]: value } : s
+      );
+      onChange && onChange(newSeasons);
+    },
+    [seasons, selectedTab, onChange]
+  );
+
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: 800, width: "100%" }}>
       <CrudDataGrid
-        rows={seasons[0]?.episodes || []}
+        rows={seasons[selectedTab]?.episodes || []}
         columns={columns}
         getRowId={(row) => row._id}
+        components={{ Toolbar: AdminSeasonGridToolbar }}
+        componentsProps={{
+          toolbar: {
+            seasons,
+            selectedTab,
+            onSelectedTabChange: (_, newValue) => setSelectedTab(newValue),
+            onSeasonDetailChange: handleSeasonDetailChange,
+          },
+        }}
+        onDeleteRow={handleEpisodeDelete}
+        onRowEditStop={handleEpisodeEdit}
       />
     </div>
   );
@@ -20,6 +71,7 @@ const columns = [
   {
     field: "episodeNumber",
     headerName: "Episode",
+    type: "number",
     editable: true,
   },
   {

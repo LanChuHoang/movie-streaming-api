@@ -15,7 +15,12 @@ const defaultValue = {
   "creatable-multiselect": [],
 };
 
-const UpsertInput = ({ input, value: outerValue, onChange }) => {
+const UpsertInput = ({
+  className = "",
+  input,
+  value: outerValue,
+  onChange,
+}) => {
   const [value, setValue] = useState(defaultValue[input.type] || "");
 
   useEffect(() => {
@@ -30,7 +35,7 @@ const UpsertInput = ({ input, value: outerValue, onChange }) => {
     case "multiline":
       return (
         <TextField
-          className="upsert-input"
+          className={`upsert-input ${className}`}
           size="small"
           multiline
           label={input.label}
@@ -43,7 +48,7 @@ const UpsertInput = ({ input, value: outerValue, onChange }) => {
     case "select":
       return (
         <TextField
-          className="upsert-input upsert-input-select"
+          className={`upsert-input upsert-input-select ${className}`}
           size="small"
           select
           label={input.label}
@@ -61,7 +66,7 @@ const UpsertInput = ({ input, value: outerValue, onChange }) => {
     case "multiselect":
       return (
         <Autocomplete
-          className="upsert-input"
+          className={`upsert-input ${className}`}
           size="small"
           multiple
           value={value}
@@ -77,6 +82,7 @@ const UpsertInput = ({ input, value: outerValue, onChange }) => {
     case "creatable-multiselect":
       return (
         <CreatableMultiselect
+          className={className}
           input={input}
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -87,11 +93,12 @@ const UpsertInput = ({ input, value: outerValue, onChange }) => {
     default:
       return (
         <TextField
-          className="upsert-input"
+          className={`upsert-input ${className}`}
           size="small"
           label={input.label}
           value={value}
           type={input.type}
+          disabled={input.readOnly}
           InputProps={{
             startAdornment:
               input.adornment?.position === "start" ? (
@@ -105,18 +112,19 @@ const UpsertInput = ({ input, value: outerValue, onChange }) => {
                   {input.adornment.unit}
                 </InputAdornment>
               ) : undefined,
+            readOnly: input.readOnly === undefined ? false : input.readOnly,
           }}
           onChange={(e) => setValue(e.target.value)}
-          onBlur={() => onChange({ target: { value } })}
+          onBlur={() => !input.readOnly && onChange({ target: { value } })}
         />
       );
   }
 };
 
-const CreatableMultiselect = ({ input, value, onChange }) => {
+const CreatableMultiselect = ({ className = "", input, value, onChange }) => {
   return (
     <Autocomplete
-      className="upsert-input"
+      className={`upsert-input ${className}`}
       size="small"
       multiple
       value={value}

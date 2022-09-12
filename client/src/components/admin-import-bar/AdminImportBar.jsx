@@ -35,7 +35,7 @@ const AdminImportBar = ({
   return (
     <div className="admin-import-bar-container">
       <div className="admin-import-bar-title-wrapper">
-        <button onClick={() => navigate(-1)}>
+        <button type="button" onClick={() => navigate(-1)}>
           <i className="bx bx-chevron-left"></i>
         </button>
         <h1>{title}</h1>
