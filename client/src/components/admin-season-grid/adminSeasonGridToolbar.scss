@@ -17,6 +17,16 @@
     }
   }
 
+  .tabs-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .season-grid-toolbar-button {
+    color: $admin-main-color;
+  }
+
   .season-detail-inputs {
     width: 100%;
     padding: 1rem;

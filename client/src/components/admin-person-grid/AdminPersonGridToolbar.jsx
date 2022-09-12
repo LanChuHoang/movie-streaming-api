@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { GridToolbarContainer } from "@mui/x-data-grid";
 import {
-  Alert,
   Button,
   FormControl,
   IconButton,
@@ -21,7 +20,6 @@ const MESSAGE = {
 };
 
 const AdminPersonGridToolbar = ({
-  rows,
   validateNewRowId,
   onNewRowSave,
   numRows,

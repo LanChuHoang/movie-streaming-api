@@ -68,20 +68,21 @@ export const toShowModel = (tmdbShow) => {
   };
 };
 
-const toSeasonModel = (tmdbSeason) => {
+export const toSeasonModel = (tmdbSeason) => {
   return {
+    _id: newSeasonId(),
     title: tmdbSeason.name,
     seasonNumber: tmdbSeason.season_number,
     overview: tmdbSeason.overview,
     releaseDate: tmdbSeason.air_date,
     posterUrl: getImageUrl(tmdbSeason.poster_path, imageSize.w185),
-    episodes: tmdbSeason.episodes.map(toEpisodeModel),
+    episodes: tmdbSeason.episodes?.map(toEpisodeModel),
   };
 };
 
 const toEpisodeModel = (tmdbEpisode) => {
   return {
-    _id: `new-episode-${tmdbEpisode.episode_number}`,
+    _id: newEpisodeId(),
     title: tmdbEpisode.name,
     episodeNumber: tmdbEpisode.episode_number,
     airDate: tmdbEpisode.air_date,
@@ -93,7 +94,7 @@ const toEpisodeModel = (tmdbEpisode) => {
 
 export const toPersonModel = (tmdbPerson, job = personJob.actor) => {
   return {
-    _id: `new-person-${tmdbPerson.name}`,
+    _id: newPersonId(),
     name: tmdbPerson.name,
     gender: tmdbPerson.gender === 1 ? "female" : "male",
     dob: tmdbPerson.birthday,
@@ -103,3 +104,7 @@ export const toPersonModel = (tmdbPerson, job = personJob.actor) => {
     avatarUrl: getImageUrl(tmdbPerson.profile_path, imageSize.w185),
   };
 };
+
+export const newSeasonId = () => `new-season-${Date.now()}`;
+export const newEpisodeId = () => `new-episode-${Date.now()}`;
+export const newPersonId = () => `new-person-${Date.now()}`;

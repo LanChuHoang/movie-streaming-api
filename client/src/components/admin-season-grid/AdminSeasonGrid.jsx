@@ -3,10 +3,15 @@ import { toBritishDate } from "../../api/helper";
 import CrudDataGrid from "../tables/crud-data-grid/CrudDataGrid";
 import { Avatar, CardHeader } from "@mui/material";
 import AdminSeasonGridToolbar from "./AdminSeasonGridToolbar";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { newEpisodeId, newSeasonId } from "../../api/tmdb/tmdbApi.helper";
 
 const AdminSeasonGrid = ({ seasons = [], onChange }) => {
   const [selectedTab, setSelectedTab] = useState(0);
+
+  useEffect(() => {
+    if (selectedTab >= seasons.length) setSelectedTab(0);
+  }, [seasons, selectedTab]);
 
   const handleEpisodeDelete = useCallback(
     (id) => {
@@ -44,6 +49,24 @@ const AdminSeasonGrid = ({ seasons = [], onChange }) => {
     [seasons, selectedTab, onChange]
   );
 
+  const handleAddSeasonClick = useCallback(() => {
+    const newSeasons = [...seasons, { _id: newSeasonId() }];
+    onChange && onChange(newSeasons);
+    setSelectedTab(newSeasons.length - 1);
+  }, [seasons, onChange]);
+
+  const handleNewEpisodeClick = useCallback(() => {
+    setTimeout(scrollToGridBottom, 500);
+    const episodes = [
+      ...seasons[selectedTab].episodes,
+      { _id: newEpisodeId() },
+    ];
+    const newSeasons = seasons.map((s, i) =>
+      i === selectedTab ? { ...s, episodes } : s
+    );
+    onChange && onChange(newSeasons);
+  }, [seasons, selectedTab, onChange]);
+
   return (
     <div style={{ height: 800, width: "100%" }}>
       <CrudDataGrid
@@ -54,9 +77,11 @@ const AdminSeasonGrid = ({ seasons = [], onChange }) => {
         componentsProps={{
           toolbar: {
             seasons,
-            selectedTab,
+            selectedTab: selectedTab >= seasons.length ? 0 : selectedTab,
             onSelectedTabChange: (_, newValue) => setSelectedTab(newValue),
             onSeasonDetailChange: handleSeasonDetailChange,
+            onAddSeasonClick: handleAddSeasonClick,
+            onNewEpisodeClick: handleNewEpisodeClick,
           },
         }}
         onDeleteRow={handleEpisodeDelete}
@@ -64,6 +89,12 @@ const AdminSeasonGrid = ({ seasons = [], onChange }) => {
       />
     </div>
   );
+};
+
+const scrollToGridBottom = () => {
+  const scroller = document.querySelector(".MuiDataGrid-virtualScroller");
+  console.log(scroller.scrollHeight);
+  scroller.scrollTop = scroller.scrollHeight;
 };
 
 const columns = [
