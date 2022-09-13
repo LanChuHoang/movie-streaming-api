@@ -48,7 +48,7 @@ const AdminSeasonGridToolbar = ({
             value={
               seasons[selectedTab] ? seasons[selectedTab][input.field] : ""
             }
-            onChange={(e) => onSeasonDetailChange(input.field, e.target.value)}
+            onChange={onSeasonDetailChange}
           />
         ))}
       </div>

@@ -1,6 +1,6 @@
 import "./adminPersonGrid.scss";
 import CrudDataGrid from "../tables/crud-data-grid/CrudDataGrid";
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import useBackendApi from "../../hooks/useBackendApi";
 import tmdbApi from "../../api/tmdb/tmdbApi";
 import {
@@ -48,7 +48,7 @@ const AdminPersonGrid = ({
       .filter((r) => r.status === rowStatus.stored)
       .map((r) => r._id);
     onPersonIdsChange(storedIds);
-  }, [rows]);
+  }, [rows, onPersonIdsChange]);
 
   useEffect(() => {
     const loadStoredPeople = async (id) => {
@@ -265,4 +265,4 @@ const columns = [
   { field: "avatarUrl", headerName: "Avatar URL", editable: true },
 ];
 
-export default AdminPersonGrid;
+export default React.memo(AdminPersonGrid);

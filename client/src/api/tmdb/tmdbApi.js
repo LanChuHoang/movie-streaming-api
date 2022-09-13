@@ -57,12 +57,23 @@ const showApi = {
       axiosClient.get(baseUrl),
       axiosClient.get(`${baseUrl}/videos`),
     ]);
+    // const seasons = (
+    //   await Promise.all(
+    //     baseDetail.seasons.map((s) => getSeason(id, s.season_number))
+    //   )
+    // ).map((s) => s.data);
+    return { ...baseDetail, videos: videos.results };
+  },
+
+  getSeasons: async (showId) => {
+    const baseUrl = `${endpoint.show.base}/${showId}`;
+    const baseDetail = (await axiosClient.get(baseUrl)).data;
     const seasons = (
       await Promise.all(
-        baseDetail.seasons.map((s) => getSeason(id, s.season_number))
+        baseDetail.seasons.map((s) => getSeason(showId, s.season_number))
       )
     ).map((s) => s.data);
-    return { ...baseDetail, videos: videos.results, seasons };
+    return seasons;
   },
 
   getSeason: (showId, seasonNumber) => {

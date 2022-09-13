@@ -1,3 +1,5 @@
+import { random } from "lodash";
+
 const baseImageUrl = "https://image.tmdb.org/t/p";
 
 export const imageSize = {
@@ -64,7 +66,7 @@ export const toShowModel = (tmdbShow) => {
     posterUrl: getImageUrl(tmdbShow.poster_path, imageSize.w185),
     thumbnailUrl: getImageUrl(tmdbShow.backdrop_path, imageSize.w300),
     backdropUrl: getImageUrl(tmdbShow.backdrop_path, imageSize.original),
-    seasons: tmdbShow.seasons.map(toSeasonModel),
+    seasons: tmdbShow.seasons?.map(toSeasonModel),
   };
 };
 
@@ -105,6 +107,7 @@ export const toPersonModel = (tmdbPerson, job = personJob.actor) => {
   };
 };
 
-export const newSeasonId = () => `new-season-${Date.now()}`;
-export const newEpisodeId = () => `new-episode-${Date.now()}`;
-export const newPersonId = () => `new-person-${Date.now()}`;
+const randomId = () => random(10000, 20000);
+export const newSeasonId = () => `new-season-${randomId()}`;
+export const newEpisodeId = () => `new-episode-${randomId()}`;
+export const newPersonId = () => `new-person-${randomId()}`;

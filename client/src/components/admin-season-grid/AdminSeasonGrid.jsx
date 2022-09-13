@@ -3,73 +3,151 @@ import { toBritishDate } from "../../api/helper";
 import CrudDataGrid from "../tables/crud-data-grid/CrudDataGrid";
 import { Avatar, CardHeader } from "@mui/material";
 import AdminSeasonGridToolbar from "./AdminSeasonGridToolbar";
-import { useState, useCallback, useEffect } from "react";
-import { newEpisodeId, newSeasonId } from "../../api/tmdb/tmdbApi.helper";
+import React, { useState, useCallback, useEffect } from "react";
+import {
+  newEpisodeId,
+  newSeasonId,
+  toSeasonModel,
+} from "../../api/tmdb/tmdbApi.helper";
+import useBackendApi from "../../hooks/useBackendApi";
+import tmdbApi from "../../api/tmdb/tmdbApi";
 
-const AdminSeasonGrid = ({ seasons = [], onChange }) => {
+const AdminSeasonGrid = ({ showId, onChange }) => {
+  const [loading, setLoading] = useState(false);
+  const [seasons, setSeasons] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [onAddingSeason, setOnAddingSeason] = useState(false);
+  const [onAddingEpisode, setOnAddingEpisode] = useState(false);
+  const backendApi = useBackendApi().show;
 
+  // Loading data from backend api
   useEffect(() => {
-    if (selectedTab >= seasons.length) setSelectedTab(0);
-  }, [seasons, selectedTab]);
+    const loadStoredSeasons = async (id) => {
+      try {
+        setLoading(true);
+        const storedSeasons = (await backendApi.getSeasons(id)).data;
+        console.log("Load stored seasons", storedSeasons);
+        setSeasons(storedSeasons);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (showId.value && showId.source === "backend-api")
+      loadStoredSeasons(showId.value);
+  }, [showId, backendApi]);
 
-  const handleEpisodeDelete = useCallback(
-    (id) => {
-      const episodes = seasons[selectedTab].episodes.filter(
-        (ep) => ep._id !== id
-      );
-      const newSeasons = seasons.map((s, i) =>
-        i === selectedTab ? { ...s, episodes } : s
-      );
-      onChange && onChange(newSeasons);
-    },
-    [seasons, selectedTab, onChange]
-  );
+  // Loading data from tmdb api
+  useEffect(() => {
+    const loadTmdbSeasons = async (id) => {
+      try {
+        setLoading(true);
+        const tmdbSeasons = await tmdbApi.show.getSeasons(id);
+        const convertedSeasons = tmdbSeasons.map(toSeasonModel);
+        console.log("Load tmdb seasons", convertedSeasons);
+        setSeasons(convertedSeasons);
+        setSelectedTab(0); // reset selected tab
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (showId.value && showId.source === "tmdb-api")
+      loadTmdbSeasons(showId.value);
+  }, [showId]);
 
-  const handleEpisodeEdit = useCallback(
-    ({ row }) => {
-      const episodes = seasons[selectedTab].episodes.map((ep) =>
-        ep._id === row._id ? row : ep
-      );
-      const newSeasons = seasons.map((s, i) =>
-        i === selectedTab ? { ...s, episodes } : s
-      );
-      onChange && onChange(newSeasons);
-    },
-    [seasons, selectedTab, onChange]
-  );
+  // Dispatch changes to parent component
+  useEffect(() => {
+    const seasonsData = seasons.map(({ _id, episodes, ...s }) => ({
+      ...s,
+      episodes: episodes.map(({ _id, ...e }) => e),
+    }));
+    onChange(seasonsData);
+  }, [seasons, onChange]);
+
+  // Change selected tab to new season
+  useEffect(() => {
+    if (onAddingSeason) {
+      setOnAddingSeason(false);
+      setSelectedTab(seasons.length - 1);
+    }
+  }, [seasons.length, onAddingSeason]);
+
+  // Scroll grid to bottom when new episode created
+  useEffect(() => {
+    if (onAddingEpisode) {
+      setOnAddingEpisode(false);
+      scrollToGridBottom();
+    }
+  }, [onAddingEpisode]);
+
+  const handleAddSeasonClick = useCallback(() => {
+    setSeasons((prevSeasons) => [...prevSeasons, { _id: newSeasonId() }]);
+    setOnAddingSeason(true);
+  }, []);
 
   const handleSeasonDetailChange = useCallback(
     (fieldName, value) => {
-      const newSeasons = seasons.map((s, i) =>
-        i === selectedTab ? { ...s, [fieldName]: value } : s
-      );
-      onChange && onChange(newSeasons);
+      setSeasons((prevSeasons) => {
+        const newSeasons = prevSeasons.map((s, i) =>
+          i === selectedTab ? { ...s, [fieldName]: value } : s
+        );
+        return newSeasons;
+      });
     },
-    [seasons, selectedTab, onChange]
+    [selectedTab]
   );
 
-  const handleAddSeasonClick = useCallback(() => {
-    const newSeasons = [...seasons, { _id: newSeasonId() }];
-    onChange && onChange(newSeasons);
-    setSelectedTab(newSeasons.length - 1);
-  }, [seasons, onChange]);
-
   const handleNewEpisodeClick = useCallback(() => {
-    setTimeout(scrollToGridBottom, 500);
-    const episodes = [
-      ...seasons[selectedTab].episodes,
-      { _id: newEpisodeId() },
-    ];
-    const newSeasons = seasons.map((s, i) =>
-      i === selectedTab ? { ...s, episodes } : s
-    );
-    onChange && onChange(newSeasons);
-  }, [seasons, selectedTab, onChange]);
+    setSeasons((prevSeasons) => {
+      const episodes = [
+        ...(prevSeasons[selectedTab].episodes || []),
+        { _id: newEpisodeId() },
+      ];
+      const newSeasons = prevSeasons.map((s, i) =>
+        i === selectedTab ? { ...s, episodes } : s
+      );
+      return newSeasons;
+    });
+    setOnAddingEpisode(true);
+  }, [selectedTab]);
+
+  const handleEpisodeEdit = useCallback(
+    ({ row }) => {
+      setSeasons((prevSeasons) => {
+        const episodes = prevSeasons[selectedTab].episodes.map((ep) =>
+          ep._id === row._id ? row : ep
+        );
+        const newSeasons = prevSeasons.map((s, i) =>
+          i === selectedTab ? { ...s, episodes } : s
+        );
+        return newSeasons;
+      });
+    },
+    [selectedTab]
+  );
+
+  const handleEpisodeDelete = useCallback(
+    (id) => {
+      setSeasons((prevSeasons) => {
+        const episodes = prevSeasons[selectedTab].episodes.filter(
+          (ep) => ep._id !== id
+        );
+        const newSeasons = prevSeasons.map((s, i) =>
+          i === selectedTab ? { ...s, episodes } : s
+        );
+        return newSeasons;
+      });
+    },
+    [selectedTab]
+  );
 
   return (
     <div style={{ height: 800, width: "100%" }}>
       <CrudDataGrid
+        loading={loading}
         rows={seasons[selectedTab]?.episodes || []}
         columns={columns}
         getRowId={(row) => row._id}
@@ -136,4 +214,4 @@ const columns = [
   { field: "thumbnailUrl", headerName: "Thumbnail URL", editable: true },
 ];
 
-export default AdminSeasonGrid;
+export default React.memo(AdminSeasonGrid);

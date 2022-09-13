@@ -38,9 +38,9 @@ const UpsertShow = () => {
   const [alertOpen, setAlertOpen] = useState(false);
   const backendApi = useBackendApi().show;
 
-  const mergeShowState = (field, value) => {
-    setShow({ ...show, [field]: value });
-  };
+  const mergeShowState = useCallback((field, value) => {
+    setShow((prevShow) => ({ ...prevShow, [field]: value }));
+  }, []);
 
   useEffect(() => {
     const loadToEditShow = async (id) => {
@@ -79,6 +79,27 @@ const UpsertShow = () => {
     }
   };
 
+  const handleSeasonsChange = useCallback((newSeasons) => {
+    console.log("season changed", newSeasons);
+    setShow((prevShow) => ({ ...prevShow, seasons: newSeasons }));
+  }, []);
+
+  const handleCastIdsChange = useCallback(
+    (newIds) => {
+      console.log("cast changed", newIds);
+      mergeShowState("cast", newIds);
+    },
+    [mergeShowState]
+  );
+
+  const handleDirectorIdsChange = useCallback(
+    (newIds) => {
+      console.log("directors changed", newIds);
+      mergeShowState("directors", newIds);
+    },
+    [mergeShowState]
+  );
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log("handle submit");
@@ -111,12 +132,8 @@ const UpsertShow = () => {
     }
   };
 
-  const handleSeasonsChange = useCallback((newSeasons) => {
-    setShow((prevShow) => ({ ...prevShow, seasons: newSeasons }));
-  }, []);
-
   return (
-    <form className="upsert-movie-container" onSubmit={handleFormSubmit}>
+    <form className="upsert-show-container" onSubmit={handleFormSubmit}>
       <AdminImportBar
         title={id ? `Edit ${id?.slice(-4) || "show"}` : "Add show"}
         searchItems={tmdbApi.show.searchShows}
@@ -124,77 +141,79 @@ const UpsertShow = () => {
         renderOption={(option) => <p>{option.name}</p>}
         onItemSelect={handleShowSelect}
       />
-      <div className="upsert-movie-inputs-wrapper">
-        <p className="group-title">Basic Info</p>
-        <div className="top-container">
-          <div className="top-right-container">
-            {topRightInputs.slice(0, 2).map((input) => (
-              <UpsertInput
-                key={input.field}
-                input={input}
-                value={show[input.field]}
-                onChange={(e) => mergeShowState(input.field, e.target.value)}
-              />
-            ))}
-            <div className="two-column-grid">
-              {topRightInputs.slice(2, 6).map((input) => (
+
+      <div className="upsert-show-inputs-wrapper">
+        <div className="upsert-inputs-group">
+          <p className="group-title">Basic Info</p>
+          <div className="top-container">
+            <div className="top-right-container">
+              {topRightInputs.slice(0, 2).map((input) => (
                 <UpsertInput
                   key={input.field}
                   input={input}
                   value={show[input.field]}
-                  onChange={(e) => mergeShowState(input.field, e.target.value)}
+                  onChange={mergeShowState}
+                />
+              ))}
+              <div className="two-column-grid">
+                {topRightInputs.slice(2, 6).map((input) => (
+                  <UpsertInput
+                    key={input.field}
+                    input={input}
+                    value={show[input.field]}
+                    onChange={mergeShowState}
+                  />
+                ))}
+              </div>
+              {topRightInputs.slice(-1).map((input) => (
+                <UpsertInput
+                  key={input.field}
+                  input={input}
+                  value={show[input.field]}
+                  onChange={mergeShowState}
                 />
               ))}
             </div>
-            {topRightInputs.slice(-1).map((input) => (
-              <UpsertInput
-                key={input.field}
-                input={input}
-                value={show[input.field]}
-                onChange={(e) => mergeShowState(input.field, e.target.value)}
-              />
-            ))}
-          </div>
-          <div className="top-left-container">
-            {topLeftInputs.map((input) => (
-              <UpsertInput
-                key={input.field}
-                input={input}
-                value={show[input.field]}
-                onChange={(e) => mergeShowState(input.field, e.target.value)}
-              />
-            ))}
+            <div className="top-left-container">
+              {topLeftInputs.map((input) => (
+                <UpsertInput
+                  key={input.field}
+                  input={input}
+                  value={show[input.field]}
+                  onChange={mergeShowState}
+                />
+              ))}
+            </div>
           </div>
         </div>
-        <div className="bottom-container">
+        <div className="upsert-inputs-group">
           <p className="group-title">Seasons</p>
           <AdminSeasonGrid
-            seasons={show.seasons}
+            showId={toEditShowId}
             onChange={handleSeasonsChange}
           />
+        </div>
+        <div className="upsert-inputs-group">
           <p className="group-title">Cast</p>
           <AdminPersonGrid
             personType="cast"
             itemType="show"
             itemId={toEditShowId}
-            onPersonIdsChange={(ids) => {
-              console.log("cast changed", ids);
-              mergeShowState("cast", ids);
-            }}
+            onPersonIdsChange={handleCastIdsChange}
           />
-          <p className="group-title directors">Directors</p>
+        </div>
+        <div className="upsert-inputs-group">
+          <p className="group-title">Directors</p>
           <AdminPersonGrid
             personType="director"
             itemType="show"
             itemId={toEditShowId}
-            onPersonIdsChange={(ids) => {
-              console.log("directors changed", ids);
-              mergeShowState("directors", ids);
-            }}
+            onPersonIdsChange={handleDirectorIdsChange}
           />
         </div>
       </div>
-      <div className="upsert-movie-footer">
+
+      <div className="upsert-show-footer">
         <Button className="submit-button" type="submit" variant="contained">
           Save
         </Button>

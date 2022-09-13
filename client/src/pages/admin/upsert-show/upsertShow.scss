@@ -1,20 +1,23 @@
 @use "../../../scss/" as *;
 
-.upsert-movie-container {
+.upsert-show-container {
   padding: 1rem;
 
-  .upsert-movie-inputs-wrapper {
+  .upsert-show-inputs-wrapper {
     padding: 2rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
 
     .group-title {
       font-size: 0.9rem;
       font-weight: 700;
       line-height: 1;
+      margin-bottom: 1rem;
     }
 
     .top-container {
       height: 80%;
-      margin-bottom: 2rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 3.5rem;
@@ -34,22 +37,9 @@
         }
       }
     }
-
-    .bottom-container {
-      display: flex;
-      flex-direction: column;
-
-      .group-title {
-        margin-bottom: 1rem;
-
-        &.directors {
-          margin-top: 2rem;
-        }
-      }
-    }
   }
 
-  .upsert-movie-footer {
+  .upsert-show-footer {
     float: right;
     padding: 0 2.5rem 3rem;
 

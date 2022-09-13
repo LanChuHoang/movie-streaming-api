@@ -5,7 +5,7 @@ import {
   MenuItem,
   InputAdornment,
 } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 
 const defaultValue = {
@@ -42,7 +42,7 @@ const UpsertInput = ({
           value={value}
           rows={input.rows}
           onChange={(e) => setValue(e.target.value)}
-          onBlur={() => onChange({ target: { value } })}
+          onBlur={() => onChange(input.field, value)}
         />
       );
     case "select":
@@ -54,7 +54,7 @@ const UpsertInput = ({
           label={input.label}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          onBlur={() => onChange({ target: { value } })}
+          onBlur={() => onChange(input.field, value)}
         >
           {input.options.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -72,7 +72,7 @@ const UpsertInput = ({
           value={value}
           // onChange={(_, value) => onChange({ target: { value } })}
           onChange={(_, value) => setValue(value)}
-          onBlur={() => onChange({ target: { value } })}
+          onBlur={() => onChange(input.field, value)}
           options={input.options}
           renderInput={(params) => (
             <TextField {...params} label={input.label} />
@@ -86,7 +86,7 @@ const UpsertInput = ({
           input={input}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          onBlur={() => onChange({ target: { value } })}
+          onBlur={() => onChange(input.field, value)}
           options={input.options}
         />
       );
@@ -115,7 +115,7 @@ const UpsertInput = ({
             readOnly: input.readOnly === undefined ? false : input.readOnly,
           }}
           onChange={(e) => setValue(e.target.value)}
-          onBlur={() => !input.readOnly && onChange({ target: { value } })}
+          onBlur={() => !input.readOnly && onChange(input.field, value)}
         />
       );
   }
@@ -147,4 +147,4 @@ const CreatableMultiselect = ({ className = "", input, value, onChange }) => {
   );
 };
 
-export default UpsertInput;
+export default React.memo(UpsertInput);
