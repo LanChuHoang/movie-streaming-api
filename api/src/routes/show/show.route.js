@@ -46,6 +46,12 @@ router.get(
 // GET /show/:id/ - get show detail
 router.get("/:id", routeValidator.validateIDParam, showController.getShow);
 
+router.get(
+  "/:id/seasons",
+  routeValidator.validateIDParam,
+  showController.getSeasons
+);
+
 // PATCH /show/:id - update show
 router.patch(
   "/:id",

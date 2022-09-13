@@ -81,6 +81,15 @@ async function getShow(req, res, next) {
   }
 }
 
+async function getSeasons(req, res, next) {
+  try {
+    const seasons = await showModel.getSeasons(req.params.id);
+    return res.send(seasons);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getRandomShow(req, res, next) {
   try {
     const randomShow = await showModel.getRandomShow();
@@ -148,6 +157,7 @@ module.exports = {
   searchShows,
   getSimilarShows,
   getShow,
+  getSeasons,
   getRandomShow,
   updateShow,
   deleteShow,

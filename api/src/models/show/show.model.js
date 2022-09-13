@@ -37,6 +37,23 @@ async function getPaginatedShows(filter = null, sort, page, limit, projection) {
   }
 }
 
+const setSeasonField = (field, value) => ({
+  $set: {
+    seasons: {
+      $map: {
+        input: "$seasons",
+        in: {
+          $setField: {
+            field,
+            input: "$$this",
+            value,
+          },
+        },
+      },
+    },
+  },
+});
+
 async function exists(title) {
   return (await Show.exists({ title: title })) !== null;
 }
@@ -109,13 +126,29 @@ async function getSimilarShows(id) {
 
 // Get Single Show
 function getShowByID(id, projection) {
-  return Show.findById(id, projection)
-    .populate("cast", PROJECTION.CUSTOM.PERSON_BRIEF_INFO)
-    .populate("directors", PROJECTION.CUSTOM.PERSON_BRIEF_INFO);
+  return Show.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    setSeasonField("episodeCount", { $size: "$$this.episodes" }),
+    setSeasonField("episodeRuntime", { $avg: "$$this.episodes.runtime" }),
+    {
+      $project: {
+        ...projection,
+        "seasons.episodes": 0,
+        cast: 0,
+        directors: 0,
+        seasons: { ...projection },
+      },
+    },
+  ]);
 }
 
 function getShowByTitle(title) {
   return Show.findOne({ title: title });
+}
+
+async function getSeasons(showId) {
+  const { seasons } = await Show.findById(showId, { seasons: 1 });
+  return seasons;
 }
 
 function getRandomShow() {
@@ -150,6 +183,7 @@ module.exports = {
   getSimilarShows,
   getShowByID,
   getShowByTitle,
+  getSeasons,
   getRandomShow,
   updateShow,
   deleteShowByID,

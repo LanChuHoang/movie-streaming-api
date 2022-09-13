@@ -97,10 +97,8 @@ const showApi = {
     return axiosClient.get(`${endpoint.show.base}/${id}`);
   },
 
-  getSeasons: async (id) => {
-    const { seasons } = (await axiosClient.get(`${endpoint.show.base}/${id}`))
-      .data;
-    return { data: seasons };
+  getSeasons: (id) => {
+    return axiosClient.get(`${endpoint.show.base}/${id}/seasons`);
   },
 
   getCredits: (id) => {
