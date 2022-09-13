@@ -52,6 +52,12 @@ router.get(
   showController.getSeasons
 );
 
+router.get(
+  "/:id/credits",
+  routeValidator.validateIDParam,
+  showController.getCredits
+);
+
 // PATCH /show/:id - update show
 router.patch(
   "/:id",

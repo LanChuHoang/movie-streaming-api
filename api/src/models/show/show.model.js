@@ -125,8 +125,8 @@ async function getSimilarShows(id) {
 }
 
 // Get Single Show
-function getShowByID(id, projection) {
-  return Show.aggregate([
+async function getShowByID(id, projection) {
+  const [show] = await Show.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(id) } },
     setSeasonField("episodeCount", { $size: "$$this.episodes" }),
     setSeasonField("episodeRuntime", { $avg: "$$this.episodes.runtime" }),
@@ -140,6 +140,7 @@ function getShowByID(id, projection) {
       },
     },
   ]);
+  return show;
 }
 
 function getShowByTitle(title) {
@@ -149,6 +150,12 @@ function getShowByTitle(title) {
 async function getSeasons(showId) {
   const { seasons } = await Show.findById(showId, { seasons: 1 });
   return seasons;
+}
+
+function getCredits(showId) {
+  return Show.findById(showId, { cast: 1, directors: 1, _id: 0 })
+    .populate("cast")
+    .populate("directors");
 }
 
 function getRandomShow() {
@@ -184,6 +191,7 @@ module.exports = {
   getShowByID,
   getShowByTitle,
   getSeasons,
+  getCredits,
   getRandomShow,
   updateShow,
   deleteShowByID,

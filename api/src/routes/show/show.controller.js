@@ -90,6 +90,15 @@ async function getSeasons(req, res, next) {
   }
 }
 
+async function getCredits(req, res, next) {
+  try {
+    const credits = await showModel.getCredits(req.params.id);
+    return res.send(credits);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getRandomShow(req, res, next) {
   try {
     const randomShow = await showModel.getRandomShow();
@@ -158,6 +167,7 @@ module.exports = {
   getSimilarShows,
   getShow,
   getSeasons,
+  getCredits,
   getRandomShow,
   updateShow,
   deleteShow,
