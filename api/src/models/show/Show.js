@@ -31,7 +31,7 @@ const seasonSchema = new mongoose.Schema(
 const showSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
-    tagLine: { type: String },
+    tagline: { type: String },
     overview: { type: String },
     adult: { type: Boolean },
     imdbID: { type: String },

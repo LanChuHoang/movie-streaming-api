@@ -102,16 +102,15 @@ const UpsertShow = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log("handle submit");
     setIsLoading(true);
     let resultMessage;
     try {
-      const { _id, _createdAt, _updatedAt, ...showData } = show;
+      const { _id, createdAt, updatedAt, ...showData } = show;
       const upsertedShow = id
         ? (await backendApi.updateShow(id, showData)).data
         : (await backendApi.addShow(showData)).data;
       resultMessage = MESSAGE.saveSuccess;
-      console.log(upsertedShow);
+      console.log("submit show", upsertedShow);
     } catch (error) {
       switch (error.response?.status) {
         case 400:
