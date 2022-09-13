@@ -15,6 +15,7 @@ import {
   CircularProgress,
   Snackbar,
 } from "@mui/material";
+import { useCallback } from "react";
 
 const MESSAGE = {
   loadingFail: { type: "error", label: "Failed to load resource" },
@@ -37,9 +38,9 @@ const UpsertMovie = () => {
   const [alertOpen, setAlertOpen] = useState(false);
   const backendApi = useBackendApi();
 
-  const mergeMovieState = (field, value) => {
-    setMovie({ ...movie, [field]: value });
-  };
+  const mergeMovieState = useCallback((field, value) => {
+    setMovie((prevMovie) => ({ ...prevMovie, [field]: value }));
+  }, []);
 
   useEffect(() => {
     const loadToEditMovie = async (id) => {
@@ -78,6 +79,22 @@ const UpsertMovie = () => {
     }
   };
 
+  const handleCastIdsChange = useCallback(
+    (newIds) => {
+      console.log("cast changed", newIds);
+      mergeMovieState("cast", newIds);
+    },
+    [mergeMovieState]
+  );
+
+  const handleDirectorIdsChange = useCallback(
+    (newIds) => {
+      console.log("directors changed", newIds);
+      mergeMovieState("directors", newIds);
+    },
+    [mergeMovieState]
+  );
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -88,7 +105,7 @@ const UpsertMovie = () => {
         ? (await backendApi.updateMovie(id, movieData)).data
         : (await backendApi.addMovie(movieData)).data;
       resultMessage = MESSAGE.saveSuccess;
-      console.log(upsertedMovie);
+      console.log("movie submited", upsertedMovie);
     } catch (error) {
       switch (error.response?.status) {
         case 400:
@@ -119,79 +136,79 @@ const UpsertMovie = () => {
         onItemSelect={handleMovieSelect}
       />
       <div className="upsert-movie-inputs-wrapper">
-        <p className="group-title">Basic Info</p>
-        <div className="top-container">
-          <div className="top-right-container">
-            {topRightInputs.slice(0, 2).map((input) => (
-              <UpsertInput
-                key={input.field}
-                input={input}
-                value={movie[input.field]}
-                onChange={(e) => mergeMovieState(input.field, e.target.value)}
-              />
-            ))}
-            <div className="two-column-grid">
-              {topRightInputs.slice(2, 5).map((input) => (
+        <div className="upsert-inputs-group">
+          <p className="group-title">Basic Info</p>
+          <div className="top-container">
+            <div className="top-right-container">
+              {topRightInputs.slice(0, 2).map((input) => (
                 <UpsertInput
                   key={input.field}
                   input={input}
                   value={movie[input.field]}
-                  onChange={(e) => mergeMovieState(input.field, e.target.value)}
+                  onChange={mergeMovieState}
                 />
               ))}
               <div className="two-column-grid">
-                {topRightInputs.slice(5, 7).map((input) => (
+                {topRightInputs.slice(2, 5).map((input) => (
                   <UpsertInput
                     key={input.field}
                     input={input}
                     value={movie[input.field]}
-                    onChange={(e) =>
-                      mergeMovieState(input.field, e.target.value)
-                    }
+                    onChange={mergeMovieState}
                   />
                 ))}
+                <div className="two-column-grid">
+                  {topRightInputs.slice(5, 7).map((input) => (
+                    <UpsertInput
+                      key={input.field}
+                      input={input}
+                      value={movie[input.field]}
+                      onChange={(e) =>
+                        mergeMovieState(input.field, e.target.value)
+                      }
+                    />
+                  ))}
+                </div>
               </div>
+              {topRightInputs.slice(-1).map((input) => (
+                <UpsertInput
+                  key={input.field}
+                  input={input}
+                  value={movie[input.field]}
+                  onChange={mergeMovieState}
+                />
+              ))}
             </div>
-            {topRightInputs.slice(-1).map((input) => (
-              <UpsertInput
-                key={input.field}
-                input={input}
-                value={movie[input.field]}
-                onChange={(e) => mergeMovieState(input.field, e.target.value)}
-              />
-            ))}
-          </div>
-          <div className="top-left-container">
-            {topLeftInputs.map((input) => (
-              <UpsertInput
-                key={input.field}
-                input={input}
-                value={movie[input.field]}
-                onChange={(e) => mergeMovieState(input.field, e.target.value)}
-              />
-            ))}
+            <div className="top-left-container">
+              {topLeftInputs.map((input) => (
+                <UpsertInput
+                  key={input.field}
+                  input={input}
+                  value={movie[input.field]}
+                  onChange={mergeMovieState}
+                />
+              ))}
+            </div>
           </div>
         </div>
-        <div className="bottom-container">
+
+        <div className="upsert-inputs-group">
           <p className="group-title">Cast</p>
           <AdminPersonGrid
             personType="cast"
             itemType="movie"
             itemId={toEditMovieId}
-            onPersonIdsChange={(ids) => {
-              console.log("cast changed", ids);
-              mergeMovieState("cast", ids);
-            }}
+            onPersonIdsChange={handleCastIdsChange}
           />
-          <p className="group-title directors">Directors</p>
+        </div>
+
+        <div className="upsert-inputs-group">
+          <p className="group-title">Directors</p>
           <AdminPersonGrid
             personType="director"
             itemType="movie"
             itemId={toEditMovieId}
-            onPersonIdsChange={(ids) => {
-              console.log("directors changed", ids);
-              mergeMovieState("directors", ids);
-            }}
+            onPersonIdsChange={handleDirectorIdsChange}
           />
         </div>
       </div>

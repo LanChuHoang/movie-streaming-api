@@ -12,6 +12,10 @@ const endpoint = {
   userOverallStats: "/statistic/user/overall",
   userDetailStats: "/statistic/user/detail",
 
+  movie: {
+    base: "/movie",
+    search: "/movie/search",
+  },
   show: {
     base: "/show",
     search: "/show/search",
@@ -69,6 +73,12 @@ const parseFieldsParam = (params) =>
     ? { ...params, fields: params.fields.join(",") }
     : { ...params };
 
+const movieApi = {
+  getCredits: (id) => {
+    return axiosClient.get(`${endpoint.movie.base}/${id}/credits`);
+  },
+};
+
 const showApi = {
   adminBaseFields: [
     "_id",
@@ -102,7 +112,7 @@ const showApi = {
   },
 
   getCredits: (id) => {
-    return axiosClient.get(`${endpoint.show.base}/${id}`);
+    return axiosClient.get(`${endpoint.show.base}/${id}/credits`);
   },
 
   updateShow: (id, showData) => {
@@ -213,6 +223,9 @@ const backendApi = {
   deleteMovie: (id) => {
     return axiosClient.delete(`/movie/${id}`);
   },
+
+  // New Movie
+  movie: movieApi,
 
   // Show
   show: showApi,

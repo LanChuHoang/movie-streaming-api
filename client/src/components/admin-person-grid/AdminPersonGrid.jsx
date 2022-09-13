@@ -54,10 +54,8 @@ const AdminPersonGrid = ({
     const loadStoredPeople = async (id) => {
       setIsLoading(true);
       try {
-        const { cast, directors } =
-          itemType === "movie"
-            ? (await backendApi.getItemDetail("movie", id)).data
-            : (await backendApi.show.getCredits(id)).data;
+        const api = itemType === "movie" ? backendApi.movie : backendApi.show;
+        const { cast, directors } = (await api.getCredits(id)).data;
         const storedPeople = (personType === "cast" ? cast : directors).map(
           toStoredRow
         );

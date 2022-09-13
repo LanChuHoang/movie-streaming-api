@@ -102,6 +102,15 @@ async function getMovie(req, res, next) {
   }
 }
 
+async function getCredits(req, res, next) {
+  try {
+    const credits = await movieModel.getCredits(req.params.id);
+    return res.send(credits);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getRandomMovie(req, res, next) {
   try {
     const randomMovie = await movieModel.getRandomMovie();
@@ -170,6 +179,7 @@ module.exports = {
   searchMovies,
   getSimilarMovies,
   getMovie,
+  getCredits,
   getRandomMovie,
   updateMovie,
   deleteMovie,

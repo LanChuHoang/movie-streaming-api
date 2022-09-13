@@ -42,11 +42,17 @@ router.get(
   movieController.getSimilarMovies
 );
 
-// GET /movie/random - get random movie
-router.get("/random", movieController.getRandomMovie);
-
 // GET /movie/:id/ - get movie detail
 router.get("/:id", routeValidator.validateIDParam, movieController.getMovie);
+
+router.get(
+  "/:id/credits",
+  routeValidator.validateIDParam,
+  movieController.getCredits
+);
+
+// GET /movie/random - get random movie
+router.get("/random", movieController.getRandomMovie);
 
 // PATCH /movie/:id - update movie
 router.patch(

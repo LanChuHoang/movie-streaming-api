@@ -121,9 +121,17 @@ async function getSimilarMovies(id) {
 
 // Get Single Movie
 function getMovieByID(id, projection) {
-  return Movie.findById(id, projection)
-    .populate("cast", PROJECTION.CUSTOM.PERSON_BRIEF_INFO)
-    .populate("directors", PROJECTION.CUSTOM.PERSON_BRIEF_INFO);
+  return Movie.findById(id, { ...projection, cast: 0, directors: 0 });
+}
+
+function getMovieByTitle(title) {
+  return Movie.findOne({ title: title });
+}
+
+function getCredits(movieId) {
+  return Movie.findById(movieId, { cast: 1, directors: 1, _id: 0 })
+    .populate("cast")
+    .populate("directors");
 }
 
 function getRandomMovie() {
@@ -132,10 +140,6 @@ function getRandomMovie() {
     { $sample: { size: 1 } },
     { $project: PROJECTION.CUSTOM.ITEM_BASE_INFO },
   ]);
-}
-
-function getMovieByTitle(title) {
-  return Movie.findOne({ title: title });
 }
 
 // Update
@@ -163,6 +167,7 @@ module.exports = {
   getSimilarMovies,
   getMovieByID,
   getMovieByTitle,
+  getCredits,
   getRandomMovie,
   updateMovie,
   deleteMovieByID,
