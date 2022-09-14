@@ -1,5 +1,6 @@
 import "./adminSearchBar.scss";
 import { Autocomplete, TextField, InputAdornment } from "@mui/material";
+import ListBox from "./ListBox.tsx";
 
 const AdminSearchBar = ({
   className,
@@ -44,9 +45,18 @@ export const AutocompleteAdminSearchBar = ({
   autoFocus = false,
   options,
   onInputChange,
+  onLoadMore,
   getOptionLabel,
   renderOption,
 }) => {
+  const handleScroll = (event) => {
+    const listboxNode = event.currentTarget;
+    const position = listboxNode.scrollTop + listboxNode.clientHeight;
+    if (listboxNode.scrollHeight - position <= 1) {
+      onLoadMore();
+    }
+  };
+
   return (
     <Autocomplete
       freeSolo
@@ -73,6 +83,10 @@ export const AutocompleteAdminSearchBar = ({
       onInputChange={(_, inputValue) => onInputChange(inputValue)}
       getOptionLabel={getOptionLabel}
       renderOption={renderOption}
+      ListboxProps={{
+        onScroll: handleScroll,
+      }}
+      ListboxComponent={ListBox}
     />
   );
 };
