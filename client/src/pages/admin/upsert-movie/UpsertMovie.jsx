@@ -17,15 +17,6 @@ import {
 } from "@mui/material";
 import { useCallback } from "react";
 
-const MESSAGE = {
-  loadingFail: { type: "error", label: "Failed to load resource" },
-  importTmdbSuccess: { type: "success", label: "Imported successfully!" },
-  importTmdbFail: { type: "error", label: "Import failed" },
-  saveSuccess: { type: "success", label: "Saved successfully!" },
-  noResponse: { type: "error", label: "No server response" },
-  invalidId: { type: "error", label: "Invalid movie ID" },
-};
-
 const UpsertMovie = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(defaultMovie);
@@ -100,7 +91,7 @@ const UpsertMovie = () => {
     setIsLoading(true);
     let resultMessage;
     try {
-      const { _id, _createdAt, _updatedAt, ...movieData } = movie;
+      const { _id, createdAt, updatedAt, ...movieData } = movie;
       const upsertedMovie = id
         ? (await backendApi.updateItem(id, movieData)).data
         : (await backendApi.addItem(movieData)).data;
@@ -110,7 +101,7 @@ const UpsertMovie = () => {
       switch (error.response?.status) {
         case 400:
         case 500:
-          resultMessage = error.response.data.error;
+          resultMessage = { type: "error", label: error.response.data.error };
           break;
         case 404:
           resultMessage = MESSAGE.invalidId;
@@ -315,5 +306,14 @@ const topLeftInputs = [
   { field: "backdropUrl", label: "Backdrop URL" },
   { field: "videoUrl", label: "Video URL" },
 ];
+
+const MESSAGE = {
+  loadingFail: { type: "error", label: "Failed to load resource" },
+  importTmdbSuccess: { type: "success", label: "Imported successfully!" },
+  importTmdbFail: { type: "error", label: "Import failed" },
+  saveSuccess: { type: "success", label: "Saved successfully!" },
+  noResponse: { type: "error", label: "No server response" },
+  invalidId: { type: "error", label: "Invalid movie ID" },
+};
 
 export default UpsertMovie;

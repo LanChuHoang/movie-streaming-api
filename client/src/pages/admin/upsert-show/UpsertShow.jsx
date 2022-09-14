@@ -17,15 +17,6 @@ import {
 } from "@mui/material";
 import AdminSeasonGrid from "../../../components/admin-season-grid/AdminSeasonGrid";
 
-const MESSAGE = {
-  loadingFail: { type: "error", label: "Failed to load resource" },
-  importTmdbSuccess: { type: "success", label: "Imported successfully!" },
-  importTmdbFail: { type: "error", label: "Import failed" },
-  saveSuccess: { type: "success", label: "Saved successfully!" },
-  noResponse: { type: "error", label: "No server response" },
-  invalidId: { type: "error", label: "Invalid movie ID" },
-};
-
 const UpsertShow = () => {
   const { id } = useParams();
   const [show, setShow] = useState(defaultShow);
@@ -115,7 +106,7 @@ const UpsertShow = () => {
       switch (error.response?.status) {
         case 400:
         case 500:
-          resultMessage = error.response.data.error;
+          resultMessage = { type: "error", label: error.response.data.error };
           break;
         case 404:
           resultMessage = MESSAGE.invalidId;
@@ -308,5 +299,14 @@ const topLeftInputs = [
   { field: "backdropUrl", label: "Backdrop URL" },
   { field: "videoUrl", label: "Video URL" },
 ];
+
+const MESSAGE = {
+  loadingFail: { type: "error", label: "Failed to load resource" },
+  importTmdbSuccess: { type: "success", label: "Imported successfully!" },
+  importTmdbFail: { type: "error", label: "Import failed" },
+  saveSuccess: { type: "success", label: "Saved successfully!" },
+  noResponse: { type: "error", label: "No server response" },
+  invalidId: { type: "error", label: "Invalid movie ID" },
+};
 
 export default UpsertShow;

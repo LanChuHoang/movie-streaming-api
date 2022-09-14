@@ -3,11 +3,7 @@ import CrudDataGrid from "../tables/crud-data-grid/CrudDataGrid";
 import React, { useEffect, useState, useCallback } from "react";
 import useBackendApi from "../../hooks/useBackendApi";
 import tmdbApi from "../../api/tmdb/tmdbApi";
-import {
-  isDirector,
-  personJob,
-  toPersonModel,
-} from "../../api/tmdb/tmdbApi.helper";
+import { isDirector, toPersonModel } from "../../api/tmdb/tmdbApi.helper";
 import { GENDERS, JOBS } from "../../api/filterOptions";
 import AdminPersonGridToolbar from "./AdminPersonGridToolbar";
 import { Chip } from "@mui/material";
@@ -73,7 +69,7 @@ const AdminPersonGrid = ({
   }, [itemId, itemType, personType, backendApi]);
 
   useEffect(() => {
-    const fillStoredPeople = (tmdbPeople, job) =>
+    const fillStoredPeople = (tmdbPeople) =>
       tmdbPeople.map(
         (p) =>
           new Promise(async (resolve, reject) => {
@@ -86,7 +82,7 @@ const AdminPersonGrid = ({
               if (storedPerson) resolve(toStoredRow(storedPerson));
               const notStoredPerson = (await tmdbApi.person.getPerson(p.id))
                 .data;
-              resolve(toNewRow(toPersonModel(notStoredPerson, job)));
+              resolve(toNewRow(toPersonModel(notStoredPerson)));
             } catch (error) {
               reject(error);
             }
@@ -100,11 +96,9 @@ const AdminPersonGrid = ({
         const { cast, crew } = (await fetcher.getCredits(id)).data;
         let people;
         if (personType === "cast") {
-          people = await Promise.all(fillStoredPeople(cast, personJob.actor));
+          people = await Promise.all(fillStoredPeople(cast));
         } else {
-          people = await Promise.all(
-            fillStoredPeople(crew.filter(isDirector), personJob.director)
-          );
+          people = await Promise.all(fillStoredPeople(crew.filter(isDirector)));
         }
         console.log("Load Tmdb people", people);
         setRows(people);

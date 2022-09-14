@@ -94,19 +94,29 @@ const toEpisodeModel = (tmdbEpisode) => {
   };
 };
 
-export const toPersonModel = (tmdbPerson, job = personJob.actor) => {
+export const toPersonModel = (tmdbPerson) => {
   return {
     _id: newPersonId(),
     name: tmdbPerson.name,
     gender: tmdbPerson.gender === 1 ? "female" : "male",
     dob: tmdbPerson.birthday,
     pob: tmdbPerson.place_of_birth,
-    job: job,
+    job: parseJob(tmdbPerson),
     biography: tmdbPerson.biography,
     avatarUrl: getImageUrl(tmdbPerson.profile_path, imageSize.w185),
   };
 };
 
+const parseJob = ({ known_for_department }) => {
+  switch (known_for_department) {
+    case "Acting":
+      return personJob.actor;
+    case "Directing":
+      return personJob.director;
+    default:
+      return personJob.actor;
+  }
+};
 const randomId = () => random(10000, 20000);
 export const newSeasonId = () => `new-season-${randomId()}`;
 export const newEpisodeId = () => `new-episode-${randomId()}`;

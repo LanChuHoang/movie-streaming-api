@@ -16,6 +16,7 @@ const endpoint = {
   },
   person: {
     base: "/person",
+    search: "/search/person",
   },
 };
 
@@ -57,11 +58,6 @@ const showApi = {
       axiosClient.get(baseUrl),
       axiosClient.get(`${baseUrl}/videos`),
     ]);
-    // const seasons = (
-    //   await Promise.all(
-    //     baseDetail.seasons.map((s) => getSeason(id, s.season_number))
-    //   )
-    // ).map((s) => s.data);
     return { ...baseDetail, videos: videos.results };
   },
 
@@ -88,6 +84,11 @@ const showApi = {
 };
 
 const personApi = {
+  searchPeople: ({ query, page = 1 }) => {
+    const params = { query, page };
+    return axiosClient.get(endpoint.person.search, { params });
+  },
+
   getPerson: (id) => {
     return axiosClient.get(`${endpoint.person.base}/${id}`);
   },

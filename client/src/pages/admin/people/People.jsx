@@ -20,6 +20,8 @@ const People = () => {
       itemType="person"
       columns={columns}
       model={model}
+      addable
+      editable
     />
   );
 };
