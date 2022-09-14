@@ -6,7 +6,11 @@ import useBackendApi from "../../../hooks/useBackendApi";
 import AdminImportBar from "../../../components/admin-import-bar/AdminImportBar";
 import { GENDERS, JOBS } from "../../../api/filterOptions";
 import UpsertInput from "../../../components/inputs/upsert-input/UpsertInput";
-import { toPersonModel } from "../../../api/tmdb/tmdbApi.helper";
+import {
+  getImageUrl,
+  imageSize,
+  toPersonModel,
+} from "../../../api/tmdb/tmdbApi.helper";
 import {
   Alert,
   Backdrop,
@@ -16,6 +20,7 @@ import {
 } from "@mui/material";
 import { useCallback } from "react";
 import { capitalize } from "lodash";
+import ProfileCell from "../../../components/table-cells/profile-cell/ProfileCell";
 
 const UpsertPerson = () => {
   const { id } = useParams();
@@ -102,7 +107,13 @@ const UpsertPerson = () => {
         title={id ? `Edit ${id?.slice(-4) || "person"}` : "Add person"}
         searchItems={tmdbApi.person.searchPeople}
         getOptionLabel={(option) => option.name}
-        renderOption={(option) => <p>{option.name}</p>}
+        renderOption={(option) => (
+          <ProfileCell
+            avatarUrl={getImageUrl(option.profile_path, imageSize.w45)}
+            name={option.name}
+            avatarSize="small"
+          />
+        )}
         onItemSelect={handlePersonSelect}
       />
       <div className="upsert-person-inputs-wrapper">
