@@ -46,7 +46,7 @@ const UpsertShow = () => {
     const loadToEditShow = async (id) => {
       setIsLoading(true);
       try {
-        const toEditShow = (await backendApi.getShow(id)).data;
+        const toEditShow = (await backendApi.getItem(id)).data;
         setShow(toEditShow);
         setToEditShowId({ value: toEditShow._id, source: "backend-api" });
       } catch (error) {
@@ -107,8 +107,8 @@ const UpsertShow = () => {
     try {
       const { _id, createdAt, updatedAt, ...showData } = show;
       const upsertedShow = id
-        ? (await backendApi.updateShow(id, showData)).data
-        : (await backendApi.addShow(showData)).data;
+        ? (await backendApi.updateItem(id, showData)).data
+        : (await backendApi.addItem(showData)).data;
       resultMessage = MESSAGE.saveSuccess;
       console.log("submit show", upsertedShow);
     } catch (error) {

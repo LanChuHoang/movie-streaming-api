@@ -2,7 +2,7 @@ import { isEmpty, isEqual, xorWith } from "lodash";
 
 export const TIMES_IN_DAY = 24 * 60 * 60 * 1000;
 
-function parseJwt(token) {
+export function parseJwt(token) {
   var base64Url = token.split(".")[1];
   var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   var jsonPayload = decodeURIComponent(
@@ -99,5 +99,3 @@ export const shallowCompare = (obj1, obj2) =>
   Object.keys(obj1).every(
     (key) => obj2.hasOwnProperty(key) && obj1[key] === obj2[key]
   );
-
-export default parseJwt;

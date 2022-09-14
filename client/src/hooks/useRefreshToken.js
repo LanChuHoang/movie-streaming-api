@@ -1,5 +1,5 @@
 import backendApi from "../api/backendApi";
-import parseJwt from "../api/helper";
+import { parseJwt } from "../api/helper";
 import useAuth from "./useAuth";
 
 const useRefreshToken = () => {

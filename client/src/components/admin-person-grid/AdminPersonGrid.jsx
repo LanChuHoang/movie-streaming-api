@@ -34,7 +34,7 @@ const countNumStoredRow = (rows) =>
 
 const AdminPersonGrid = ({
   personType,
-  itemType,
+  itemType = "movie",
   itemId,
   onPersonIdsChange,
 }) => {
@@ -54,8 +54,8 @@ const AdminPersonGrid = ({
     const loadStoredPeople = async (id) => {
       setIsLoading(true);
       try {
-        const api = itemType === "movie" ? backendApi.movie : backendApi.show;
-        const { cast, directors } = (await api.getCredits(id)).data;
+        const { cast, directors } = (await backendApi[itemType].getCredits(id))
+          .data;
         const storedPeople = (personType === "cast" ? cast : directors).map(
           toStoredRow
         );
@@ -78,7 +78,7 @@ const AdminPersonGrid = ({
         (p) =>
           new Promise(async (resolve, reject) => {
             try {
-              const { data: results } = await backendApi.searchPeople({
+              const { data: results } = await backendApi.person.searchItems({
                 query: p.name,
                 limit: 1,
               });
@@ -137,10 +137,10 @@ const AdminPersonGrid = ({
     const toUpdatePeople = rows.filter((r) => r.status === rowStatus.edited);
     const responses = await Promise.all([
       ...toAddPeople.map(({ _id, status, ...data }) =>
-        backendApi.addPerson(data)
+        backendApi.person.addItem(data)
       ),
       ...toUpdatePeople.map(({ _id, status, ...data }) =>
-        backendApi.updatePerson(_id, data)
+        backendApi.person.updateItem(_id, data)
       ),
     ]);
     const updatedPeople = responses.map((r) => r.data);

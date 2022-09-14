@@ -1,5 +1,9 @@
 import axiosClient, { axiosPrivateClient } from "./axiosClient";
-import parseJwt, { toShortISOString } from "./helper";
+import MovieApi from "./backendApi/MovieApi";
+import PersonApi from "./backendApi/PersonApi";
+import ShowApi from "./backendApi/ShowApi";
+import UserApi from "./backendApi/UserApi";
+import { parseJwt, toShortISOString } from "./helper";
 
 const endpoint = {
   register: "/auth/register",
@@ -73,56 +77,10 @@ const parseFieldsParam = (params) =>
     ? { ...params, fields: params.fields.join(",") }
     : { ...params };
 
-const movieApi = {
-  getCredits: (id) => {
-    return axiosClient.get(`${endpoint.movie.base}/${id}/credits`);
-  },
-};
-
-const showApi = {
-  adminBaseFields: [
-    "_id",
-    "posterUrl",
-    "title",
-    "firstAirDate",
-    "lastAirDate",
-    "createdAt",
-  ],
-
-  addShow: (showData) => {
-    return axiosClient.post(endpoint.show.base, showData);
-  },
-
-  getShows: (params = {}) => {
-    const parsedParams = parseFieldsParam(params);
-    return axiosClient.get(endpoint.show.base, { params: parsedParams });
-  },
-
-  searchShows: (params = {}) => {
-    const parsedParams = parseFieldsParam(params);
-    return axiosClient.get(endpoint.show.search, { params: parsedParams });
-  },
-
-  getShow: (id) => {
-    return axiosClient.get(`${endpoint.show.base}/${id}`);
-  },
-
-  getSeasons: (id) => {
-    return axiosClient.get(`${endpoint.show.base}/${id}/seasons`);
-  },
-
-  getCredits: (id) => {
-    return axiosClient.get(`${endpoint.show.base}/${id}/credits`);
-  },
-
-  updateShow: (id, showData) => {
-    return axiosClient.patch(`${endpoint.show.base}/${id}`, showData);
-  },
-
-  deleteShow: (id) => {
-    return axiosClient.delete(`${endpoint.show.base}/${id}`);
-  },
-};
+const userApi = new UserApi();
+const movieApi = new MovieApi();
+const showApi = new ShowApi();
+const personApi = new PersonApi();
 
 const backendApi = {
   // User
@@ -224,11 +182,11 @@ const backendApi = {
     return axiosClient.delete(`/movie/${id}`);
   },
 
-  // New Movie
+  // New api
+  user: userApi,
   movie: movieApi,
-
-  // Show
   show: showApi,
+  person: personApi,
 
   // People
   addPerson: (personData) => {

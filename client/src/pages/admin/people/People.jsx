@@ -6,6 +6,24 @@ import ProfileCell from "../../../components/table-cells/profile-cell/ProfileCel
 import RoleCell from "../../../components/table-cells/role-cell/RoleCell";
 import "./people.scss";
 
+const People = () => {
+  const backendApi = useBackendApi().person;
+  const model = {
+    getItems: backendApi.getItems,
+    searchItems: backendApi.searchItems,
+    deleteItem: backendApi.deleteItem,
+  };
+
+  return (
+    <DataPage
+      title="People"
+      itemType="person"
+      columns={columns}
+      model={model}
+    />
+  );
+};
+
 const columns = [
   { field: "_id", headerName: "ID", flex: 2.5, filterable: false },
   {
@@ -50,29 +68,5 @@ const columns = [
     valueGetter: (params) => toFullDateFormat(params.row.createdAt),
   },
 ];
-
-const People = () => {
-  const backendApi = useBackendApi();
-  const model = {
-    addItem: (item) => {},
-    getItems: backendApi.getPeople,
-    searchItems: backendApi.searchPeople,
-    updateItem: (id) => {
-      console.log(id);
-    },
-    deleteItem: (id) => {
-      console.log(id);
-    },
-  };
-
-  return (
-    <DataPage
-      title="People"
-      itemType="person"
-      columns={columns}
-      model={model}
-    />
-  );
-};
 
 export default People;

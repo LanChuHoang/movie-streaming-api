@@ -45,13 +45,10 @@ const columns = [
 ];
 
 const Users = () => {
-  const backendApi = useBackendApi();
+  const backendApi = useBackendApi().user;
   const model = {
     getItems: backendApi.getUsers,
     searchItems: backendApi.searchUsers,
-    updateItem: (id) => {
-      console.log(id);
-    },
     deleteItem: backendApi.deleteUser,
   };
   return (

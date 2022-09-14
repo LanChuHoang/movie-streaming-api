@@ -63,12 +63,12 @@ const columns = [
 ];
 
 const Movies = () => {
-  const backendApi = useBackendApi();
+  const backendApi = useBackendApi().movie;
+
   const model = {
-    addItem: (item) => {},
-    getItems: (params) => backendApi.getItems("movie", params),
-    searchItems: (params) => backendApi.searchItems("movie", params),
-    deleteItem: backendApi.deleteMovie,
+    getItems: backendApi.getItems,
+    searchItems: backendApi.searchItems,
+    deleteItem: backendApi.deleteItem,
   };
 
   return (

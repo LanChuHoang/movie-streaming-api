@@ -30,7 +30,7 @@ const AdminPersonGridToolbar = ({
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState();
   const [isAdding, setIsAdding] = useState(false);
-  const backendApi = useBackendApi();
+  const backendApi = useBackendApi().person;
   const isAllStored = numStoredRows === numRows;
 
   const handleSaveClick = async () => {
@@ -48,7 +48,7 @@ const AdminPersonGridToolbar = ({
     }
 
     try {
-      const newPerson = (await backendApi.getPerson(toAddId)).data;
+      const newPerson = (await backendApi.getItem(toAddId)).data;
       setMessage(MESSAGE.success);
       onNewRowSave(newPerson);
     } catch (error) {

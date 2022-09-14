@@ -36,7 +36,7 @@ const UpsertMovie = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState();
   const [alertOpen, setAlertOpen] = useState(false);
-  const backendApi = useBackendApi();
+  const backendApi = useBackendApi().movie;
 
   const mergeMovieState = useCallback((field, value) => {
     setMovie((prevMovie) => ({ ...prevMovie, [field]: value }));
@@ -46,7 +46,7 @@ const UpsertMovie = () => {
     const loadToEditMovie = async (id) => {
       setIsLoading(true);
       try {
-        const toEditMovie = (await backendApi.getItemDetail("movie", id)).data;
+        const toEditMovie = (await backendApi.getItem(id)).data;
         setMovie(toEditMovie);
         setToEditMovieId({ value: toEditMovie._id, source: "backend-api" });
       } catch (error) {
@@ -102,8 +102,8 @@ const UpsertMovie = () => {
     try {
       const { _id, _createdAt, _updatedAt, ...movieData } = movie;
       const upsertedMovie = id
-        ? (await backendApi.updateMovie(id, movieData)).data
-        : (await backendApi.addMovie(movieData)).data;
+        ? (await backendApi.updateItem(id, movieData)).data
+        : (await backendApi.addItem(movieData)).data;
       resultMessage = MESSAGE.saveSuccess;
       console.log("movie submited", upsertedMovie);
     } catch (error) {

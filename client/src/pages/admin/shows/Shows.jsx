@@ -1,3 +1,4 @@
+import ShowApi from "../../../api/backendApi/ShowApi";
 import { toFullDateFormat } from "../../../api/helper";
 import { RectangularProfileCell } from "../../../components/table-cells/profile-cell/ProfileCell";
 import useBackendApi from "../../../hooks/useBackendApi";
@@ -8,10 +9,10 @@ const Shows = () => {
   const showApi = useBackendApi().show;
   const model = {
     getItems: (params) =>
-      showApi.getShows({ ...params, fields: showApi.adminBaseFields }),
+      showApi.getItems({ ...params, fields: ShowApi.adminBaseFields }),
     searchItems: (params) =>
-      showApi.searchShows({ ...params, fields: showApi.adminBaseFields }),
-    deleteItem: showApi.deleteShow,
+      showApi.searchItems({ ...params, fields: ShowApi.adminBaseFields }),
+    deleteItem: showApi.deleteItem,
   };
 
   return (
