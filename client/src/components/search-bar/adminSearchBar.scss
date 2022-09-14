@@ -57,3 +57,8 @@
 .MuiAutocomplete-paper {
   margin-top: 10px;
 }
+
+.MuiAutocomplete-popper
+  .MuiAutocomplete-option[role="option"][aria-selected="false"]:hover {
+  background: rgba($color: black, $alpha: 0.03);
+}
