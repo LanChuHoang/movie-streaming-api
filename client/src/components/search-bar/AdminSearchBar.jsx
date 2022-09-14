@@ -51,6 +51,7 @@ export const AutocompleteAdminSearchBar = ({
 }) => {
   const handleScroll = (event) => {
     const listboxNode = event.currentTarget;
+    // console.log(listboxNode);
     const position = listboxNode.scrollTop + listboxNode.clientHeight;
     if (listboxNode.scrollHeight - position <= 1) {
       onLoadMore();
@@ -80,7 +81,10 @@ export const AutocompleteAdminSearchBar = ({
         />
       )}
       options={options}
-      onInputChange={(_, inputValue) => onInputChange(inputValue)}
+      onInputChange={(_, inputValue) => {
+        scrollToTop();
+        onInputChange(inputValue);
+      }}
       getOptionLabel={getOptionLabel}
       renderOption={renderOption}
       ListboxProps={{
@@ -89,6 +93,11 @@ export const AutocompleteAdminSearchBar = ({
       ListboxComponent={ListBox}
     />
   );
+};
+
+const scrollToTop = () => {
+  const list = document.querySelector(".MuiAutocomplete-listbox");
+  if (list && list.scrollTop !== 0) list.scrollTop = 0;
 };
 
 export default AdminSearchBar;
