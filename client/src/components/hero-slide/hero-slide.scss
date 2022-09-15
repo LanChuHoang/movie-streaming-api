@@ -1,125 +1,179 @@
 @use "../../scss/" as *;
 
 .hero-slide {
-    margin-bottom: 3rem;
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.trailer-modal {
+  background-color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: calc(60vw / 16 * 9);
+  width: 60vw;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  iframe {
+    border-radius: 8px;
+  }
+
+  p {
+    text-align: center;
+  }
 }
 
 .hero-slide__item {
-    padding: 9rem 0;
+  padding: 9rem 0;
+  width: 100%;
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    @include overlay();
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-image: linear-gradient(to top, $body-bg, rgba($black, 0));
+  }
+
+  &__content {
+    @include flex(center, center);
     position: relative;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
 
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
+    &__info {
+      width: 55%;
+      padding: 0 3rem;
+      position: relative;
+
+      @include tablet {
         width: 100%;
-        height: 100%;
-        @include overlay();
+      }
+
+      & > * ~ * {
+        margin-top: 3rem;
+      }
+
+      .title {
+        font-size: 5rem;
+        font-weight: 700;
+        line-height: 1;
+
+        @include tablet {
+          font-size: 4rem;
+        }
+      }
+
+      .overview {
+        font-weight: 700;
+      }
+
+      .btns > * ~ * {
+        margin-left: 1rem;
+      }
+
+      .btns,
+      .title,
+      .overview {
+        opacity: 0;
+        transform: translateY(-100px);
+        transition: transform 0.5s ease, opacity 0.5s ease;
+      }
     }
 
-    &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100px;
-        background-image: linear-gradient(to top, $body-bg, rgba($black, 0));
+    &__poster {
+      flex: 1;
+      @include flex(center, flex-start);
+      position: relative;
+
+      img {
+        width: 400px;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow;
+
+        transform: scale(0);
+        transition: transform 0.7s ease;
+      }
+
+      @include tablet {
+        display: none;
+      }
+    }
+  }
+
+  &.active > &__content > &__content__poster {
+    img {
+      transform: scale(1);
+    }
+  }
+
+  &.active > &__content > &__content__info {
+    .btns,
+    .title,
+    .overview {
+      opacity: 1;
+      transform: translateY(0);
     }
 
+    .title {
+      transition-delay: 0.3s, 0.3s;
+    }
+
+    .overview {
+      transition-delay: 0.6s, 0.6s;
+    }
+
+    .btns {
+      transition-delay: 0.9s, 0.9s;
+    }
+  }
+}
+
+@include tablet {
+  .trailer-modal {
+    height: calc(80vw / 16 * 9);
+    width: 80vw;
+  }
+}
+
+@include mobile {
+  .trailer-modal {
+    height: calc(90vw / 16 * 9);
+    width: 90vw;
+  }
+
+  .hero-slide__item {
     &__content {
-        @include flex(center, center);
-        position: relative;
-
-        &__info {
-            width: 55%;
-            padding: 0 3rem;
-            position: relative;
-
-            @include tablet {
-                width: 100%;
-            }
-
-            & > * ~ * {
-                margin-top: 3rem;
-            }
-
-            .title {
-                font-size: 5rem;
-                font-weight: 700;
-                line-height: 1;
-
-                @include tablet {
-                    font-size: 4rem;
-                }
-            }
-
-            .overview {
-                font-weight: 700;
-            }
-
-            .btns > * ~ * {
-                margin-left: 1rem;
-            }
-
-            .btns,
-            .title,
-            .overview {
-                opacity: 0;
-                transform: translateY(-100px);
-                transition: transform 0.5s ease, opacity 0.5s ease;
-            }
-        }
-
-        &__poster {
-            flex: 1;
-            @include flex(center, flex-start);
-            position: relative;
-
-            img {
-                width: 400px;
-                border-radius: $border-radius;
-                box-shadow: $box-shadow;
-
-                transform: scale(0);
-                transition: transform 0.7s ease;
-            }
-
-            @include tablet {
-                display: none;
-            }
-        }
-    }
-
-    &.active > &__content > &__content__poster {
-        img {
-            transform: scale(1);
-        }
-    }
-
-    &.active > &__content > &__content__info {
-        .btns,
-        .title,
-        .overview {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .title {
-            transition-delay: 0.3s, 0.3s;
-        }
-
-        .overview {
-            transition-delay: 0.6s, 0.6s;
+      &__info {
+        .btns > * ~ * {
+          margin-left: 0;
         }
 
         .btns {
-            transition-delay: 0.9s, 0.9s;
+          width: 80%;
+          display: grid;
+          grid-template-columns: 1fr;
+          row-gap: 1rem;
         }
+      }
     }
+  }
 }

@@ -5,7 +5,7 @@ import {
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import "./summaryWidget.scss";
-import { Backdrop, CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress, IconButton } from "@mui/material";
 
 const AmountItem = (props) => {
   return (

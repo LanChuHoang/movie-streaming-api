@@ -113,7 +113,8 @@ async function getCredits(req, res, next) {
 
 async function getRandomMovie(req, res, next) {
   try {
-    const randomMovie = await movieModel.getRandomMovie();
+    const { limit } = req.query;
+    const randomMovie = await movieModel.getRandomMovies(limit);
     if (!randomMovie)
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     return res.status(200).send(randomMovie);

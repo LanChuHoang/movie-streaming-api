@@ -22,13 +22,24 @@ function parseDefaultProjection(req, res, next) {
   next();
 }
 
-function validatePaginationParams(req, res, next) {
-  const { page, limit, fields } = req.query;
-  if (page && !isPositiveInteger(page))
+function parsePageParam(req, res, next) {
+  const { page } = req.query;
+  if (page === "" || (page && !isPositiveInteger(page)))
     return res.status(400).send(errorResponse.INVALID_QUERY);
-  if (limit && !isPositiveInteger(limit))
-    return res.status(400).send(errorResponse.INVALID_QUERY);
+  req.query.page = Number(page) || undefined;
+  next();
+}
 
+function parseLimitParam(req, res, next) {
+  const { limit } = req.query;
+  if (limit === "" || (limit && !isPositiveInteger(limit)))
+    return res.status(400).send(errorResponse.INVALID_QUERY);
+  req.query.limit = Number(limit) || undefined;
+  next();
+}
+
+function parseFieldsParam(req, res, next) {
+  const { fields } = req.query;
   if (fields) {
     const fieldsArr = fields.split(",");
     if (
@@ -37,17 +48,8 @@ function validatePaginationParams(req, res, next) {
       fields.includes(" ")
     )
       return res.status(400).send(errorResponse.INVALID_QUERY);
-  }
-  next();
-}
 
-function parsePaginationParams(req, res, next) {
-  const { page, limit, fields } = req.query;
-  req.query.page = page ? Number(page) : undefined;
-  req.query.limit = limit ? Number(limit) : undefined;
-  if (fields) {
-    req.query.projection = fields
-      .split(",")
+    req.query.projection = fieldsArr
       .filter((f) => req.query.defaultProjection[f] !== 0)
       .reduce((prevResult, f) => ({ ...prevResult, [f]: 1 }), {});
   } else {
@@ -112,20 +114,26 @@ function parseYearParam(req, res, next) {
 }
 
 const parseGetItemsParams = [
-  validatePaginationParams,
-  parsePaginationParams,
+  parsePageParam,
+  parseLimitParam,
+  parseFieldsParam,
   validateSortParam,
   parseSortParam,
 ];
 
 const parseSearchItemsParams = [
-  validatePaginationParams,
-  parsePaginationParams,
+  parsePageParam,
+  parseLimitParam,
+  parseFieldsParam,
   parseQueryParam,
 ];
 
 module.exports = {
   validateIDParam,
+  parsePageParam,
+  parseLimitParam,
+  parseFieldsParam,
+  parseSortParam,
   parseDefaultProjection,
   parseGetItemsParams,
   parseSearchItemsParams,

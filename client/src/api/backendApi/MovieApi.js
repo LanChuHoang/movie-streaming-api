@@ -11,13 +11,9 @@ class MovieApi extends MediaApi {
     super(endpoint);
   }
 
-  getRandomMovies = async () => {
-    const items = [];
-    for (let i = 0; i < 3; i++) {
-      const { data } = await this.client.get(this.endpoint.random);
-      items.push(data[0]);
-    }
-    return items;
+  getRandomMovies = (amount = 1) => {
+    const params = { params: { limit: amount } };
+    return this.client.get(this.endpoint.random, params);
   };
 }
 

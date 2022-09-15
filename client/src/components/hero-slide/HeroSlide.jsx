@@ -1,27 +1,42 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import SwiperCore, { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Button, { OutlineButton } from "../button/Button";
-// import Modal, { ModalContent } from "../modals/modal/Modal";
 import "./hero-slide.scss";
 import { useNavigate } from "react-router";
 import useBackendApi from "../../hooks/useBackendApi";
+import { Fade, Modal } from "@mui/material";
 
 const HeroSlide = () => {
   SwiperCore.use([Autoplay]);
   const [movieItems, setMovieItems] = useState([]);
-  const backendApi = useBackendApi();
+  const [selectedItem, setSelectedItem] = useState();
+  const [trailerOpen, setTrailerOpen] = useState(false);
+  const backendApi = useBackendApi().movie;
 
   useEffect(() => {
     const getMovies = async () => {
       try {
-        const movies = await backendApi.getRandomMovies();
+        const movies = (await backendApi.getRandomMovies(3)).data;
+        console.log(movies.map((m) => m.title));
         setMovieItems(movies);
       } catch (error) {
         console.log(error);
       }
     };
     getMovies();
+  }, [backendApi]);
+
+  const handleTrailerOpen = useCallback((item) => {
+    setSelectedItem({ ...item });
+  }, []);
+
+  useEffect(() => {
+    if (selectedItem) setTrailerOpen(true);
+  }, [selectedItem]);
+
+  const handleTrailerClose = useCallback(() => {
+    setTrailerOpen(false);
   }, []);
 
   return (
@@ -31,50 +46,52 @@ const HeroSlide = () => {
         grabCursor={true}
         spaceBetween={0}
         slidesPerView={1}
-        autoplay={{ delay: 3000 }}
+        // autoplay={{ delay: 3000 }}
       >
         {movieItems.map((item, i) => (
           <SwiperSlide key={i}>
             {({ isActive }) => (
               <HeroSlideItem
-                item={item}
                 className={`${isActive ? "active" : ""}`}
+                item={item}
+                onOpenTrailerClick={handleTrailerOpen}
               />
             )}
           </SwiperSlide>
         ))}
       </Swiper>
-      {/* {movieItems.map((item, i) => (
-        <TrailerModal key={i} item={item} />
-      ))} */}
+      <Modal
+        open={trailerOpen}
+        onClose={handleTrailerClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Fade in={trailerOpen}>
+          <div className="trailer-modal">
+            {selectedItem?.trailers?.length > 0 ? (
+              <iframe
+                width="100%"
+                height="100%"
+                title="trailer"
+                allow="fullscreen"
+                src={toYoutubeVideoUrl(selectedItem.trailers[0])}
+              />
+            ) : (
+              <p>This movie has no trailer</p>
+            )}
+          </div>
+        </Fade>
+      </Modal>
     </div>
   );
 };
 
-const HeroSlideItem = (props) => {
+const HeroSlideItem = ({ className, item, onOpenTrailerClick }) => {
   const navigate = useNavigate();
-  const item = props.item;
-
-  const setModalActive = async () => {
-    const modal = document.querySelector(`#modal_${item._id}`);
-
-    if (item.trailers.length > 0) {
-      const videoSrc = "https://www.youtube.com/embed/" + item.trailers[0];
-      modal
-        .querySelector(".modal__content > iframe")
-        .setAttribute("src", videoSrc);
-    } else {
-      modal
-        .querySelector(".modal__content")
-        .insertAdjacentHTML("afterbegin", "<p>No trailer</p>");
-    }
-
-    modal.classList.toggle("active");
-  };
 
   return (
     <div
-      className={`hero-slide__item ${props.className}`}
+      className={`hero-slide__item ${className}`}
       style={{ backgroundImage: `url(${item.backdropUrl})` }}
     >
       <div className="hero-slide__item__content container">
@@ -85,9 +102,11 @@ const HeroSlideItem = (props) => {
             <Button onClick={() => navigate(`/movie/${item._id}/detail`)}>
               Watch now
             </Button>
-            <OutlineButton onClick={setModalActive}>
-              Watch trailer
-            </OutlineButton>
+            {item.trailers?.length > 0 && (
+              <OutlineButton onClick={() => onOpenTrailerClick(item)}>
+                Watch trailer
+              </OutlineButton>
+            )}
           </div>
         </div>
         <div className="hero-slide__item__content__poster">
@@ -98,24 +117,7 @@ const HeroSlideItem = (props) => {
   );
 };
 
-// const TrailerModal = (props) => {
-//   const item = props.item;
-//   const iframeRef = useRef(null);
-
-//   const onClose = () => iframeRef.current.setAttribute("src", "");
-
-//   return (
-//     <Modal active={false} id={`modal_${item._id}`}>
-//       <ModalContent onClose={onClose}>
-//         <iframe
-//           ref={iframeRef}
-//           width="100%"
-//           height="500px"
-//           title="trailer"
-//         ></iframe>
-//       </ModalContent>
-//     </Modal>
-//   );
-// };
+const toYoutubeVideoUrl = (path) =>
+  path ? `https://www.youtube.com/embed/${path}` : undefined;
 
 export default HeroSlide;
