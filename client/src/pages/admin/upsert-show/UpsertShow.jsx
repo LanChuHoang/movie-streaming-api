@@ -137,6 +137,11 @@ const UpsertShow = () => {
           <p className="group-title">Basic Info</p>
           <div className="top-container">
             <div className="top-right-container">
+              <UpsertInput
+                key={idInput.field}
+                input={idInput}
+                value={id || ""}
+              />
               {topRightInputs.slice(0, 2).map((input) => (
                 <UpsertInput
                   key={input.field}
@@ -257,6 +262,8 @@ const TRUE_FALSE = [
   },
 ];
 
+const idInput = { field: "_id", label: "ID", readOnly: true };
+
 const topRightInputs = [
   { field: "title", label: "Title" },
   { field: "tagline", label: "Tagline" },
@@ -272,7 +279,7 @@ const topRightInputs = [
     type: "select",
     options: TRUE_FALSE,
   },
-  { field: "overview", label: "Overview", type: "multiline", rows: 6 },
+  { field: "overview", label: "Overview", type: "multiline", rows: 3.5 },
 ];
 
 const topLeftInputs = [
