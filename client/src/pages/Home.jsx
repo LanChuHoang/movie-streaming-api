@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { OutlineButton } from "../components/button/Button";
 import HeroSlide from "../components/hero-slide/HeroSlide";
 import MovieList from "../components/movie-list/MovieList";
-import { itemType } from "../api/backendApi";
 import MediaApi from "../api/backendApi/MediaApi";
 
 const Home = () => {
@@ -21,27 +20,27 @@ const Home = () => {
 const sections = [
   {
     title: "Popular Movies",
-    itemType: itemType.movie,
+    itemType: MediaApi.itemType.movie,
     listType: MediaApi.listType.popular,
   },
   {
     title: "Lastest Movies",
-    itemType: itemType.movie,
+    itemType: MediaApi.itemType.movie,
     listType: MediaApi.listType.lastest,
   },
   {
     title: "Coming Soon",
-    itemType: itemType.movie,
+    itemType: MediaApi.itemType.movie,
     listType: MediaApi.listType.upcoming,
   },
   {
     title: "Popular Shows",
-    itemType: itemType.show,
+    itemType: MediaApi.itemType.show,
     listType: MediaApi.listType.popular,
   },
   {
     title: "Lastest Shows",
-    itemType: itemType.show,
+    itemType: MediaApi.itemType.show,
     listType: MediaApi.listType.lastest,
   },
 ];

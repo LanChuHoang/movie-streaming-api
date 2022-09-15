@@ -118,7 +118,12 @@ const parseJob = ({ known_for_department }) => {
       return personJob.actor;
   }
 };
+
 const randomId = () => random(10000, 20000);
 export const newSeasonId = () => `new-season-${randomId()}`;
 export const newEpisodeId = () => `new-episode-${randomId()}`;
 export const newPersonId = () => `new-person-${randomId()}`;
+
+export const episodeReleased = (episode) => {
+  return new Date(episode?.airDate).getTime() <= Date.now();
+};

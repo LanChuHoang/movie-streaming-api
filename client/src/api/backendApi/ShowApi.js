@@ -31,6 +31,14 @@ class ShowApi extends MediaApi {
     throw new Error("Show API does not have upcoming route");
   };
 
+  getDetailWithSeasons = async (id) => {
+    const [{ data: detail }, { data: seasons }] = await Promise.all([
+      this.getItem(id),
+      this.getSeasons(id),
+    ]);
+    return { ...detail, seasons };
+  };
+
   getSeasons = (id) => {
     return this.client.get(`${this.endpoint.base}/${id}/seasons`);
   };

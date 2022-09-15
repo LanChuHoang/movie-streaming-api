@@ -1,25 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation } from "swiper";
-import SeasonCell from "../season-cell/SeasonCell";
+import SeasonCell from "./season-cell/SeasonCell";
 import "swiper/swiper-bundle.css";
 import "./SeasonList.scss";
+import { episodeReleased } from "../../api/tmdb/tmdbApi.helper";
 
-const SeasonList = (props) => {
-  const [seasonNumber, setSeasonNumber] = useState(props.seasons.length - 1);
+const SeasonList = ({ seasons = [] }) => {
+  const [selectedIndex, setSelectedIndex] = useState(endIndex(seasons));
+
+  useEffect(() => {
+    setSelectedIndex(endIndex(seasons));
+  }, [seasons]);
 
   return (
     <div className="section mb-3">
       <div className="section__header mb-2">
         <select
           className="season-select"
-          value={seasonNumber}
-          onChange={(e) => setSeasonNumber(e.target.value)}
+          value={selectedIndex}
+          onChange={(e) => setSelectedIndex(e.target.value)}
         >
-          Seasons
-          {props.seasons.map((s, i) => (
-            <option value={i} key={i}>
-              {"Season " + s.seasonNumber}
+          {seasons.map((s, i) => (
+            <option value={i} key={s.title}>
+              {s.title}
             </option>
           ))}
         </select>
@@ -28,14 +32,14 @@ const SeasonList = (props) => {
         <Swiper
           grabCursor={true}
           spaceBetween={10}
-          slidesPerView={4}
+          slidesPerView="auto"
           navigation={true}
           modules={[Navigation]}
         >
-          {props.seasons[seasonNumber]?.episodes
-            .filter((ep) => ep.thumbnailUrl)
-            .map((ep, i) => (
-              <SwiperSlide key={i}>
+          {seasons[selectedIndex]?.episodes
+            ?.filter(episodeReleased)
+            .map((ep) => (
+              <SwiperSlide key={ep.episodeNumber}>
                 <SeasonCell item={ep} />
               </SwiperSlide>
             ))}
@@ -44,5 +48,7 @@ const SeasonList = (props) => {
     </div>
   );
 };
+
+const endIndex = (arr) => (arr && arr.length > 0 ? arr.length - 1 : 0);
 
 export default SeasonList;

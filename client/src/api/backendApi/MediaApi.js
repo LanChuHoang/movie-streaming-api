@@ -8,6 +8,11 @@ class MediaApi extends BaseApi {
     similar: "similar",
   };
 
+  static itemType = {
+    movie: "movie",
+    show: "show",
+  };
+
   static briefInfoFields = ["title", "posterUrl"];
 
   getList = (listType, params = {}) => {

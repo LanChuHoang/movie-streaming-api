@@ -14,7 +14,7 @@ const MovieList = ({ id, itemType, listType }) => {
     const getList = async () => {
       try {
         if (listType === MediaApi.listType.similar) {
-          const { data } = await backendApi.getSimilarItems(itemType, id);
+          const { data } = await backendApi.getSimilarItems(id);
           setItems(data);
         } else {
           const { data } = await backendApi.getList(listType);

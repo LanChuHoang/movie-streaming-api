@@ -90,15 +90,16 @@
 }
 
 .casts {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 10px;
+  width: 100%;
+  margin-top: 1rem;
 
-  &__item {
-    &__img {
-      padding-top: 160px;
-      background-size: cover;
-      margin-bottom: 0.5rem;
+  .swiper-slide {
+    width: 15%;
+    max-width: 150px;
+
+    img {
+      aspect-ratio: 2 / 3;
+      border-radius: 4px;
     }
 
     &__name {

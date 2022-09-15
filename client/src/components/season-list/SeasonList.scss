@@ -32,11 +32,11 @@
     width: 25%;
 
     @include tablet {
-      width: 30%;
+      width: 40%;
     }
 
     @include mobile {
-      width: 40%;
+      width: 100%;
     }
   }
 }

@@ -6,6 +6,7 @@ import "./hero-slide.scss";
 import { useNavigate } from "react-router";
 import useBackendApi from "../../hooks/useBackendApi";
 import { Fade, Modal } from "@mui/material";
+import { toYoutubeVideoUrl } from "../../api/helper";
 
 const HeroSlide = () => {
   SwiperCore.use([Autoplay]);
@@ -116,8 +117,5 @@ const HeroSlideItem = ({ className, item, onOpenTrailerClick }) => {
     </div>
   );
 };
-
-const toYoutubeVideoUrl = (path) =>
-  path ? `https://www.youtube.com/embed/${path}` : undefined;
 
 export default HeroSlide;

@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
 
-const CastList = (props) => {
-  const [casts, setCasts] = useState([]);
-
-  useEffect(() => {
-    setCasts(props.cast.slice(0, 5));
-  }, [props.cast]);
+const CastList = ({ cast = [] }) => {
   return (
     <div className="casts">
-      {casts.map((item, i) => (
-        <div key={i} className="casts__item">
-          <div
-            className="casts__item__img"
-            style={{ backgroundImage: `url(${item.avatarUrl})` }}
-          ></div>
-          <p className="casts__item__name">{item.name}</p>
-        </div>
-      ))}
+      <Swiper grabCursor={true} spaceBetween={10} slidesPerView="auto">
+        {cast.map((item, i) => (
+          <SwiperSlide key={i}>
+            <div className="casts__item">
+              <img src={item.avatarUrl} alt={item.name} />
+              <p className="casts__item__name">{item.name}</p>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 };
