@@ -5,6 +5,7 @@ import {
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import "./summaryWidget.scss";
+import { Backdrop, CircularProgress, IconButton } from "@mui/material";
 
 const AmountItem = (props) => {
   return (
@@ -20,24 +21,33 @@ const AmountItem = (props) => {
   );
 };
 
-const SummaryWidget = (props) => {
+const SummaryWidget = ({
+  loading = false,
+  summaryItems,
+  mainItemIndex,
+  onReset,
+}) => {
   return (
     <div className="summary-widget-container widget">
       <div className="header-container">
-        <h3>{props.summaryItems[props.mainItemIndex]?.label}</h3>
-        <FontAwesomeIcon
-          icon={faArrowRotateRight}
-          onClick={() => props.onReset()}
-        />
+        <h3>{summaryItems[mainItemIndex]?.label}</h3>
+        <IconButton onClick={() => onReset()}>
+          <FontAwesomeIcon icon={faArrowRotateRight} />
+        </IconButton>
       </div>
       <div className="content-container">
-        <p className="total-users-amount">
-          {props.summaryItems[props.mainItemIndex]?.amount}
-        </p>
+        <div className="total-users-amount">
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <p>{summaryItems[mainItemIndex]?.amount}</p>
+          )}
+        </div>
+
         <p>Processing users may not be included. Reload to update the stats.</p>
         <div className="summary-items-container">
-          {props.summaryItems.map((item, i) => {
-            return i !== props.mainItemIndex ? (
+          {summaryItems.map((item, i) => {
+            return i !== mainItemIndex ? (
               <div key={i}>
                 <div className="summary-item title-item">{item.label}</div>
                 <AmountItem increased={item.increased} amount={item.amount} />

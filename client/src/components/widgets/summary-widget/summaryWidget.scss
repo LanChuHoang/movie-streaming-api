@@ -1,6 +1,7 @@
 @use "../../../scss/" as *;
 
 .summary-widget-container {
+  position: relative;
   flex: 2;
   display: flex;
   flex-direction: column;
@@ -11,10 +12,9 @@
     flex: 0 1;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    justify-content: space-between;
 
     svg {
-      margin-left: auto;
       font-size: 1.1rem;
       transition: color 0.2s, transform 0.4s;
 
@@ -30,13 +30,23 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
     text-align: center;
 
     .total-users-amount {
-      padding: 1rem 0;
-      color: $admin-main-color;
-      font-size: 3.5rem;
-      font-weight: 600;
+      height: 40%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      p,
+      .MuiCircularProgress-root {
+        color: $admin-main-color;
+        font-size: 3.5rem;
+        font-weight: 600;
+      }
     }
 
     .summary-items-container {
@@ -67,5 +77,12 @@
         }
       }
     }
+  }
+
+  .summary-widget-backdrop {
+    position: absolute;
+    z-index: 100;
+    border-radius: 1rem;
+    background-color: rgba($color: #000000, $alpha: 0.03);
   }
 }
