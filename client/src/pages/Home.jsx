@@ -1,66 +1,67 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { OutlineButton } from "../components/button/Button";
 import HeroSlide from "../components/hero-slide/HeroSlide";
 import MovieList from "../components/movie-list/MovieList";
-import { itemType, listType } from "../api/backendApi";
+import { itemType } from "../api/backendApi";
+import MediaApi from "../api/backendApi/MediaApi";
 
 const Home = () => {
   return (
     <>
       <HeroSlide />
       <div className="container">
-        <div className="section mb-3">
-          <div className="section__header mb-2">
-            <h2>Popular Movies</h2>
-            <Link to="/movie/browse">
-              <OutlineButton className="small">View more</OutlineButton>
-            </Link>
-          </div>
-          <MovieList itemType={itemType.movie} listType={listType.popular} />
-        </div>
-
-        <div className="section mb-3">
-          <div className="section__header mb-2">
-            <h2>Lastest Movies</h2>
-            <Link to="/movie/browse">
-              <OutlineButton className="small">View more</OutlineButton>
-            </Link>
-          </div>
-          <MovieList itemType={itemType.movie} listType={listType.lastest} />
-        </div>
-
-        <div className="section mb-3">
-          <div className="section__header mb-2">
-            <h2>Coming soon</h2>
-            <Link to="/movie/browse">
-              <OutlineButton className="small">View more</OutlineButton>
-            </Link>
-          </div>
-          <MovieList itemType={itemType.movie} listType={listType.upcoming} />
-        </div>
-
-        <div className="section mb-3">
-          <div className="section__header mb-2">
-            <h2>Popular Show</h2>
-            <Link to="/show/browse">
-              <OutlineButton className="small">View more</OutlineButton>
-            </Link>
-          </div>
-          <MovieList itemType={itemType.show} listType={listType.popular} />
-        </div>
-
-        <div className="section mb-3">
-          <div className="section__header mb-2">
-            <h2>Lastest Show</h2>
-            <Link to="/show/browse">
-              <OutlineButton className="small">View more</OutlineButton>
-            </Link>
-          </div>
-          <MovieList itemType={itemType.show} listType={listType.lastest} />
-        </div>
+        {sections.map((s) => (
+          <HomeSection key={s.title} {...s} />
+        ))}
       </div>
     </>
+  );
+};
+
+const sections = [
+  {
+    title: "Popular Movies",
+    itemType: itemType.movie,
+    listType: MediaApi.listType.popular,
+  },
+  {
+    title: "Lastest Movies",
+    itemType: itemType.movie,
+    listType: MediaApi.listType.lastest,
+  },
+  {
+    title: "Coming Soon",
+    itemType: itemType.movie,
+    listType: MediaApi.listType.upcoming,
+  },
+  {
+    title: "Popular Shows",
+    itemType: itemType.show,
+    listType: MediaApi.listType.popular,
+  },
+  {
+    title: "Lastest Shows",
+    itemType: itemType.show,
+    listType: MediaApi.listType.lastest,
+  },
+];
+
+const HomeSection = ({
+  title,
+  viewMorePath = "/movie/browse",
+  itemType,
+  listType,
+}) => {
+  return (
+    <div className="section mb-3">
+      <div className="section__header mb-2">
+        <h2>{title}</h2>
+        <Link to={viewMorePath}>
+          <OutlineButton className="small">View more</OutlineButton>
+        </Link>
+      </div>
+      <MovieList itemType={itemType} listType={listType} />
+    </div>
   );
 };
 

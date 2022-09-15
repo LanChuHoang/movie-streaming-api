@@ -19,6 +19,18 @@ class ShowApi extends MediaApi {
     super(endpoint);
   }
 
+  getPopularItems = (params = {}) => {
+    return this.getLastestItems(params);
+  };
+
+  getLastestItems = (params = {}) => {
+    return this.getBriefInfoItems(params);
+  };
+
+  getUpcomingItems = () => {
+    throw new Error("Show API does not have upcoming route");
+  };
+
   getSeasons = (id) => {
     return this.client.get(`${this.endpoint.base}/${id}/seasons`);
   };

@@ -75,7 +75,7 @@ function getMovies({
       $gte: new Date(`${year}-01-01`),
       $lte: new Date(`${year}-12-31`),
     };
-  if (isUpcoming) filter.isUpcoming = isUpcoming;
+  if (typeof isUpcoming === "boolean") filter.isUpcoming = isUpcoming;
   return getPaginatedMovies(filter, sort, page, limit, projection);
 }
 

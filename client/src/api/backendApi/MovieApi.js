@@ -1,11 +1,5 @@
 import MediaApi from "./MediaApi";
 
-const endpoint = {
-  base: "/movie",
-  search: "/movie/search",
-  random: "/movie/random",
-};
-
 class MovieApi extends MediaApi {
   constructor() {
     super(endpoint);
@@ -15,6 +9,26 @@ class MovieApi extends MediaApi {
     const params = { params: { limit: amount } };
     return this.client.get(this.endpoint.random, params);
   };
+
+  getPopularItems = (params = {}) => {
+    return this.getLastestItems(params);
+  };
+
+  getLastestItems = (params = {}) => {
+    const upcoming = false;
+    return this.getBriefInfoItems({ ...params, upcoming });
+  };
+
+  getUpcomingItems = (params = {}) => {
+    const upcoming = true;
+    return this.getBriefInfoItems({ ...params, upcoming });
+  };
 }
+
+const endpoint = {
+  base: "/movie",
+  search: "/movie/search",
+  random: "/movie/random",
+};
 
 export default MovieApi;
