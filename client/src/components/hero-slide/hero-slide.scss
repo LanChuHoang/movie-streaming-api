@@ -31,9 +31,7 @@
   padding: 9rem 0;
   width: 100%;
   position: relative;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-color: transparent;
 
   &::before {
     content: "";
@@ -53,6 +51,22 @@
     width: 100%;
     height: 100px;
     background-image: linear-gradient(to top, $body-bg, rgba($black, 0));
+  }
+
+  &__background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: transparent;
+    z-index: -1;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
   &__content {

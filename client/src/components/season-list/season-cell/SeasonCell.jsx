@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Button from "../../button/Button";
+import FallbackImage from "../../fallback-image/FallbackImage";
 import "./SeasonCell.scss";
 
 const SeasonCell = ({ item = {} }) => {
@@ -7,17 +8,14 @@ const SeasonCell = ({ item = {} }) => {
     <Link to={item.videoUrl || "/"}>
       <div className="season-cell">
         <div className="thumbnail">
-          {item.thumbnailUrl ? (
-            <img src={item.thumbnailUrl} alt={item.title} />
-          ) : (
-            <DefaultThumbnail />
-          )}
-
+          <FallbackImage
+            fallback={<DefaultThumbnail />}
+            image={<img src={item.thumbnailUrl} alt={item.title} />}
+          />
           <Button>
             <i className="bx bx-play"></i>
           </Button>
         </div>
-
         <div className="itemInfo">
           <div className="miniInfo">
             <span className="episode-span">{`EPISODE ${item.episodeNumber}`}</span>

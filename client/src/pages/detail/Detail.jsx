@@ -100,7 +100,7 @@ const Detail = () => {
             <div className="section__header">
               <h2>Casts</h2>
             </div>
-            <CastList cast={credits?.cast?.slice(0, 8)} />
+            <CastList cast={credits?.cast} />
           </div>
           <div className="buttons">
             <Button className="play-button" onClick={handlePlay}>

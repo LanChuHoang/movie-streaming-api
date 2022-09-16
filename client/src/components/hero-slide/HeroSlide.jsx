@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
-import SwiperCore, { Autoplay } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Lazy, Mousewheel } from "swiper";
+import { SwiperSlide } from "swiper/react";
 import Button, { OutlineButton } from "../button/Button";
 import "./hero-slide.scss";
 import { useNavigate } from "react-router";
 import useBackendApi from "../../hooks/useBackendApi";
 import { Fade, Modal } from "@mui/material";
 import { toYoutubeVideoUrl } from "../../api/helper";
+import LazySwiper from "../lazy-swiper/LazySwiper";
 
 const HeroSlide = () => {
-  SwiperCore.use([Autoplay]);
   const [movieItems, setMovieItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState();
   const [trailerOpen, setTrailerOpen] = useState(false);
@@ -42,12 +42,10 @@ const HeroSlide = () => {
 
   return (
     <div className="hero-slide">
-      <Swiper
-        modules={[Autoplay]}
-        grabCursor={true}
+      <LazySwiper
         spaceBetween={0}
-        slidesPerView={1}
         autoplay={{ delay: 3000 }}
+        modules={[Autoplay, Lazy, Mousewheel]}
       >
         {movieItems.map((item, i) => (
           <SwiperSlide key={i}>
@@ -60,7 +58,8 @@ const HeroSlide = () => {
             )}
           </SwiperSlide>
         ))}
-      </Swiper>
+      </LazySwiper>
+
       <Modal
         open={trailerOpen}
         onClose={handleTrailerClose}
@@ -91,10 +90,14 @@ const HeroSlideItem = ({ className, item, onOpenTrailerClick }) => {
   const navigate = useNavigate();
 
   return (
-    <div
-      className={`hero-slide__item ${className}`}
-      style={{ backgroundImage: `url(${item.backdropUrl})` }}
-    >
+    <div className={`hero-slide__item ${className}`}>
+      <div className="hero-slide__item__background">
+        <img
+          className="swiper-lazy"
+          data-src={item.backdropUrl}
+          alt={item.name}
+        />
+      </div>
       <div className="hero-slide__item__content container">
         <div className="hero-slide__item__content__info">
           <h2 className="title">{item.title}</h2>

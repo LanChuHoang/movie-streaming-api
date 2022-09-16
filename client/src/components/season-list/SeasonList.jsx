@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { SwiperSlide, Swiper } from "swiper/react";
-import { Navigation } from "swiper";
+import { SwiperSlide } from "swiper/react";
+import { Navigation, Lazy, Mousewheel, FreeMode } from "swiper";
 import SeasonCell from "./season-cell/SeasonCell";
 import "swiper/swiper-bundle.css";
 import "./SeasonList.scss";
 import { episodeReleased } from "../../api/tmdb/tmdbApi.helper";
+import LazySwiper from "../lazy-swiper/LazySwiper";
 
 const SeasonList = ({ seasons = [] }) => {
   const [selectedIndex, setSelectedIndex] = useState(endIndex(seasons));
@@ -29,12 +30,18 @@ const SeasonList = ({ seasons = [] }) => {
         </select>
       </div>
       <div className="season-list">
-        <Swiper
-          grabCursor={true}
-          spaceBetween={10}
-          slidesPerView="auto"
+        <LazySwiper
+          slidesPerView="1"
+          breakpoints={{
+            600: {
+              slidesPerView: 2.5,
+            },
+            1024: {
+              slidesPerView: 4,
+            },
+          }}
           navigation={true}
-          modules={[Navigation]}
+          modules={[Navigation, Lazy, Mousewheel, FreeMode]}
         >
           {seasons[selectedIndex]?.episodes
             ?.filter(episodeReleased)
@@ -43,7 +50,7 @@ const SeasonList = ({ seasons = [] }) => {
                 <SeasonCell item={ep} />
               </SwiperSlide>
             ))}
-        </Swiper>
+        </LazySwiper>
       </div>
     </div>
   );

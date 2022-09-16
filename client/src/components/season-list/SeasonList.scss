@@ -27,16 +27,4 @@
 
 .season-list {
   --swiper-navigation-color: white;
-
-  .swiper-slide {
-    width: 25%;
-
-    @include tablet {
-      width: 40%;
-    }
-
-    @include mobile {
-      width: 100%;
-    }
-  }
 }

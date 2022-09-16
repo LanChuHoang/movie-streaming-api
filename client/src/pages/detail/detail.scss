@@ -94,12 +94,21 @@
   margin-top: 1rem;
 
   .swiper-slide {
-    width: 15%;
-    max-width: 150px;
-
-    img {
+    img,
+    .default-profile-image {
       aspect-ratio: 2 / 3;
       border-radius: 4px;
+    }
+
+    .default-profile-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba($color: white, $alpha: 0.01);
+
+      p {
+        font-size: 2rem;
+      }
     }
 
     &__name {
