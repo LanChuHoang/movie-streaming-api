@@ -36,3 +36,40 @@
   box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
   border-radius: 1rem;
 }
+
+.admin-menu {
+  .MuiPaper-root {
+    border-radius: 0.25rem;
+    margin-top: 0.25rem;
+
+    .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+      margin: 0 0.5rem;
+      border-radius: 0.25rem;
+      font-family: "Nunito", sans-serif;
+      color: $admin-text-color;
+      font-weight: 600;
+
+      &:hover {
+        background-color: $admin-hover-color;
+      }
+    }
+
+    .Mui-selected {
+      background-color: $admin-main-color;
+      color: white;
+
+      &:hover {
+        background-color: $admin-main-color;
+        opacity: 0.8;
+      }
+
+      &:active {
+        background-color: $admin-main-color;
+      }
+    }
+
+    .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
+      background-color: $admin-main-color;
+    }
+  }
+}

@@ -6,6 +6,7 @@ import "swiper/swiper-bundle.css";
 import "./SeasonList.scss";
 import { episodeReleased } from "../../api/tmdb/tmdbApi.helper";
 import LazySwiper from "../lazy-swiper/LazySwiper";
+import { FormControl, MenuItem, Select } from "@mui/material";
 
 const SeasonList = ({ seasons = [] }) => {
   const [selectedIndex, setSelectedIndex] = useState(endIndex(seasons));
@@ -17,7 +18,7 @@ const SeasonList = ({ seasons = [] }) => {
   return (
     <div className="section mb-3">
       <div className="section__header mb-2">
-        <select
+        {/* <select
           className="season-select"
           value={selectedIndex}
           onChange={(e) => setSelectedIndex(e.target.value)}
@@ -27,7 +28,27 @@ const SeasonList = ({ seasons = [] }) => {
               {s.title}
             </option>
           ))}
-        </select>
+        </select> */}
+        <FormControl size="small">
+          <Select
+            className="season-select"
+            value={selectedIndex}
+            onChange={(e) => setSelectedIndex(e.target.value)}
+            displayEmpty
+            inputProps={{ "aria-label": "Without label" }}
+            MenuProps={{
+              classes: {
+                root: "main-select-menu",
+              },
+            }}
+          >
+            {seasons?.map((s, i) => (
+              <MenuItem key={s.title} value={i}>
+                {s.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
       <div className="season-list">
         <LazySwiper

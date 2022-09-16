@@ -159,9 +159,7 @@ const UpsertMovie = () => {
                       key={input.field}
                       input={input}
                       value={movie[input.field]}
-                      onChange={(e) =>
-                        mergeMovieState(input.field, e.target.value)
-                      }
+                      onChange={mergeMovieState}
                     />
                   ))}
                 </div>

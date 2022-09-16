@@ -49,6 +49,11 @@ const UpsertInput = ({
       return (
         <TextField
           className={`upsert-input upsert-input-select ${className}`}
+          SelectProps={{
+            MenuProps: {
+              classes: { root: "admin-menu" },
+            },
+          }}
           size="small"
           select
           label={input.label}
@@ -70,7 +75,6 @@ const UpsertInput = ({
           size="small"
           multiple
           value={value}
-          // onChange={(_, value) => onChange({ target: { value } })}
           onChange={(_, value) => setValue(value)}
           onBlur={() => onChange(input.field, value)}
           options={input.options}

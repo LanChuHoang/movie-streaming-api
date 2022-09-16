@@ -8,6 +8,7 @@ import useBackendApi from "../../hooks/useBackendApi";
 import filterOptions from "../../api/filterOptions";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 import MediaApi from "../../api/backendApi/MediaApi";
+import { FormControl, MenuItem, Select } from "@mui/material";
 
 const MovieGrid = ({ itemType }) => {
   const [items, setItems] = useState([]);
@@ -106,7 +107,7 @@ const FilterBar = ({ itemType, browseType, params }) => {
   };
 
   return (
-    <div className="filter-bar">
+    <div className="filter-bar-container">
       {fields(itemType).map((f) => (
         <FilterField
           key={f.paramName}
@@ -135,18 +136,28 @@ const fields = (itemType) => [
 
 const FilterField = ({ label, paramName, options, value = "", onChange }) => {
   return (
-    <div className="filter-field">
+    <div className="filter-field-container">
       <label>{label}</label>
-      <select
-        value={value}
-        onChange={(e) => onChange(paramName, e.target.value)}
-      >
-        {options?.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.display}
-          </option>
-        ))}
-      </select>
+      <FormControl size="small">
+        <Select
+          className="movie-grid-select"
+          value={value}
+          onChange={(e) => onChange(paramName, e.target.value)}
+          displayEmpty
+          inputProps={{ "aria-label": "Without label" }}
+          MenuProps={{
+            classes: {
+              root: "main-select-menu",
+            },
+          }}
+        >
+          {options?.map((o) => (
+            <MenuItem key={o.value} value={o.value}>
+              {o.display}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
   );
 };
@@ -186,7 +197,6 @@ const MovieSearch = ({ itemType, browseType, query: initialQuery }) => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </form>
-
       <Button className="small" onClick={goToSearch}>
         Search
       </Button>
