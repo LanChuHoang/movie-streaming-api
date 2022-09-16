@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams } from "react-router";
 import PageHeader from "../components/page-header/PageHeader";
 import { itemType as type } from "../api/backendApi";
