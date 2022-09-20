@@ -1,26 +1,35 @@
 const tmdbModel = require("./tmdb.model");
 const fileModel = require("./file.model");
 const Movie = require("../../models/movie/Movie");
+const Show = require("../../models/show/Show");
 const mongoService = require("../mongo.service");
 
-async function updateTmdbIds() {
-  const tmdbApi = tmdbModel.movie;
+const backendModel = {
+  movie: Movie,
+  show: Show,
+};
+
+async function updateTmdbIds(itemType = tmdbModel.itemType.movie) {
+  const tmdbApi = tmdbModel[itemType];
+  const backendApi = backendModel[itemType];
   const updateTmdbId = async ({ _id, title }) => {
     try {
-      const matchedItem = await tmdbApi.findMatchingItem(title);
-      const updatedMovie = await Movie.findByIdAndUpdate(
+      const matchedTmdb = await tmdbApi.searchItem(title);
+      const updatedItem = await backendApi.findByIdAndUpdate(
         _id,
-        { tmdbID: matchedItem.id },
+        { tmdbID: matchedTmdb.id },
         { projection: { title: 1, tmdbID: 1 }, returnDocument: "after" }
       );
-      return updatedMovie;
+      return updatedItem;
     } catch (error) {
       throw new Error(`${_id} - ${title} - ${error.message}`);
     }
   };
 
-  const movies = await Movie.find({ tmdbID: null }, { title: 1 });
-  const results = await Promise.allSettled(movies.map((m) => updateTmdbId(m)));
+  const toUpdateItems = await backendApi.find({ tmdbID: null }, { title: 1 });
+  const results = await Promise.allSettled(
+    toUpdateItems.map((m) => updateTmdbId(m))
+  );
   const successItems = results
     .filter((r) => r.status === "fulfilled")
     .map(({ value }) => `${value._id} - ${value.tmdbID} - ${value.title}`);
@@ -31,13 +40,15 @@ async function updateTmdbIds() {
     fileModel.writeSuccess(successItems),
     fileModel.writeErrors(errors),
   ]);
-  console.log(`Updated ${successItems.length}, Failed ${errors.length}`);
+  console.log(
+    `Updated ${itemType}: ${successItems.length}, Failed ${errors.length}`
+  );
 }
 
 async function update() {
   try {
     await mongoService.connect();
-    await updateTmdbIds();
+    await updateTmdbIds(tmdbModel.itemType.show);
   } catch (error) {
     console.log(error);
   } finally {

@@ -35,6 +35,7 @@ const showSchema = new mongoose.Schema(
     overview: { type: String },
     adult: { type: Boolean },
     imdbID: { type: String },
+    tmdbID: { type: Number },
     genres: { type: [String], enum: SHOW_GENRES },
     countries: { type: [String], enum: COUNTRIES },
     cast: { type: [mongoose.Schema.Types.ObjectId], ref: "Person" },

@@ -22,12 +22,16 @@ class BaseApi {
 
   getItem = (id) => this.client.get(`${this.endpoint.base}/${id}`);
 
-  findMatchingItem = async (title) => {
+  searchItem = async (
+    title,
+    isMatched = (r) => r[this.fieldName.title] === title
+  ) => {
     const { results } = (await this.searchItems(title)).data;
-    const isMatched = (r) => r[this.fieldName.title] === title;
-    const matchedTmdb = results.find(isMatched);
-    if (!matchedTmdb) throw new Error(`Not found`);
-    return matchedTmdb;
+    const matchedItems = results.filter(isMatched);
+    if (matchedItems.length === 0) throw new Error(`Not found`);
+    if (matchedItems.length > 1)
+      throw new Error(`Too many matched: ${matchedItems.length}`);
+    return matchedItems[0];
   };
 }
 
@@ -42,6 +46,16 @@ class MovieApi extends MediaApi {
   }
 }
 
+class ShowApi extends MediaApi {
+  constructor() {
+    super(
+      { base: "/tv", search: "/search/tv" },
+      { title: "name", releaseDate: "first_air_date", overview: "overview" }
+    );
+  }
+}
+
 module.exports = {
   MovieApi,
+  ShowApi,
 };
