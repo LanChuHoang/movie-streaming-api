@@ -47,8 +47,26 @@ function toMovieModel(tmdbMovie) {
   };
 }
 
+function toShowModel(tmdbShow) {
+  return {
+    title: tmdbShow.name,
+    tagline: tmdbShow.tagline,
+    overview: tmdbShow.overview,
+    adult: tmdbShow.adult,
+    firstAirDate: tmdbShow.first_air_date,
+    lastAirDate: tmdbShow.last_air_date,
+    imdbID: tmdbShow.imdb_id,
+    genres: tmdbShow.genres.map((g) => g.name),
+    countries: tmdbShow.production_countries.map((c) => c.iso_3166_1),
+    posterUrl: getImageUrl(tmdbShow.poster_path, imageSize.w185),
+    thumbnailUrl: getImageUrl(tmdbShow.backdrop_path, imageSize.w300),
+    backdropUrl: getImageUrl(tmdbShow.backdrop_path, imageSize.original),
+  };
+}
+
 module.exports = {
   currentTime,
   isSameDate,
   toMovieModel,
+  toShowModel,
 };

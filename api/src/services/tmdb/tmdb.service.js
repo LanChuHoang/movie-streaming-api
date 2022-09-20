@@ -4,7 +4,7 @@ const Movie = require("../../models/movie/Movie");
 const Show = require("../../models/show/Show");
 const Person = require("../../models/person/Person");
 const mongoService = require("../mongo.service");
-const { toMovieModel } = require("./tmdb.helper");
+const { toMovieModel, toShowModel } = require("./tmdb.helper");
 
 const backendModel = {
   movie: Movie,
@@ -14,9 +14,10 @@ const backendModel = {
 
 const toModel = {
   movie: toMovieModel,
+  show: toShowModel,
 };
 
-async function updateBasicDetail(itemType = tmdbModel.itemType.movie) {
+async function updateMediaBasicInfo(itemType = tmdbModel.itemType.movie) {
   const mediaModel = backendModel[itemType];
   const tmdbApi = tmdbModel[itemType];
   const mapToModel = toModel[itemType];
@@ -58,7 +59,7 @@ async function updateBasicDetail(itemType = tmdbModel.itemType.movie) {
 async function update() {
   try {
     await mongoService.connect();
-    await updateBasicDetail();
+    await updateMediaBasicInfo(tmdbModel.itemType.show);
   } catch (error) {
     console.log(error);
   } finally {
