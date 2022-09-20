@@ -136,10 +136,13 @@ function getMovieByTitle(title) {
   return Movie.findOne({ title: title });
 }
 
-function getCredits(movieId) {
-  return Movie.findById(movieId, { cast: 1, directors: 1, _id: 0 })
-    .populate("cast")
-    .populate("directors");
+async function getCredits(movieId) {
+  const docs = (
+    await Movie.findById(movieId, { cast: 1, directors: 1, _id: 0 })
+      .populate("cast._id", { name: 1, avatarUrl: 1 })
+      .populate("directors", { name: 1, avatarUrl: 1 })
+  ).toObject();
+  return { ...docs, cast: docs.cast.map((p) => ({ ...p, ...p._id })) };
 }
 
 // Update

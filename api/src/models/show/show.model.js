@@ -152,10 +152,13 @@ async function getSeasons(showId) {
   return seasons;
 }
 
-function getCredits(showId) {
-  return Show.findById(showId, { cast: 1, directors: 1, _id: 0 })
-    .populate("cast")
-    .populate("directors");
+async function getCredits(showId) {
+  const docs = (
+    await Show.findById(showId, { cast: 1, directors: 1, _id: 0 })
+      .populate("cast._id", { name: 1, avatarUrl: 1 })
+      .populate("directors", { name: 1, avatarUrl: 1 })
+  ).toObject();
+  return { ...docs, cast: docs.cast.map((p) => ({ ...p, ...p._id })) };
 }
 
 function getRandomShow() {
