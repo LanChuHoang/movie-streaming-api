@@ -25,10 +25,6 @@ const personJob = {
   director: "Director",
 };
 
-function getImageUrl(filePath, size = imageSize.w92) {
-  return filePath ? `${baseImageUrl}/${size}${filePath}` : undefined;
-}
-
 function toMovieModel(tmdbMovie) {
   return {
     title: tmdbMovie.title,
@@ -64,9 +60,43 @@ function toShowModel(tmdbShow) {
   };
 }
 
+function toPersonModel(tmdbPerson) {
+  return {
+    name: tmdbPerson.name,
+    gender: tmdbPerson.gender === 1 ? "female" : "male",
+    dob: tmdbPerson.birthday,
+    dod: tmdbPerson.deathday,
+    pob: tmdbPerson.place_of_birth,
+    job: parseJob(tmdbPerson),
+    biography: tmdbPerson.biography,
+    avatarUrl: getImageUrl(tmdbPerson.profile_path, imageSize.w185),
+    imdbID: tmdbPerson.imdb_id,
+    tmdbID: tmdbPerson.id,
+  };
+}
+
+function getImageUrl(filePath, size = imageSize.w92) {
+  return filePath ? `${baseImageUrl}/${size}${filePath}` : undefined;
+}
+
+const parseJob = ({ known_for_department }) => {
+  switch (known_for_department) {
+    case "Acting":
+      return personJob.actor;
+    case "Directing":
+      return personJob.director;
+    default:
+      return personJob.actor;
+  }
+};
+
+const isDirector = ({ job }) => job === "Director";
+
 module.exports = {
   currentTime,
   isSameDate,
   toMovieModel,
   toShowModel,
+  toPersonModel,
+  isDirector,
 };

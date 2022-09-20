@@ -4,7 +4,12 @@ const Movie = require("../../models/movie/Movie");
 const Show = require("../../models/show/Show");
 const Person = require("../../models/person/Person");
 const mongoService = require("../mongo.service");
-const { toMovieModel, toShowModel } = require("./tmdb.helper");
+const {
+  toMovieModel,
+  toShowModel,
+  toPersonModel,
+  isDirector,
+} = require("./tmdb.helper");
 
 const backendModel = {
   movie: Movie,
@@ -56,10 +61,76 @@ async function updateMediaBasicInfo(itemType = tmdbModel.itemType.movie) {
   }
 }
 
+async function upsertPerson(tmdbPerson, type = "cast") {
+  let storedPerson = await Person.findOne({ tmdbID: tmdbPerson.id });
+  if (!storedPerson) {
+    const tmdbPersonDetail = (await tmdbModel.person.getItem(tmdbPerson.id))
+      .data;
+    const mappedData = toPersonModel(tmdbPersonDetail);
+    storedPerson = await Person.create(mappedData);
+  }
+  return type === "cast"
+    ? { _id: storedPerson._id, character: tmdbPerson.character }
+    : { _id: storedPerson._id };
+}
+
+async function updateCredits(itemType = tmdbModel.itemType.movie) {
+  const mediaModel = backendModel[itemType];
+  const tmdbApi = tmdbModel[itemType];
+
+  const updateCredit = async ({ _id, tmdbID }) => {
+    const tmdbCredits = (await tmdbApi.getCredits(tmdbID)).data;
+    const [cast, directors] = await Promise.all([
+      Promise.all(tmdbCredits.cast.map((p) => upsertPerson(p, "cast"))),
+      Promise.all(
+        tmdbCredits.crew
+          .filter(isDirector)
+          .map((p) => upsertPerson(p, "director"))
+      ),
+    ]);
+    const updatedMedia = await mediaModel.findByIdAndUpdate(
+      _id,
+      {
+        cast,
+        directors,
+      },
+      {
+        returnDocument: "after",
+        projection: { title: 1 },
+      }
+    );
+    return updatedMedia;
+  };
+
+  // const totalDocs = 1;
+  const totalDocs = await mediaModel.estimatedDocumentCount();
+  const pageSize = 10;
+  const totalPages = Math.ceil(totalDocs / pageSize);
+
+  for (let page = 0; page < totalPages; page++) {
+    const backendMedia = await mediaModel
+      .find({}, { tmdbID: 1 })
+      .skip(page * pageSize)
+      .limit(pageSize);
+    const results = await Promise.allSettled(backendMedia.map(updateCredit));
+    const fulfilled = results.filter((r) => r.status === "fulfilled");
+    const rejected = results
+      .filter((r) => r.status === "rejected")
+      .flatMap(
+        (r, i) =>
+          `${backendMedia[i]._id} - ${backendMedia[i].tmdbID} - ${r.reason.message}`
+      );
+    await fileModel.writeErrors(rejected);
+    console.log(
+      `Updated ${itemType} credits page ${page}: success ${fulfilled.length}, errors ${rejected.length}`
+    );
+  }
+}
+
 async function update() {
   try {
     await mongoService.connect();
-    await updateMediaBasicInfo(tmdbModel.itemType.show);
+    await updateCredits();
   } catch (error) {
     console.log(error);
   } finally {
