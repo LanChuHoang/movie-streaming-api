@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node src/server.js",
     "watch": "nodemon src/server.js",
-    "update-data": "nodemon src/data/tmdb/tmdb.service.js",
+    "tmdb": "nodemon src/services/tmdb/tmdb.service.js",
     "test": "jest --detectOpenHandles"
   },
   "keywords": [],
