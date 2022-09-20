@@ -11,6 +11,7 @@ const personSchema = new mongoose.Schema(
     biography: { type: String },
     avatarUrl: { type: String },
     images: { type: [String] },
+    tmdbID: { type: Number },
     // joined: {type: [mongoose.SchemaTypes.ObjectId], ref: ""}
   },
   { timestamps: true }
