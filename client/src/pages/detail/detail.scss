@@ -86,33 +86,9 @@
         background-color: $body-bg;
       }
     }
-  }
-}
 
-.casts {
-  width: 100%;
-  margin-top: 1rem;
-
-  .swiper-slide {
-    img,
-    .default-profile-image {
-      aspect-ratio: 2 / 3;
-      border-radius: 4px;
-    }
-
-    .default-profile-image {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba($color: white, $alpha: 0.01);
-
-      p {
-        font-size: 2rem;
-      }
-    }
-
-    &__name {
-      font-size: 0.8rem;
+    .cast {
+      margin-bottom: 1.5rem;
     }
   }
 }

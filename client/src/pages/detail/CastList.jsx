@@ -1,21 +1,26 @@
 import { SwiperSlide } from "swiper/react";
 import FallbackImage from "../../components/fallback-image/FallbackImage";
 import LazySwiper from "../../components/lazy-swiper/LazySwiper";
+import "./castList.scss";
 
 const CastList = ({ cast = [] }) => {
   return (
-    <div className="casts">
+    <div className="cast-list-container">
       <LazySwiper
-        slidesPerView="4.5"
+        spaceBetween={15}
+        slidesPerView="5"
         breakpoints={{
-          600: {
-            slidesPerView: 7.5,
+          800: {
+            slidesPerView: 6,
+          },
+          1024: {
+            slidesPerView: 7,
           },
         }}
       >
         {cast.map((item, i) => (
           <SwiperSlide key={i}>
-            <div className="casts__item">
+            <div className="cast-item-container">
               <FallbackImage
                 fallback={<DefaultProfileImage name={item.name} />}
                 image={
@@ -26,7 +31,10 @@ const CastList = ({ cast = [] }) => {
                   />
                 }
               />
-              <p className="casts__item__name">{item.name}</p>
+              <div className="cast-description">
+                <p className="cast-name">{item.name}</p>
+                <p className="cast-character">{item.character}</p>
+              </div>
             </div>
           </SwiperSlide>
         ))}
