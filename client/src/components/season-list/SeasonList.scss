@@ -2,7 +2,8 @@
 
 .season-select {
   .MuiSelect-select {
-    border-radius: 0.3rem;
+    border-radius: 0.3px;
+    padding-left: 0;
     color: whitesmoke;
     font-family: $font-family;
     font-size: 1.5rem;
@@ -25,5 +26,29 @@
 }
 
 .season-list {
+  position: relative;
   --swiper-navigation-color: white;
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    @include mobile {
+      display: none;
+    }
+
+    &::after {
+      font-size: 1.8rem;
+    }
+  }
+
+  .swiper-button-prev {
+    left: -2.5rem;
+  }
+
+  .swiper-button-next {
+    right: -2.5rem;
+  }
+
+  .swiper-button-disabled {
+    display: none;
+  }
 }

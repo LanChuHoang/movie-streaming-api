@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SwiperSlide } from "swiper/react";
-import { Navigation, Lazy, Mousewheel, FreeMode } from "swiper";
+import { Navigation, Lazy, Mousewheel } from "swiper";
 import SeasonCell from "./season-cell/SeasonCell";
 import "swiper/swiper-bundle.css";
 import "./SeasonList.scss";
@@ -17,18 +17,7 @@ const SeasonList = ({ seasons = [] }) => {
 
   return (
     <div className="section mb-3">
-      <div className="section__header mb-2">
-        {/* <select
-          className="season-select"
-          value={selectedIndex}
-          onChange={(e) => setSelectedIndex(e.target.value)}
-        >
-          {seasons.map((s, i) => (
-            <option value={i} key={s.title}>
-              {s.title}
-            </option>
-          ))}
-        </select> */}
+      <div className="section__header">
         <FormControl size="small">
           <Select
             className="season-select"
@@ -55,14 +44,19 @@ const SeasonList = ({ seasons = [] }) => {
           slidesPerView="1"
           breakpoints={{
             600: {
-              slidesPerView: 2.5,
+              slidesPerView: 3,
+              slidesPerGroup: 3,
             },
             1024: {
               slidesPerView: 4,
+              slidesPerGroup: 4,
             },
           }}
-          navigation={true}
-          modules={[Navigation, Lazy, Mousewheel, FreeMode]}
+          navigation={{
+            prevEl: ".swiper-button-prev",
+            nextEl: ".swiper-button-next",
+          }}
+          modules={[Navigation, Lazy, Mousewheel]}
         >
           {seasons[selectedIndex]?.episodes
             ?.filter(episodeReleased)
@@ -72,6 +66,8 @@ const SeasonList = ({ seasons = [] }) => {
               </SwiperSlide>
             ))}
         </LazySwiper>
+        <div className="swiper-button-prev"></div>
+        <div className="swiper-button-next"></div>
       </div>
     </div>
   );
