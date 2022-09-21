@@ -5,28 +5,6 @@
   margin-bottom: 3rem;
 }
 
-.trailer-modal {
-  background-color: black;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: calc(60vw / 16 * 9);
-  width: 60vw;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  iframe {
-    border-radius: 8px;
-  }
-
-  p {
-    text-align: center;
-  }
-}
-
 .hero-slide__item {
   padding: 9rem 0;
   width: 100%;

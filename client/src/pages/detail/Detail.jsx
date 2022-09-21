@@ -6,16 +6,19 @@ import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import "./detail.scss";
 import Button, { OutlineButton } from "../../components/button/Button";
 import CastList from "./CastList";
-import VideoList from "./TrailerList";
+import VideoList from "./VideoList";
 import MovieList from "../../components/movie-list/MovieList";
 import SeasonList from "../../components/season-list/SeasonList";
 import MediaApi from "../../api/backendApi/MediaApi";
+import youtubeApi from "../../api/youtube/youtubeApi";
+import { toYoutubeVideoUrl } from "../../api/helper";
 
 const Detail = () => {
   const { itemType, id } = useParams();
   const [item, setItem] = useState();
   const [credits, setCredits] = useState();
   const [seasons, setSeasons] = useState();
+  const [trailers, setTrailers] = useState();
   const trailersRef = useRef();
   const seasonsRef = useRef();
   const backendApi = useBackendApi()[itemType];
@@ -24,7 +27,6 @@ const Detail = () => {
     const getDetail = async () => {
       try {
         const { data } = await backendApi.getItem(id);
-        console.log(data);
         setItem(data);
         window.scrollTo(0, 0);
       } catch (error) {
@@ -38,7 +40,6 @@ const Detail = () => {
     const getCredits = async () => {
       try {
         const { data } = await backendApi.getCredits(id);
-        console.log(data);
         setCredits(data);
       } catch (error) {
         console.log(error);
@@ -51,7 +52,6 @@ const Detail = () => {
     const getSeasons = async () => {
       try {
         const { data } = await backendApi.getSeasons(id);
-        console.log(data);
         setSeasons(data);
       } catch (error) {
         console.log(error);
@@ -65,6 +65,24 @@ const Detail = () => {
       ? (window.location.href = item.videoUrl || "/")
       : scrollToRef(seasonsRef);
   };
+
+  useEffect(() => {
+    const getTrailers = async (ids) => {
+      try {
+        const videoData = (
+          await Promise.allSettled(
+            ids.map((id) => youtubeApi.getVideoDetail(id))
+          )
+        )
+          .filter((r) => r.status === "fulfilled")
+          .map((r, i) => toVideoModel({ ...r.value, id: ids[i] }));
+        setTrailers(videoData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    item?.trailers?.length > 0 && getTrailers(item.trailers);
+  }, [item]);
 
   return (
     <>
@@ -119,10 +137,13 @@ const Detail = () => {
       <div className="container" ref={seasonsRef}>
         {itemType === "show" && <SeasonList seasons={seasons} />}
         <div className="section mb-3" ref={trailersRef}>
-          <VideoList videos={item?.trailers?.slice(0, 2)} />
+          <div className="section__header mb-1">
+            <h2>Trailers</h2>
+          </div>
+          <VideoList videos={trailers} />
         </div>
         <div className="section mb-3">
-          <div className="section__header mb-2">
+          <div className="section__header mb-1">
             <h2>Similar</h2>
           </div>
           <MovieList
@@ -139,5 +160,11 @@ const Detail = () => {
 const scrollToRef = (ref) => {
   ref.current.scrollIntoView({ behavior: "smooth" });
 };
+
+const toVideoModel = (v) => ({
+  title: v.title,
+  thumbnailUrl: v.thumbnails.standard.url,
+  srcUrl: toYoutubeVideoUrl(v.id),
+});
 
 export default Detail;

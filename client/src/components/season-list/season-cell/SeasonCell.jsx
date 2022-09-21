@@ -1,24 +1,23 @@
 import { Link } from "react-router-dom";
-import Button from "../../button/Button";
+import PlayButton from "../../buttons/play-button/PlayButton";
 import FallbackImage from "../../fallback-image/FallbackImage";
+import Overlay from "../../overlay/Overlay";
 import "./SeasonCell.scss";
 
 const SeasonCell = ({ item = {} }) => {
   return (
     <Link to={item.videoUrl || "/"}>
-      <div className="season-cell">
-        <div className="thumbnail">
+      <div className="season-cell-container">
+        <div className="thumbnail-container">
           <FallbackImage
             fallback={<DefaultThumbnail />}
             image={<img src={item.thumbnailUrl} alt={item.title} />}
           />
-          <Button>
-            <i className="bx bx-play"></i>
-          </Button>
+          <PlayButton />
         </div>
-        <div className="itemInfo">
-          <div className="miniInfo">
-            <span className="episode-span">{`EPISODE ${item.episodeNumber}`}</span>
+        <div className="season-info-container">
+          <div className="season-mini-info">
+            <span className="episode-number">{`EPISODE ${item.episodeNumber}`}</span>
             <span>{formatAirDate(item.airDate)}</span>
             <span>{formatRuntime(item.runtime)}</span>
           </div>
@@ -26,6 +25,7 @@ const SeasonCell = ({ item = {} }) => {
           <label>{item.title}</label>
           <p>{formatOverview(item.overview)}</p>
         </div>
+        <Overlay />
       </div>
     </Link>
   );

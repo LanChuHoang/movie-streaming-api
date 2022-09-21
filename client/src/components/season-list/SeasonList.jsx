@@ -17,7 +17,7 @@ const SeasonList = ({ seasons = [] }) => {
 
   return (
     <div className="section mb-3">
-      <div className="section__header">
+      <div className="section__header mb-1">
         <FormControl size="small">
           <Select
             className="season-select"

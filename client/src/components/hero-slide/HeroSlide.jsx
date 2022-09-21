@@ -5,9 +5,9 @@ import Button, { OutlineButton } from "../button/Button";
 import "./hero-slide.scss";
 import { useNavigate } from "react-router";
 import useBackendApi from "../../hooks/useBackendApi";
-import { Fade, Modal } from "@mui/material";
 import { toYoutubeVideoUrl } from "../../api/helper";
 import LazySwiper from "../lazy-swiper/LazySwiper";
+import TrailerModal from "../modals/trailer-modal/TrailerModal";
 
 const HeroSlide = () => {
   const [movieItems, setMovieItems] = useState([]);
@@ -59,29 +59,11 @@ const HeroSlide = () => {
           </SwiperSlide>
         ))}
       </LazySwiper>
-
-      <Modal
+      <TrailerModal
         open={trailerOpen}
         onClose={handleTrailerClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Fade in={trailerOpen}>
-          <div className="trailer-modal">
-            {selectedItem?.trailers?.length > 0 ? (
-              <iframe
-                width="100%"
-                height="100%"
-                title="trailer"
-                allow="fullscreen"
-                src={toYoutubeVideoUrl(selectedItem.trailers[0])}
-              />
-            ) : (
-              <p>This movie has no trailer</p>
-            )}
-          </div>
-        </Fade>
-      </Modal>
+        srcUrl={toYoutubeVideoUrl(selectedItem?.trailers?.[0])}
+      />
     </div>
   );
 };

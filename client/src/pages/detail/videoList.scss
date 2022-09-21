@@ -1,0 +1,32 @@
+@use "../../scss/" as *;
+
+.video-list-container {
+  .video-item-container {
+    .thumbnail-container {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+
+      img {
+        height: 100%;
+        width: 100%;
+        border-radius: 12px;
+        object-fit: cover;
+      }
+    }
+
+    .video-title {
+      font-size: 0.8rem;
+    }
+
+    &:hover {
+      .small-play-button {
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .overlay-component-container {
+        background-color: rgba($color: #0f0f0f, $alpha: 0.4);
+      }
+    }
+  }
+}

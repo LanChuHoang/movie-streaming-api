@@ -1,16 +1,14 @@
-.season-cell {
-  color: #989898;
-  font-size: 0.8rem;
+.season-cell-container {
   position: relative;
+  font-size: 0.8rem;
 
-  .thumbnail {
+  .thumbnail-container {
     position: relative;
 
     img,
     .default-thumbnail {
       width: 100%;
       border-radius: 12px;
-      transition: opacity 0.3s ease;
     }
 
     .default-thumbnail {
@@ -24,29 +22,10 @@
         font-size: 3.5rem;
       }
     }
-
-    .btn {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
   }
 
-  &:hover {
-    .thumbnail img,
-    .itemInfo {
-      opacity: 0.4;
-    }
-
-    .btn {
-      transform: translate(-50%, -50%) scale(1);
-    }
-  }
-
-  .itemInfo {
-    transition: opacity 0.3s ease;
+  .season-info-container {
+    color: #989898;
 
     label {
       color: white;
@@ -54,7 +33,7 @@
       font-weight: 500;
     }
 
-    .miniInfo {
+    .season-mini-info {
       margin-top: 5px;
 
       span {
@@ -62,9 +41,19 @@
         float: right;
       }
 
-      .episode-span {
+      .episode-number {
         float: left;
       }
+    }
+  }
+
+  &:hover {
+    .small-play-button {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .overlay-component-container {
+      background-color: rgba($color: #0f0f0f, $alpha: 0.4);
     }
   }
 }
