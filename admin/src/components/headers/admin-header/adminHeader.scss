@@ -3,7 +3,7 @@
 .admin-header-container {
   position: fixed;
   top: 0;
-  left: 13rem;
+  left: $sidebar-desktop-width;
   right: 0;
   z-index: 100;
   height: $header-height;

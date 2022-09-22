@@ -20,27 +20,28 @@
   }
 
   .main-section {
-    padding: 0 0.25em;
+    padding: 0 0.5em;
 
     ul {
       .group-header {
         padding-left: 0.5em;
         margin-top: 1.25em;
         margin-bottom: 0.3em;
-        font-size: 0.8em;
-        font-weight: bold;
+        font-size: 0.8rem;
+        font-weight: 700;
         color: $header-color;
       }
 
       li {
-        padding: 5px;
-        padding-left: 1em;
+        padding: 7px;
+        padding-left: 25px;
         display: flex;
         align-items: center;
-        border-radius: 0.25em;
+        border-radius: 7px;
         cursor: pointer;
         // text
-        font-weight: 600;
+        font-size: 0.9rem;
+        font-weight: 500;
         // animation
         transition: background-color 0.2s;
 

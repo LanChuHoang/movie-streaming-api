@@ -1,3 +1,5 @@
+@use "../../../scss/" as *;
+
 .auth-header-container {
   display: flex;
   flex-direction: row;
@@ -13,7 +15,7 @@
   .logo-link {
     font-size: 2.5rem;
     font-weight: 600;
-    font-family: "Montserrat", sans-serif;
+    font-family: $logo-font;
     color: white;
     text-decoration: none;
     padding-left: 10px;

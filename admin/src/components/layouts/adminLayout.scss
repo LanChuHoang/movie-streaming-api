@@ -2,7 +2,7 @@
 
 .admin-layout-container {
   position: relative;
-  font-family: "Nunito", sans-serif;
+  font-family: $font-family;
   color: $text-color;
 
   .admin-layout-content-container {
@@ -45,7 +45,7 @@
     .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
       margin: 0 0.5rem;
       border-radius: 0.25rem;
-      font-family: "Nunito", sans-serif;
+      font-family: $font-family;
       color: $text-color;
       font-weight: 600;
 

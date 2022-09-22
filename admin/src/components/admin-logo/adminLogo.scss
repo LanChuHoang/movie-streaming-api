@@ -1,6 +1,7 @@
 @use "../../scss/" as *;
 
 .admin-logo {
+  font-family: $logo-font;
   font-size: 2em;
   font-weight: bold;
   color: $logo-color;
