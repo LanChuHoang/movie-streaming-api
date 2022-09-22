@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material/styles";
+import { deepPurple } from "@mui/material/colors";
 
 const LightTheme = createTheme({
   typography: {
@@ -9,6 +10,11 @@ const LightTheme = createTheme({
       "Arial",
       "sans-serif",
     ].join(","),
+  },
+  palette: {
+    primary: {
+      main: "#7451f8",
+    },
   },
 });
 
