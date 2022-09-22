@@ -11,14 +11,20 @@ import Catalog from "./pages/Catalog";
 import Detail from "./pages/detail/Detail";
 import RequireAuth from "./components/auth/RequireAuth";
 import PersistLogin from "./components/auth/PersistLogin";
+import RequireUnauth from "./components/auth/RequireUnauth";
 
 function App() {
   return (
     <Routes>
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<PersistLogin />}>
-        <Route element={<RequireAuth forAdmin={false} />}>
+      <Route element={<PersistLogin />}>
+        <Route path="/login" element={<RequireUnauth />}>
+          <Route index element={<Login />} />
+        </Route>
+        <Route path="/register" element={<RequireUnauth />}>
+          <Route index element={<Register />} />
+        </Route>
+
+        <Route path="/" element={<RequireAuth forAdmin={false} />}>
           <Route element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="movie">
