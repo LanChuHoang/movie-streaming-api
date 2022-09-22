@@ -1,24 +1,24 @@
-import React from "react";
 import "./movie-card.scss";
 import { Link } from "react-router-dom";
-import Button from "../button/Button";
+import PlayButton from "../buttons/play-button/PlayButton";
+import Overlay from "../overlay/Overlay";
 
-const MovieCard = (props) => {
-  const item = props.item;
-  const link = `/${props.itemType}/${item._id}`;
+const MovieCard = ({ item, itemType }) => {
   const bg =
     item.posterUrl?.replace("w185", "w500") ||
     item.backdropUrl?.replace("original", "w500") ||
     item.thumbnailUrl;
 
   return (
-    <Link to={link}>
-      <div className="movie-card" style={{ backgroundImage: `url(${bg})` }}>
-        <Button>
-          <i className="bx bx-play"></i>
-        </Button>
+    <Link to={`/${itemType}/${item._id}`}>
+      <div className="movie-card-container">
+        <div className="movie-image-container">
+          <img className="swiper-lazy" data-src={bg} alt={item.title} />
+          <Overlay />
+          <PlayButton />
+        </div>
+        <h3 className="movie-title">{item.title}</h3>
       </div>
-      <h3>{item.title}</h3>
     </Link>
   );
 };

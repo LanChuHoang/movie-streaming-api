@@ -85,7 +85,7 @@ const HeroSlideItem = ({ className, item, onOpenTrailerClick }) => {
           <h2 className="title">{item.title}</h2>
           <div className="overview">{item.overview}</div>
           <div className="btns">
-            <Button onClick={() => navigate(`/movie/${item._id}/detail`)}>
+            <Button onClick={() => navigate(`/movie/${item._id}`)}>
               Watch now
             </Button>
             {item.trailers?.length > 0 && (
