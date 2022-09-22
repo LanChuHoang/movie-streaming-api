@@ -1,0 +1,11 @@
+@use "../../../scss/" as *;
+
+.dashboard-container {
+  flex: 1 1 auto;
+  padding: 3rem;
+  background-color: white;
+
+  .summary-section {
+    display: flex;
+  }
+}

@@ -1,0 +1,28 @@
+.profile-cell {
+  display: flex;
+  align-items: center;
+
+  .rect-image {
+    height: 2.5rem;
+    width: 2rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .default-rect-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #b3b3b3;
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 1.2rem;
+  }
+
+  span {
+    margin-left: 1rem;
+  }
+}
+
+.profile-cell-card-header {
+  padding: 0;
+}

@@ -1,0 +1,19 @@
+.data-table {
+  height: 100%;
+  width: 100%;
+  border-radius: 0.25rem;
+
+  .data-grid {
+    border-radius: 0.25rem;
+  }
+}
+
+.MuiDataGrid-columnHeaders {
+  background-color: #f9fbfc;
+}
+
+.css-r11z79-MuiDataGrid-root {
+  .MuiDataGrid-columnSeparator {
+    display: none;
+  }
+}
