@@ -5,20 +5,20 @@
   margin-top: 1rem;
 
   & label.Mui-focused {
-    color: $admin-main-color;
+    color: $main-color;
   }
 
   // & .MuiInput-underline:after {
-  //   border-bottom-color: $admin-main-color;
+  //   border-bottom-color: $main-color;
   // }
 
   & .MuiOutlinedInput-root {
     &:hover fieldset {
-      border-color: rgba($color: $admin-main-color, $alpha: 0.6);
+      border-color: rgba($color: $main-color, $alpha: 0.6);
     }
 
     &.Mui-focused fieldset {
-      border-color: rgba($color: $admin-main-color, $alpha: 0.6);
+      border-color: rgba($color: $main-color, $alpha: 0.6);
     }
   }
 }
@@ -29,10 +29,10 @@
 //     border-radius: 0.25rem;
 
 //     &[aria-selected="true"] {
-//       background-color: $admin-hover-color;
+//       background-color: $hover-color;
 
 //       &.Mui-focused {
-//         background-color: $admin-hover-color;
+//         background-color: $hover-color;
 //       }
 //     }
 //   }

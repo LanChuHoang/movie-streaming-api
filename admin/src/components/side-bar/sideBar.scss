@@ -5,18 +5,18 @@
   top: 0;
   left: 0;
   z-index: 100;
-  width: $admin-sidebar-desktop-width;
+  width: $sidebar-desktop-width;
   height: 100vh;
-  border-right: $admin-divider-border;
+  border-right: $divider-border;
   backdrop-filter: blur(10px);
-  background: $admin-transparent-background;
+  background: $transparent-background;
 
   .logo-section {
     height: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: $admin-divider-border;
+    border-bottom: $divider-border;
   }
 
   .main-section {
@@ -29,7 +29,7 @@
         margin-bottom: 0.3em;
         font-size: 0.8em;
         font-weight: bold;
-        color: $admin-header-color;
+        color: $header-color;
       }
 
       li {
@@ -45,11 +45,11 @@
         transition: background-color 0.2s;
 
         &.selected {
-          background-color: $admin-main-color;
+          background-color: $main-color;
           color: white;
 
           &:hover {
-            background-color: $admin-main-color;
+            background-color: $main-color;
             color: white;
           }
 
@@ -59,40 +59,40 @@
         }
 
         &:hover {
-          background-color: $admin-hover-color;
-          color: $admin-text-color;
+          background-color: $hover-color;
+          color: $text-color;
         }
 
         &:active {
-          background-color: rgba($color: $admin-main-color, $alpha: 0.2);
-          color: $admin-text-color;
+          background-color: rgba($color: $main-color, $alpha: 0.2);
+          color: $text-color;
         }
 
         svg {
           margin-right: 10px;
           width: 1em;
-          color: $admin-main-color;
+          color: $main-color;
           font-size: 1rem;
         }
       }
     }
 
     a:hover {
-      color: $admin-text-color;
+      color: $text-color;
     }
   }
 }
 
 @include tablet {
   .sidebar-container {
-    width: $admin-sidebar-tablet-width;
+    width: $sidebar-tablet-width;
 
     .logo-section {
       display: none;
     }
 
     .main-section {
-      margin-top: $admin-header-height;
+      margin-top: $header-height;
       height: 100%;
       padding: 0;
 
@@ -116,7 +116,7 @@
           svg {
             margin: 0;
             font-size: 1.2rem;
-            color: $admin-text-color;
+            color: $text-color;
           }
 
           .sidebar-item-name {
@@ -125,24 +125,24 @@
 
           &.selected {
             background-color: transparent;
-            color: $admin-main-color;
+            color: $main-color;
 
             &:hover {
               background-color: transparent;
-              color: $admin-main-color;
+              color: $main-color;
             }
 
             svg {
-              color: $admin-main-color;
+              color: $main-color;
             }
           }
 
           &:active {
             background-color: transparent;
-            color: $admin-main-color;
+            color: $main-color;
 
             svg {
-              color: $admin-main-color;
+              color: $main-color;
             }
           }
         }
@@ -157,9 +157,9 @@
     bottom: 0;
     right: 0;
     width: 100vw;
-    height: $admin-sidebar-mobile-height;
+    height: $sidebar-mobile-height;
     border-right: none;
-    border-top: $admin-divider-border;
+    border-top: $divider-border;
 
     .logo-section {
       display: none;
@@ -191,7 +191,7 @@
           svg {
             margin: 4px 0 0;
             font-size: 1.2rem;
-            color: $admin-text-color;
+            color: $text-color;
           }
 
           .sidebar-item-name {
@@ -202,16 +202,16 @@
 
           &.selected {
             background-color: transparent;
-            color: $admin-main-color;
+            color: $main-color;
 
             svg {
-              color: $admin-main-color;
+              color: $main-color;
             }
           }
 
           &:active {
             background-color: transparent;
-            color: $admin-main-color;
+            color: $main-color;
           }
         }
       }

@@ -2,11 +2,11 @@
 
 .action-button {
   padding: 0.25rem 0.5rem;
-  background-color: $admin-hover-color;
-  border: 1px solid $admin-main-color;
+  background-color: $hover-color;
+  border: 1px solid $main-color;
   border-radius: 0.25rem;
   // Text
-  color: $admin-main-color;
+  color: $main-color;
   font-family: "Nunito", sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
@@ -14,7 +14,7 @@
   transition: background-color 0.3s, transform 0.3s;
 
   &:hover {
-    background-color: $admin-main-color;
+    background-color: $main-color;
     color: white;
   }
 

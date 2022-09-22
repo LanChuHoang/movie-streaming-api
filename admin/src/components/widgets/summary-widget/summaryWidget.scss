@@ -19,7 +19,7 @@
       transition: color 0.2s, transform 0.4s;
 
       &:hover {
-        color: $admin-main-color;
+        color: $main-color;
         transform: rotate(270deg);
       }
     }
@@ -43,7 +43,7 @@
 
       p,
       .MuiCircularProgress-root {
-        color: $admin-main-color;
+        color: $main-color;
         font-size: 3.5rem;
         font-weight: 600;
       }

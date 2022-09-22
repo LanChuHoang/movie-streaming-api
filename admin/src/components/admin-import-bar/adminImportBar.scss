@@ -9,14 +9,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    color: $admin-main-color;
+    color: $main-color;
 
     button,
     h1 {
       font-size: 1.5rem;
       font-weight: 600;
       line-height: 1;
-      color: $admin-main-color;
+      color: $main-color;
     }
 
     button {
@@ -28,11 +28,11 @@
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: $admin-hover-color;
+        background-color: $hover-color;
       }
 
       &:active {
-        background-color: rgba($color: $admin-main-color, $alpha: 0.3);
+        background-color: rgba($color: $main-color, $alpha: 0.3);
       }
     }
 

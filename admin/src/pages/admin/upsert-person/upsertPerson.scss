@@ -54,7 +54,7 @@
       padding: 0.5rem 3rem;
 
       &:not(.Mui-disabled) {
-        background-color: $admin-logo-color;
+        background-color: $logo-color;
       }
     }
   }
@@ -64,6 +64,6 @@
   }
 
   .MuiCircularProgress-root {
-    color: $admin-main-color;
+    color: $main-color;
   }
 }

@@ -8,12 +8,12 @@
       text-transform: capitalize;
 
       &.Mui-selected {
-        color: $admin-main-color;
+        color: $main-color;
       }
     }
 
     .MuiTabs-indicator {
-      background-color: $admin-main-color;
+      background-color: $main-color;
     }
   }
 
@@ -24,7 +24,7 @@
   }
 
   .season-grid-toolbar-button {
-    color: $admin-main-color;
+    color: $main-color;
   }
 
   .season-detail-inputs {

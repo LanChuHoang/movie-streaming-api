@@ -24,8 +24,8 @@
 
     &.edit-action-button {
       &:hover {
-        background-color: $admin-hover-color;
-        color: $admin-main-color;
+        background-color: $hover-color;
+        color: $main-color;
       }
     }
   }

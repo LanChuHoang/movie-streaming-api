@@ -13,8 +13,8 @@
 
     .toolbar-button {
       &:not(.Mui-disabled) {
-        color: $admin-main-color;
-        border-color: $admin-main-color;
+        color: $main-color;
+        border-color: $main-color;
       }
     }
 
@@ -53,7 +53,7 @@
 
     label {
       &:not(label.Mui-error).Mui-focused {
-        color: $admin-main-color;
+        color: $main-color;
       }
     }
 
@@ -61,13 +61,13 @@
       &:not(.MuiOutlinedInput-root.Mui-error) {
         &:hover {
           fieldset {
-            border-color: rgba($color: $admin-main-color, $alpha: 0.6);
+            border-color: rgba($color: $main-color, $alpha: 0.6);
           }
         }
 
         &.Mui-focused {
           fieldset {
-            border-color: rgba($color: $admin-main-color, $alpha: 0.6);
+            border-color: rgba($color: $main-color, $alpha: 0.6);
           }
         }
       }

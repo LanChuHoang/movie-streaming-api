@@ -34,7 +34,7 @@
     &:hover {
       .MuiOutlinedInput-notchedOutline {
         border-color: rgba(0, 0, 0, 0.1);
-        box-shadow: 0 0 0 3px rgba($color: $admin-main-color, $alpha: 0.2);
+        box-shadow: 0 0 0 3px rgba($color: $main-color, $alpha: 0.2);
       }
     }
 
@@ -47,8 +47,8 @@
 
     &:not(:active).Mui-focused {
       .MuiOutlinedInput-notchedOutline {
-        border-color: rgba($color: $admin-main-color, $alpha: 0.6);
-        box-shadow: 0 0 0 3px rgba($color: $admin-main-color, $alpha: 0.2);
+        border-color: rgba($color: $main-color, $alpha: 0.6);
+        box-shadow: 0 0 0 3px rgba($color: $main-color, $alpha: 0.2);
       }
     }
   }

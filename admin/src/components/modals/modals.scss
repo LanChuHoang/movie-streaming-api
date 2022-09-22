@@ -52,7 +52,7 @@
   button {
     background-color: transparent;
     border: none;
-    color: $admin-text-color;
+    color: $text-color;
     transition: transform 0.2s;
 
     &:hover {
@@ -90,7 +90,7 @@
 
 //       .cancel-button {
 //         background-color: rgba(211, 211, 211, 0.441);
-//         color: $admin-header-color;
+//         color: $header-color;
 //         margin-right: 1rem;
 //       }
 
@@ -123,7 +123,7 @@
       button {
         padding: 0.5rem 0.75rem;
         border-radius: 0.25rem;
-        background-color: $admin-main-color;
+        background-color: $main-color;
         color: white;
       }
     }

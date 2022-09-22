@@ -3,7 +3,7 @@
 .add-button {
   height: fit-content;
   padding: 0.5rem 0.75rem;
-  background-color: $admin-main-color;
+  background-color: $main-color;
   border: 1px solid transparent;
   border-radius: 0.45rem;
   // text
@@ -19,10 +19,10 @@
   }
 
   &:hover {
-    background-color: $admin-logo-color;
+    background-color: $logo-color;
   }
 
   &:active {
-    background-color: $admin-main-color;
+    background-color: $main-color;
   }
 }

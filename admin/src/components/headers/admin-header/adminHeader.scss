@@ -6,11 +6,11 @@
   left: 13rem;
   right: 0;
   z-index: 100;
-  height: $admin-header-height;
+  height: $header-height;
   padding: 1rem 2rem;
   backdrop-filter: blur(10px);
-  background: $admin-transparent-background;
-  border-bottom: $admin-divider-border;
+  background: $transparent-background;
+  border-bottom: $divider-border;
   display: flex;
   flex-direction: row;
 
@@ -31,7 +31,7 @@
 
     .username {
       padding: 0 1.5rem 0 0.75rem;
-      color: $admin-main-color;
+      color: $main-color;
       font-size: 1.2rem;
     }
 
@@ -55,7 +55,7 @@
 
 @include tablet {
   .admin-header-container {
-    left: $admin-sidebar-tablet-width;
+    left: $sidebar-tablet-width;
 
     .admin-header-mobile-logo {
       display: block;
