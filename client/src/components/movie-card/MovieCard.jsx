@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PlayButton from "../buttons/play-button/PlayButton";
 import Overlay from "../overlay/Overlay";
 
-const MovieCard = ({ item, itemType }) => {
+const MovieCard = ({ item, itemType, lazy = true }) => {
   const bg =
     item.posterUrl?.replace("w185", "w500") ||
     item.backdropUrl?.replace("original", "w500") ||
@@ -13,7 +13,12 @@ const MovieCard = ({ item, itemType }) => {
     <Link to={`/${itemType}/${item._id}`}>
       <div className="movie-card-container">
         <div className="movie-image-container">
-          <img className="swiper-lazy" data-src={bg} alt={item.title} />
+          {lazy ? (
+            <img className="swiper-lazy" data-src={bg} alt={item.title} />
+          ) : (
+            <img src={bg} alt={item.title} />
+          )}
+
           <Overlay />
           <PlayButton />
         </div>

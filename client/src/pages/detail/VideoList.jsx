@@ -51,7 +51,7 @@ const VideoItem = ({ thumbnailUrl, title = "Trailer", srcUrl, onClick }) => {
   return (
     <div className="video-item-container" onClick={() => onClick(srcUrl)}>
       <div className="thumbnail-container">
-        <img loading="lazy" src={thumbnailUrl} alt={srcUrl} />
+        <img className="swiper-lazy" data-src={thumbnailUrl} alt={srcUrl} />
         <PlayButton />
       </div>
       <div className="video-title">

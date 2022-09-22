@@ -11,7 +11,13 @@ const SeasonCell = ({ item = {} }) => {
         <div className="thumbnail-container">
           <FallbackImage
             fallback={<DefaultThumbnail />}
-            image={<img src={item.thumbnailUrl} alt={item.title} />}
+            image={
+              <img
+                className="swiper-lazy"
+                data-src={item.thumbnailUrl?.replace("w300", "w780")}
+                alt={item.title}
+              />
+            }
           />
           <PlayButton />
         </div>

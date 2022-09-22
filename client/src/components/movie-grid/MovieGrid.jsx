@@ -76,7 +76,7 @@ const MovieGrid = ({ itemType, browseType }) => {
       </div>
       <div className="movie-grid">
         {items.map((item, i) => (
-          <MovieCard itemType={itemType} item={item} key={i} />
+          <MovieCard key={i} itemType={itemType} item={item} lazy={false} />
         ))}
       </div>
       {loadedPages < totalPages ? (
