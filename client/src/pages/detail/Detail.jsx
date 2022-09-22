@@ -13,8 +13,8 @@ import MediaApi from "../../api/backendApi/MediaApi";
 import youtubeApi from "../../api/youtube/youtubeApi";
 import { toYoutubeVideoUrl } from "../../api/helper";
 
-const Detail = () => {
-  const { itemType, id } = useParams();
+const Detail = ({ itemType }) => {
+  const { id } = useParams();
   const [item, setItem] = useState();
   const [credits, setCredits] = useState();
   const [seasons, setSeasons] = useState();

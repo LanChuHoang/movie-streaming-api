@@ -20,10 +20,29 @@ function App() {
       <Route path="/" element={<PersistLogin />}>
         <Route element={<RequireAuth forAdmin={false} />}>
           <Route element={<MainLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/:itemType/:browseType" element={<Catalog />} />
-            <Route path="/:itemType/detail/:id" element={<Detail />} />
-            <Route path="/:itemType/:id/detail" element={<Detail />} />
+            <Route index element={<Home />} />
+            <Route path="movie">
+              <Route
+                path="browse"
+                element={<Catalog itemType="movie" browseType="browse" />}
+              />
+              <Route
+                path="search"
+                element={<Catalog itemType="movie" browseType="search" />}
+              />
+              <Route path=":id" element={<Detail itemType="movie" />} />
+            </Route>
+            <Route path="show">
+              <Route
+                path="browse"
+                element={<Catalog itemType="show" browseType="browse" />}
+              />
+              <Route
+                path="search"
+                element={<Catalog itemType="show" browseType="search" />}
+              />
+              <Route path=":id" element={<Detail itemType="show" />} />
+            </Route>
           </Route>
         </Route>
       </Route>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import "./movie-grid.scss";
 import MovieCard from "../movie-card/MovieCard";
 import Button, { OutlineButton } from "../button/Button";
@@ -10,11 +10,10 @@ import { createSearchParams, useSearchParams } from "react-router-dom";
 import MediaApi from "../../api/backendApi/MediaApi";
 import { FormControl, MenuItem, Select } from "@mui/material";
 
-const MovieGrid = ({ itemType }) => {
+const MovieGrid = ({ itemType, browseType }) => {
   const [items, setItems] = useState([]);
   const [loadedPages, setLoadedPages] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const { browseType } = useParams();
   const [params] = useSearchParams();
   const backendApi = useBackendApi()[itemType];
 
