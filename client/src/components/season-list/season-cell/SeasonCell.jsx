@@ -13,8 +13,8 @@ const SeasonCell = ({ item = {} }) => {
             fallback={<DefaultThumbnail />}
             image={
               <img
-                className="swiper-lazy"
-                data-src={item.thumbnailUrl?.replace("w300", "w780")}
+                loading="lazy"
+                src={item.thumbnailUrl?.replace("w300", "w780")}
                 alt={item.title}
               />
             }
