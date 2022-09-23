@@ -5,7 +5,7 @@ const LazySwiper = (props) => {
   return (
     <Swiper
       grabCursor={true}
-      spaceBetween={10}
+      spaceBetween={15}
       lazy={true}
       mousewheel={{ forceToAxis: true }}
       cssMode={true}

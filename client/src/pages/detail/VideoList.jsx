@@ -54,9 +54,7 @@ const VideoItem = ({ thumbnailUrl, title = "Trailer", srcUrl, onClick }) => {
         <img className="swiper-lazy" data-src={thumbnailUrl} alt={srcUrl} />
         <PlayButton />
       </div>
-      <div className="video-title">
-        <p>{title}</p>
-      </div>
+      <div className="video-title">{title}</div>
       <Overlay />
     </div>
   );

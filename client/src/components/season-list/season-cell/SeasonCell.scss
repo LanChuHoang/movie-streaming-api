@@ -1,3 +1,5 @@
+@use "../../../scss/" as *;
+
 .season-cell-container {
   position: relative;
   font-size: 0.8rem;
@@ -26,24 +28,33 @@
 
   .season-info-container {
     color: #989898;
-
-    label {
-      color: white;
-      font-size: 1.2rem;
-      font-weight: 500;
-    }
+    font-size: 0.75rem;
 
     .season-mini-info {
-      margin-top: 5px;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      margin-top: 8px;
 
-      span {
-        padding-right: 0.8em;
-        float: right;
+      .mini-info-item {
+        &:nth-child(2) {
+          margin-left: auto;
+          margin-right: 0.8em;
+        }
       }
+    }
 
-      .episode-number {
-        float: left;
-      }
+    .season-title {
+      color: whitesmoke;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .season-overview {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   }
 
@@ -55,5 +66,11 @@
     .overlay-component-container {
       opacity: 1;
     }
+  }
+}
+
+@include mobile {
+  .season-info-container {
+    font-size: 0.9rem;
   }
 }

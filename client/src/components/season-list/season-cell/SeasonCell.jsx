@@ -23,13 +23,12 @@ const SeasonCell = ({ item = {} }) => {
         </div>
         <div className="season-info-container">
           <div className="season-mini-info">
-            <span className="episode-number">{`EPISODE ${item.episodeNumber}`}</span>
-            <span>{formatAirDate(item.airDate)}</span>
-            <span>{formatRuntime(item.runtime)}</span>
+            <div className="mini-info-item">{`EPISODE ${item.episodeNumber}`}</div>
+            <div className="mini-info-item">{formatRuntime(item.runtime)}</div>
+            <div className="mini-info-item">{formatAirDate(item.airDate)}</div>
           </div>
-          <br />
-          <label>{item.title}</label>
-          <p>{formatOverview(item.overview)}</p>
+          <div className="season-title">{item.title}</div>
+          <div className="season-overview">{item.overview}</div>
         </div>
         <Overlay />
       </div>
@@ -45,19 +44,12 @@ const DefaultThumbnail = () => {
   );
 };
 
-const formatOverview = (overview) => {
-  const limit = 250;
-  return overview.length <= limit
-    ? overview
-    : overview.substring(0, limit).trim() + "...";
-};
-
 const formatRuntime = (minutes) => {
   if (minutes !== 0 && !minutes) return "";
-  if (minutes < 60) return `${minutes} mins`;
+  if (minutes < 60) return `${minutes} min`;
   const numHours = Math.floor(minutes / 60);
   const numMins = minutes % 60;
-  return `${numHours}h ${numMins ? `${numMins} mins` : ""}`;
+  return `${numHours} hr${numMins ? ` ${numMins} min` : ""}`;
 };
 
 const formatAirDate = (date) => {
@@ -67,5 +59,4 @@ const formatAirDate = (date) => {
     day: "numeric",
   });
 };
-
 export default SeasonCell;
