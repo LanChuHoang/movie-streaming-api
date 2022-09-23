@@ -92,11 +92,7 @@ const parseJob = ({ known_for_department }) => {
 
 const isDirector = ({ job }) => job === "Director";
 const isTrailer = (clip) => {
-  return (
-    clip.official &&
-    clip.site === "YouTube" &&
-    (clip.type === "Trailer" || clip.type === "Teaser")
-  );
+  return clip.official && clip.site === "YouTube" && clip.type === "Trailer";
 };
 
 module.exports = {

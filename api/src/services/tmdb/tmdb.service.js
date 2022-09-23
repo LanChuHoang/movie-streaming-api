@@ -6,9 +6,7 @@ async function update() {
     await mongoService.connect();
     const api = new BackendMovieApi();
     await api.updateMany({
-      pageSize: 2,
-      limit: 2,
-      updateCallback: api.updateCredits,
+      updateCallback: api.updateTrailers,
     });
   } catch (error) {
     console.log(error);
