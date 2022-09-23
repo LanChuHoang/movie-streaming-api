@@ -1,5 +1,5 @@
-const tmdbModel = require("./tmdb.model");
-const fileModel = require("./file.model");
+const tmdbModel = require("./models/tmdb/tmdb.model");
+const logger = require("./models/logger/logger.model");
 const Movie = require("../../models/movie/Movie");
 const Show = require("../../models/show/Show");
 const Person = require("../../models/person/Person");
@@ -9,7 +9,7 @@ const {
   toShowModel,
   toPersonModel,
   isDirector,
-} = require("./tmdb.helper");
+} = require("./models/tmdb/tmdb.helper");
 
 const backendModel = {
   movie: Movie,
@@ -54,7 +54,7 @@ async function updateMediaBasicInfo(itemType = tmdbModel.itemType.movie) {
       .filter((r) => r.status === "rejected")
       .map((r) => r.reason.message);
 
-    await fileModel.writeErrors(errors);
+    await logger.writeErrors(errors);
     console.log(
       `Updated page ${page}: success ${updated.length}, failed ${errors.length}`
     );
@@ -120,7 +120,7 @@ async function updateCredits(itemType = tmdbModel.itemType.movie) {
         (r, i) =>
           `${backendMedia[i]._id} - ${backendMedia[i].tmdbID} - ${r.reason.message}`
       );
-    await fileModel.writeErrors(rejected);
+    await logger.writeErrors(rejected);
     console.log(
       `Updated ${itemType} credits page ${page}: success ${fulfilled.length}, errors ${rejected.length}`
     );
@@ -130,7 +130,7 @@ async function updateCredits(itemType = tmdbModel.itemType.movie) {
 async function update() {
   try {
     await mongoService.connect();
-    await updateCredits();
+    // await updateCredits();
   } catch (error) {
     console.log(error);
   } finally {

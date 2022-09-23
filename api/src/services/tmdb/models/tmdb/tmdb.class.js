@@ -1,6 +1,5 @@
 const axios = require("axios").default;
 const dotenv = require("dotenv");
-const { isSameDate } = require("./tmdb.helper");
 
 dotenv.config();
 

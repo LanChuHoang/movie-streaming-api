@@ -1,9 +1,10 @@
 const fs = require("fs/promises");
 const path = require("path");
-const { currentTime } = require("./tmdb.helper");
+const { currentTime } = require("../tmdb/tmdb.helper");
 
-const SUCCESS_FILE_PATH = path.join(__dirname, "update_success.log");
-const ERROR_FILE_PATH = path.join(__dirname, "update_error.log");
+const LOG_FOLDER_PATH = path.join(__dirname, "..", "..", "logs");
+const SUCCESS_FILE_PATH = path.join(LOG_FOLDER_PATH, "update_success.log");
+const ERROR_FILE_PATH = path.join(LOG_FOLDER_PATH, "update_error.log");
 
 async function writeResults(filePath, results) {
   const header = `\r\n${currentTime()} - ${results?.length || 0} items\r\n`;
