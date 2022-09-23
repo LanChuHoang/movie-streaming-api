@@ -1,4 +1,4 @@
-import { Lazy, Mousewheel } from "swiper";
+import { Mousewheel } from "swiper";
 import { Swiper } from "swiper/react";
 
 const LazySwiper = (props) => {
@@ -6,10 +6,9 @@ const LazySwiper = (props) => {
     <Swiper
       grabCursor={true}
       spaceBetween={15}
-      lazy={true}
       mousewheel={{ forceToAxis: true }}
       cssMode={true}
-      modules={[Lazy, Mousewheel]}
+      modules={[Mousewheel]}
       {...props}
     />
   );

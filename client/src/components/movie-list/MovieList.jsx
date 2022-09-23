@@ -41,8 +41,8 @@ const MovieList = ({ id, itemType, listType }) => {
           },
         }}
       >
-        {items.map((item, i) => (
-          <SwiperSlide key={i}>
+        {items.map((item) => (
+          <SwiperSlide key={`${item._id}`}>
             <MovieCard item={item} itemType={itemType} />
           </SwiperSlide>
         ))}

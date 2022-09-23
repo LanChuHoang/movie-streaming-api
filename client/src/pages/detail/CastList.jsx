@@ -18,15 +18,17 @@ const CastList = ({ cast = [] }) => {
           },
         }}
       >
-        {cast.map((item, i) => (
-          <SwiperSlide key={i}>
+        {cast.map((item) => (
+          <SwiperSlide key={item._id}>
             <div className="cast-item-container">
               <FallbackImage
                 fallback={<DefaultProfileImage name={item.name} />}
                 image={
                   <img
-                    className="swiper-lazy"
-                    data-src={item.avatarUrl}
+                    loading="lazy"
+                    src={item.avatarUrl}
+                    // className="swiper-lazy"
+                    // data-src={item.avatarUrl}
                     alt={item.name}
                   />
                 }

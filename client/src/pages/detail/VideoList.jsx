@@ -32,8 +32,8 @@ const VideoList = ({ videos = [] }) => {
           },
         }}
       >
-        {videos.map((v, i) => (
-          <SwiperSlide key={v.id || i}>
+        {videos.map((v) => (
+          <SwiperSlide key={v.srcUrl}>
             <VideoItem {...v} onClick={handleVideoItemClick} />
           </SwiperSlide>
         ))}
@@ -51,7 +51,7 @@ const VideoItem = ({ thumbnailUrl, title = "Trailer", srcUrl, onClick }) => {
   return (
     <div className="video-item-container" onClick={() => onClick(srcUrl)}>
       <div className="thumbnail-container">
-        <img className="swiper-lazy" data-src={thumbnailUrl} alt={srcUrl} />
+        <img loading="lazy" src={thumbnailUrl} alt={srcUrl} />
         <PlayButton />
       </div>
       <div className="video-title">{title}</div>

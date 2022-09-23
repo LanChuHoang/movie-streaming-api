@@ -74,11 +74,7 @@ const HeroSlideItem = ({ className, item, onOpenTrailerClick }) => {
   return (
     <div className={`hero-slide__item ${className}`}>
       <div className="hero-slide__item__background">
-        <img
-          className="swiper-lazy"
-          data-src={item.backdropUrl}
-          alt={item.name}
-        />
+        <img loading="lazy" src={item.backdropUrl} alt={item.name} />
       </div>
       <div className="hero-slide__item__content container">
         <div className="hero-slide__item__content__info">
@@ -96,7 +92,11 @@ const HeroSlideItem = ({ className, item, onOpenTrailerClick }) => {
           </div>
         </div>
         <div className="hero-slide__item__content__poster">
-          <img src={item.posterUrl?.replace("w185", "w500")} alt="" />
+          <img
+            loading="lazy"
+            src={item.posterUrl?.replace("w185", "w500")}
+            alt=""
+          />
         </div>
       </div>
     </div>

@@ -68,7 +68,7 @@ const MainHeader = () => {
       }
     };
     fetchUserDetail(auth?.id);
-  }, [auth]);
+  }, [auth, backendApi]);
 
   const handleLogout = async (e) => {
     e.preventDefault();

@@ -82,7 +82,7 @@ const Detail = ({ itemType }) => {
       }
     };
     item?.trailers?.length > 0 && getTrailers(item.trailers);
-  }, [item]);
+  }, [item, id]);
 
   return (
     <>

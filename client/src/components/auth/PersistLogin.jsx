@@ -21,7 +21,7 @@ const PersistLogin = () => {
     return () => {
       isFirstTime.current = false;
     };
-  }, []);
+  }, [auth?.accessToken, refresh]);
 
   return isLoading ? <p>Loading</p> : <Outlet />;
 };
