@@ -9,7 +9,7 @@ const axiosClient = axios.create({
   timeout: 1 * 60 * 1000,
 });
 
-class BaseApi {
+class TmdbBaseApi {
   constructor(endpoint, fieldName) {
     this.endpoint = endpoint;
     this.fieldName = fieldName;
@@ -43,30 +43,37 @@ class BaseApi {
   };
 }
 
-class MediaApi extends BaseApi {
+class TmdbMediaApi extends TmdbBaseApi {
+  getVideos = async (id) => {
+    const { data } = await this.client.get(
+      `${this.endpoint.base}/${id}/videos`
+    );
+    return data.results;
+  };
+
   getCredits = (id) => this.client.get(`${this.endpoint.base}/${id}/credits`);
 }
 
-class MovieApi extends MediaApi {
+class TmdbMovieApi extends TmdbMediaApi {
   constructor() {
     super({ base: "/movie", search: "/search/movie" }, { title: "title" });
   }
 }
 
-class ShowApi extends MediaApi {
+class TmdbShowApi extends TmdbMediaApi {
   constructor() {
     super({ base: "/tv", search: "/search/tv" }, { title: "name" });
   }
 }
 
-class PersonApi extends BaseApi {
+class TmdbPersonApi extends TmdbBaseApi {
   constructor() {
     super({ base: "/person", search: "/search/person" }, { title: "name" });
   }
 }
 
 module.exports = {
-  MovieApi,
-  ShowApi,
-  PersonApi,
+  TmdbMovieApi,
+  TmdbShowApi,
+  TmdbPersonApi,
 };

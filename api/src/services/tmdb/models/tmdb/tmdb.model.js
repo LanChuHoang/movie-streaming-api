@@ -1,8 +1,8 @@
-const { MovieApi, ShowApi, PersonApi } = require("./tmdb.class.js");
+const { TmdbMovieApi, TmdbShowApi, TmdbPersonApi } = require("./tmdb.class.js");
 
-const movieApi = new MovieApi();
-const showApi = new ShowApi();
-const personApi = new PersonApi();
+const movieApi = new TmdbMovieApi();
+const showApi = new TmdbShowApi();
+const personApi = new TmdbPersonApi();
 
 const tmdbModel = {
   itemType: {
