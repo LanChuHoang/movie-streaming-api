@@ -1,13 +1,17 @@
 import "./playButton.scss";
-import Button from "../../button/Button";
+import { IconButton } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 const PlayButton = ({ className, ...otherProps }) => {
   return (
-    <Button className={`small-play-button ${className}`} {...otherProps}>
+    <IconButton
+      classes={{ root: `small-play-button apple-light-blur ${className}` }}
+      disableRipple
+      {...otherProps}
+    >
       <FontAwesomeIcon icon={faPlay} />
-    </Button>
+    </IconButton>
   );
 };
 
