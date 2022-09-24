@@ -99,8 +99,8 @@ const Detail = ({ itemType }) => {
             className="movie-content__poster__img"
             style={{
               backgroundImage: `url(${item?.posterUrl?.replace(
-                "w185",
-                "w500"
+                "w500",
+                "original"
               )})`,
             }}
           />
