@@ -7,10 +7,20 @@
   .thumbnail-container {
     position: relative;
 
+    .fallback-image-container {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+    }
+
     img,
     .default-thumbnail {
+      height: 100%;
       width: 100%;
       border-radius: 12px;
+    }
+
+    img {
+      object-fit: cover;
     }
 
     .default-thumbnail {
