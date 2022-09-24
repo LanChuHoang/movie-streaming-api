@@ -7,7 +7,7 @@ import "./Register.scss";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import backendApi from "../../api/backendApi";
+import backendApi from "../../api/backendApi/backendApi";
 import AuthHeader from "../../components/headers/auth-header/AuthHeader";
 
 function Register() {

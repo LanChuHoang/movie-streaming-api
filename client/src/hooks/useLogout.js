@@ -1,4 +1,4 @@
-import backendApi from "../api/backendApi";
+import backendApi from "../api/backendApi/backendApi";
 import useAuth from "./useAuth";
 
 const useLogout = () => {

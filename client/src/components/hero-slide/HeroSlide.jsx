@@ -5,7 +5,7 @@ import Button, { OutlineButton } from "../button/Button";
 import "./hero-slide.scss";
 import { useNavigate } from "react-router";
 import useBackendApi from "../../hooks/useBackendApi";
-import { toYoutubeVideoUrl } from "../../api/helper";
+import { toYoutubeVideoUrl } from "../../api/backendApi/helper";
 import LazySwiper from "../lazy-swiper/LazySwiper";
 import TrailerModal from "../modals/trailer-modal/TrailerModal";
 

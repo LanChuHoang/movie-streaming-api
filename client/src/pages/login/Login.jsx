@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { useState, useRef, useEffect } from "react";
-import backendApi from "../../api/backendApi";
+import backendApi from "../../api/backendApi/backendApi";
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Login.scss";

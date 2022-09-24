@@ -1,5 +1,5 @@
 import PageHeader from "../components/page-header/PageHeader";
-import { itemType as type } from "../api/backendApi";
+import { itemType as type } from "../api/backendApi/backendApi";
 import MovieGrid from "../components/movie-grid/MovieGrid";
 
 const Catalog = ({ itemType, browseType }) => {

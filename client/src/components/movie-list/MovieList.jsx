@@ -4,7 +4,7 @@ import "./movie-list.scss";
 import { SwiperSlide } from "swiper/react";
 import useBackendApi from "../../hooks/useBackendApi";
 import MovieCard from "../movie-card/MovieCard";
-import MediaApi from "../../api/backendApi/MediaApi";
+import MediaApi from "../../api/backendApi/class/MediaApi";
 import LazySwiper from "../lazy-swiper/LazySwiper";
 
 const MovieList = ({ id, itemType, listType }) => {

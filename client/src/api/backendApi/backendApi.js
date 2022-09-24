@@ -1,8 +1,8 @@
 import axiosClient, { axiosPrivateClient } from "./axiosClient";
-import MovieApi from "./backendApi/MovieApi";
-import PersonApi from "./backendApi/PersonApi";
-import ShowApi from "./backendApi/ShowApi";
-import UserApi from "./backendApi/UserApi";
+import MovieApi from "./class/MovieApi";
+import PersonApi from "./class/PersonApi";
+import ShowApi from "./class/ShowApi";
+import UserApi from "./class/UserApi";
 import { parseJwt, toShortISOString } from "./helper";
 
 const endpoint = {
@@ -61,21 +61,6 @@ const MOVIE_BASE_FIELDS = [
   "createdAt",
   "isUpcoming",
 ];
-
-const PERSON_BASE_FIELDS = [
-  "_id",
-  "avatarUrl",
-  "name",
-  "dob",
-  "pob",
-  "job",
-  "createdAt",
-];
-
-const parseFieldsParam = (params) =>
-  params.fields
-    ? { ...params, fields: params.fields.join(",") }
-    : { ...params };
 
 const userApi = new UserApi();
 const movieApi = new MovieApi();

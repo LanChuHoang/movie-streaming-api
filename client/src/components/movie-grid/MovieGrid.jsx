@@ -5,9 +5,9 @@ import MovieCard from "../movie-card/MovieCard";
 import Button, { OutlineButton } from "../button/Button";
 import Input from "../input/Input";
 import useBackendApi from "../../hooks/useBackendApi";
-import filterOptions from "../../api/filterOptions";
+import filterOptions from "../../api/backendApi/filterOptions";
 import { createSearchParams, useSearchParams } from "react-router-dom";
-import MediaApi from "../../api/backendApi/MediaApi";
+import MediaApi from "../../api/backendApi/class/MediaApi";
 import { FormControl, MenuItem, Select } from "@mui/material";
 
 const MovieGrid = ({ itemType, browseType }) => {

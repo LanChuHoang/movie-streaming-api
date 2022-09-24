@@ -9,10 +9,10 @@ import CastList from "./CastList";
 import VideoList from "./VideoList";
 import MovieList from "../../components/movie-list/MovieList";
 import SeasonList from "../../components/season-list/SeasonList";
-import MediaApi from "../../api/backendApi/MediaApi";
+import MediaApi from "../../api/backendApi/class/MediaApi";
 import youtubeApi from "../../api/youtube/youtubeApi";
-import { toYoutubeVideoUrl } from "../../api/helper";
 import GenreList from "./genre-list/GenreList";
+import { toYoutubeVideoUrl } from "../../api/backendApi/helper";
 
 const Detail = ({ itemType }) => {
   const { id } = useParams();
