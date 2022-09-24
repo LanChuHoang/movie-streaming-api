@@ -73,6 +73,6 @@ const SeasonList = ({ seasons = [] }) => {
   );
 };
 
-const endIndex = (arr) => (arr && arr.length > 0 ? arr.length - 1 : 0);
+const endIndex = (arr) => (arr && arr.length > 0 ? arr.length - 1 : "");
 
 export default SeasonList;

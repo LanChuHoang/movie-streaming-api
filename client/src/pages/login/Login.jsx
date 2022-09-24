@@ -18,12 +18,6 @@ export default function Login() {
   const location = useLocation();
 
   const lastPagePath = location.state?.from?.pathname || "/";
-  const message = {
-    MISSING_EMAIL_PASSWORD: "Missing email or password",
-    WRONG_EMAIL_PASSWORD: "Wrong email or password, please try again!",
-    NO_SERVER_RESPONSE: "No server response",
-    LOGIN_FAILED: "Login failed",
-  };
 
   useEffect(() => {
     emailInputRef.current.focus();
@@ -44,44 +38,28 @@ export default function Login() {
         accessToken: response.data.accessToken,
       };
       setAuth(userData);
-      setErrorMessage(null);
-      setEmail("");
-      setPassword("");
       navigate(lastPagePath, { replace: true });
     } catch (error) {
       console.log(error);
       if (!error?.response) {
-        setErrorMessage(message.NO_SERVER_RESPONSE);
+        setErrorMessage(MESSAGE.NO_SERVER_RESPONSE);
         return;
       }
       switch (error.response.status) {
         case 400:
-          setErrorMessage(message.MISSING_EMAIL_PASSWORD);
+          setErrorMessage(MESSAGE.MISSING_EMAIL_PASSWORD);
           break;
         case 401:
-          setErrorMessage(message.WRONG_EMAIL_PASSWORD);
+          setErrorMessage(MESSAGE.WRONG_EMAIL_PASSWORD);
           break;
         default:
           setErrorMessage(
-            message.LOGIN_FAILED + " with status " + error.response.status
+            MESSAGE.LOGIN_FAILED + " with status " + error.response.status
           );
           break;
       }
     }
   };
-
-  const invalidIcon = (
-    <span className="icon">
-      <FontAwesomeIcon
-        icon={faTimesCircle}
-        className={
-          errorMessage === message.WRONG_EMAIL_PASSWORD
-            ? "invalid-icon"
-            : "hidden"
-        }
-      />
-    </span>
-  );
 
   return (
     <div className="login-container">
@@ -89,52 +67,39 @@ export default function Login() {
       <div className="body-container">
         <form onSubmit={handleSubmit}>
           <h1>Sign In</h1>
-
           <label>Email</label>
           <div className="input-container">
             <input
               ref={emailInputRef}
               type="email"
-              className={
-                errorMessage === message.WRONG_EMAIL_PASSWORD
-                  ? "invalid-input"
-                  : ""
-              }
+              className={isInvalidError(errorMessage) ? "invalid-input" : ""}
               required
               onChange={(e) => {
                 setEmail(e.target.value);
                 setErrorMessage(null);
               }}
             ></input>
-            {invalidIcon}
+            <InvalidIcon display={isInvalidError(errorMessage)} />
           </div>
-
           <label>Password</label>
           <div className="input-container">
             <input
               type="password"
-              className={
-                errorMessage === message.WRONG_EMAIL_PASSWORD
-                  ? "invalid-input"
-                  : ""
-              }
+              className={isInvalidError(errorMessage) ? "invalid-input" : ""}
               required
               onChange={(e) => {
                 setPassword(e.target.value);
                 setErrorMessage(null);
               }}
             ></input>
-            {invalidIcon}
+            <InvalidIcon display={isInvalidError(errorMessage)} />
           </div>
-
           <p className={errorMessage ? "error-message" : "hidden"}>
             {errorMessage}
           </p>
-
           <button ref={buttonRef} className="signin-button">
             Sign in
           </button>
-
           <p>
             Not a member?
             <Link to="/register" className="signup-link">
@@ -146,3 +111,23 @@ export default function Login() {
     </div>
   );
 }
+
+const InvalidIcon = ({ display }) => (
+  <span className="icon">
+    <FontAwesomeIcon
+      icon={faTimesCircle}
+      className={`invalid-icon ${!display ? "hidden" : ""}`}
+    />
+  </span>
+);
+
+const MESSAGE = {
+  MISSING_EMAIL_PASSWORD: "Missing email or password",
+  WRONG_EMAIL_PASSWORD: "Wrong email or password, please try again!",
+  NO_SERVER_RESPONSE: "No server response",
+  LOGIN_FAILED: "Login failed",
+};
+
+const isInvalidError = (message) =>
+  message === MESSAGE.MISSING_EMAIL_PASSWORD ||
+  message === MESSAGE.WRONG_EMAIL_PASSWORD;
