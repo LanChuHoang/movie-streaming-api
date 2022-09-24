@@ -64,6 +64,23 @@ class TmdbShowApi extends TmdbMediaApi {
   constructor() {
     super({ base: "/tv", search: "/search/tv" }, { title: "name" });
   }
+
+  getSeason = (showId, seasonNumber) => {
+    return this.client.get(
+      `${this.endpoint.base}/${showId}/season/${seasonNumber}`
+    );
+  };
+
+  getSeasons = async (showId) => {
+    const baseUrl = `${this.endpoint.base}/${showId}`;
+    const baseDetail = (await this.client.get(baseUrl)).data;
+    const seasons = (
+      await Promise.all(
+        baseDetail.seasons.map((s) => this.getSeason(showId, s.season_number))
+      )
+    ).map((s) => s.data);
+    return seasons;
+  };
 }
 
 class TmdbPersonApi extends TmdbBaseApi {

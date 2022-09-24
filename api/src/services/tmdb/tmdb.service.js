@@ -1,12 +1,22 @@
 const mongoService = require("../mongo.service");
-const { BackendMovieApi } = require("./models/backend/backend.class");
+const {
+  BackendMovieApi,
+  BackendShowApi,
+  BackendPersonApi,
+} = require("./models/backend/backend.class");
+
+const models = {
+  movie: new BackendMovieApi(),
+  show: new BackendShowApi(),
+  person: new BackendPersonApi(),
+};
 
 async function update() {
   try {
     await mongoService.connect();
-    const api = new BackendMovieApi();
+    const api = models.movie;
     await api.updateMany({
-      updateCallback: api.updateTrailers,
+      updateCallback: api.updateBaseData,
     });
   } catch (error) {
     console.log(error);

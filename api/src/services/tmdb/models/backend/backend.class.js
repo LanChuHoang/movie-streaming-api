@@ -9,6 +9,7 @@ const {
   toPersonModel,
   isDirector,
   isTrailer,
+  toSeasonModel,
 } = require("../tmdb/tmdb.helper");
 
 class BackendBaseApi {
@@ -118,6 +119,17 @@ class BackendShowApi extends BackendMediaApi {
   constructor() {
     super(Show, tmdbModel.show, toShowModel);
   }
+
+  updateSeasons = async (_id, tmdbID) => {
+    const tmdbId = tmdbID ? tmdbID : await this.getTmdbId(_id);
+    const tmdbSeasons = await this.tmdbApi.getSeasons(tmdbId);
+    const mappedSeasons = tmdbSeasons.map(toSeasonModel);
+    return Show.findByIdAndUpdate(
+      _id,
+      { seasons: mappedSeasons },
+      { returnDocument: "after", projection: { title: 1 } }
+    );
+  };
 }
 
 class BackendPersonApi extends BackendBaseApi {
@@ -129,4 +141,6 @@ class BackendPersonApi extends BackendBaseApi {
 module.exports = {
   BackendBaseApi,
   BackendMovieApi,
+  BackendShowApi,
+  BackendPersonApi,
 };

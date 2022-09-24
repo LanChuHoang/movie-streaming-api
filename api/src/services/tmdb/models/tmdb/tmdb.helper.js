@@ -36,7 +36,7 @@ function toMovieModel(tmdbMovie) {
     imdbID: tmdbMovie.imdb_id,
     genres: tmdbMovie.genres.map((g) => g.name),
     countries: tmdbMovie.production_countries.map((c) => c.iso_3166_1),
-    posterUrl: getImageUrl(tmdbMovie.poster_path, imageSize.w185),
+    posterUrl: getImageUrl(tmdbMovie.poster_path, imageSize.w500),
     thumbnailUrl: getImageUrl(tmdbMovie.backdrop_path, imageSize.w300),
     backdropUrl: getImageUrl(tmdbMovie.backdrop_path, imageSize.original),
     isUpcoming: tmdbMovie.status !== "Released",
@@ -54,9 +54,31 @@ function toShowModel(tmdbShow) {
     imdbID: tmdbShow.imdb_id,
     genres: tmdbShow.genres.map((g) => g.name),
     countries: tmdbShow.production_countries.map((c) => c.iso_3166_1),
-    posterUrl: getImageUrl(tmdbShow.poster_path, imageSize.w185),
+    posterUrl: getImageUrl(tmdbShow.poster_path, imageSize.w500),
     thumbnailUrl: getImageUrl(tmdbShow.backdrop_path, imageSize.w300),
     backdropUrl: getImageUrl(tmdbShow.backdrop_path, imageSize.original),
+  };
+}
+
+function toSeasonModel(tmdbSeason) {
+  return {
+    title: tmdbSeason.name,
+    seasonNumber: tmdbSeason.season_number,
+    overview: tmdbSeason.overview,
+    releaseDate: tmdbSeason.air_date,
+    posterUrl: getImageUrl(tmdbSeason.poster_path, imageSize.w500),
+    episodes: tmdbSeason.episodes?.map(toEpisodeModel),
+  };
+}
+
+function toEpisodeModel(tmdbEpisode) {
+  return {
+    title: tmdbEpisode.name,
+    episodeNumber: tmdbEpisode.episode_number,
+    airDate: tmdbEpisode.air_date,
+    runtime: tmdbEpisode.runtime,
+    overview: tmdbEpisode.overview,
+    thumbnailUrl: getImageUrl(tmdbEpisode.still_path, imageSize.w780),
   };
 }
 
@@ -100,6 +122,8 @@ module.exports = {
   isSameDate,
   toMovieModel,
   toShowModel,
+  toSeasonModel,
+  toEpisodeModel,
   toPersonModel,
   isDirector,
   isTrailer,
