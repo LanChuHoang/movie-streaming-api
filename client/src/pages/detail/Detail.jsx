@@ -12,6 +12,7 @@ import SeasonList from "../../components/season-list/SeasonList";
 import MediaApi from "../../api/backendApi/MediaApi";
 import youtubeApi from "../../api/youtube/youtubeApi";
 import { toYoutubeVideoUrl } from "../../api/helper";
+import GenreList from "./genre-list/GenreList";
 
 const Detail = ({ itemType }) => {
   const { id } = useParams();
@@ -91,7 +92,7 @@ const Detail = ({ itemType }) => {
         style={{
           backgroundImage: `url(${item?.backdropUrl})`,
         }}
-      ></div>
+      />
       <div className="mb-3 movie-content container">
         <div className="movie-content__poster">
           <div
@@ -102,17 +103,11 @@ const Detail = ({ itemType }) => {
                 "w500"
               )})`,
             }}
-          ></div>
+          />
         </div>
         <div className="movie-content__info">
           <h1 className="title">{item?.title}</h1>
-          <div className="genres">
-            {item?.genres?.slice(0, 5).map((genre) => (
-              <span key={genre} className="genres__item">
-                {genre}
-              </span>
-            ))}
-          </div>
+          <GenreList itemType={itemType} genres={item?.genres} />
           <p className="overview">{item?.overview}</p>
           <div className="cast">
             <div className="section__header">
