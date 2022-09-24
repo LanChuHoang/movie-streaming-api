@@ -112,14 +112,16 @@ export default function Login() {
   );
 }
 
-const InvalidIcon = ({ display }) => (
-  <span className="icon">
-    <FontAwesomeIcon
-      icon={faTimesCircle}
-      className={`invalid-icon ${!display ? "hidden" : ""}`}
-    />
-  </span>
-);
+const InvalidIcon = ({ display }) => {
+  return (
+    <span className="icon">
+      <FontAwesomeIcon
+        icon={faTimesCircle}
+        className={`invalid-icon ${!display ? "hidden" : ""}`}
+      />
+    </span>
+  );
+};
 
 const MESSAGE = {
   MISSING_EMAIL_PASSWORD: "Missing email or password",
