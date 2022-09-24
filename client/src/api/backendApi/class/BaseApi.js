@@ -37,10 +37,6 @@ class BaseApi {
   deleteItem = (id) => {
     return this.client.delete(`${this.endpoint.base}/${id}`);
   };
-
-  printThis = () => {
-    console.log(this);
-  };
 }
 
 export default BaseApi;

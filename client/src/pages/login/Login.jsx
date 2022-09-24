@@ -29,7 +29,7 @@ export default function Login() {
 
     try {
       console.log(email, password);
-      const response = await backendApi.loginUser(email, password);
+      const response = await backendApi.user.loginUser(email, password);
       console.log(response.data);
 
       const userData = {

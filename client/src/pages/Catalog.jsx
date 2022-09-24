@@ -1,11 +1,13 @@
 import PageHeader from "../components/page-header/PageHeader";
-import { itemType as type } from "../api/backendApi/backendApi";
 import MovieGrid from "../components/movie-grid/MovieGrid";
+import MediaApi from "../api/backendApi/class/MediaApi";
 
 const Catalog = ({ itemType, browseType }) => {
   return (
     <>
-      <PageHeader>{itemType === type.movie ? "Movies" : "Shows"}</PageHeader>
+      <PageHeader>
+        {itemType === MediaApi.itemType.movie ? "Movies" : "Shows"}
+      </PageHeader>
       <div className="container">
         <div className="section mb-3">
           <MovieGrid itemType={itemType} browseType={browseType} />

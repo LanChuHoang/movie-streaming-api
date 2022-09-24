@@ -35,7 +35,7 @@ const MainHeader = () => {
   const [user, setUser] = useState();
   const logout = useLogout();
   const navigator = useNavigate();
-  const backendApi = useBackendApi();
+  const backendApi = useBackendApi().user;
 
   const active = headerNav.findIndex((e) => e.path === pathname);
 
@@ -59,7 +59,7 @@ const MainHeader = () => {
   useEffect(() => {
     const fetchUserDetail = async (id) => {
       try {
-        const userDetail = (await backendApi.getUserDetail(id)).data;
+        const userDetail = (await backendApi.getItem(id)).data;
         setUser(userDetail);
       } catch (error) {
         console.log("Fetch user detail failed");

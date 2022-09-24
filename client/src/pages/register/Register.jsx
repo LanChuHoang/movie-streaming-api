@@ -32,7 +32,11 @@ function Register() {
 
     // Send request to server
     try {
-      const response = await backendApi.registerUser(username, email, password);
+      const response = await backendApi.user.registerUser(
+        username,
+        email,
+        password
+      );
       console.log(response.data);
 
       const userData = {

@@ -46,35 +46,6 @@ class UserApi extends BaseApi {
   logoutUser = () => {
     return this.privateClient.post(this.endpoint.logout);
   };
-
-  getUsers = (params = {}) => {
-    return this.client.get(this.endpoint.base, { params });
-  };
-
-  searchUsers = (params = {}) => {
-    return this.client.get(this.endpoint.search, { params });
-  };
-
-  getUser = (id) => {
-    return this.getItem(id);
-  };
-
-  deleteUser = (id) => {
-    return this.deleteItem(id);
-  };
-
-  getUserOverallStats = () => {
-    return this.client.get(this.endpoint.userOverallStats);
-  };
-
-  getUserDetailStats = (startDate, endDate, type) => {
-    const params = {
-      from: toShortISOString(startDate),
-      to: toShortISOString(endDate),
-      type,
-    };
-    return this.client.get(this.endpoint.userDetailStats, { params });
-  };
 }
 
 export default UserApi;
