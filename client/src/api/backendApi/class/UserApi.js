@@ -1,5 +1,5 @@
 import BaseApi from "./BaseApi";
-import { parseJwt, toShortISOString } from "../helper";
+import { parseJwt } from "../helper";
 
 const endpoint = {
   base: "/user",

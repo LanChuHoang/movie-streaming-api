@@ -24,11 +24,16 @@
   left: 0;
   width: 100%;
   z-index: 150;
-  transition: height 0.3s ease, background-color 0.3s ease;
+  transition: height 0.2s ease, background-color 0.2s ease;
 
   &.shrink {
     height: $header-shrink-height;
-    background-color: $body-bg;
+    background-color: rgba($color: $body-bg, $alpha: 0.8);
+    backdrop-filter: blur(33px);
+  }
+
+  &.transparent {
+    background-color: transparent;
   }
 
   &__wrap {
