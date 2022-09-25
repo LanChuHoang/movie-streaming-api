@@ -1,4 +1,4 @@
-@use "../../scss/" as *;
+@use "../../../scss/" as *;
 
 .cast-list-container {
   width: 100%;
@@ -13,8 +13,12 @@
     .default-profile-image {
       aspect-ratio: 1 / 1;
       border-radius: 50%;
-      object-fit: cover;
       height: 100%;
+    }
+
+    img {
+      object-fit: cover;
+      object-position: 50% 30%;
     }
 
     .default-profile-image {

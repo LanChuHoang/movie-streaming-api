@@ -8,10 +8,11 @@ import Register from "./pages/register/Register";
 import MainLayout from "./components/layouts/MainLayout";
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
-import Detail from "./pages/detail/Detail";
+import MediaDetail from "./pages/media-detail/MediaDetail";
 import RequireAuth from "./components/auth/RequireAuth";
 import PersistLogin from "./components/auth/PersistLogin";
 import RequireUnauth from "./components/auth/RequireUnauth";
+import PersonDetail from "./pages/person-detail/PersonDetail";
 
 function App() {
   return (
@@ -23,7 +24,6 @@ function App() {
         <Route path="/register" element={<RequireUnauth />}>
           <Route index element={<Register />} />
         </Route>
-
         <Route path="/" element={<RequireAuth forAdmin={false} />}>
           <Route element={<MainLayout />}>
             <Route index element={<Home />} />
@@ -36,7 +36,7 @@ function App() {
                 path="search"
                 element={<Catalog itemType="movie" browseType="search" />}
               />
-              <Route path=":id" element={<Detail itemType="movie" />} />
+              <Route path=":id" element={<MediaDetail itemType="movie" />} />
             </Route>
             <Route path="show">
               <Route
@@ -47,7 +47,10 @@ function App() {
                 path="search"
                 element={<Catalog itemType="show" browseType="search" />}
               />
-              <Route path=":id" element={<Detail itemType="show" />} />
+              <Route path=":id" element={<MediaDetail itemType="show" />} />
+            </Route>
+            <Route path="person">
+              <Route path=":id" element={<PersonDetail />} />
             </Route>
           </Route>
         </Route>

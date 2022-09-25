@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import { SwiperSlide } from "swiper/react";
-import FallbackImage from "../../components/fallback-image/FallbackImage";
-import LazySwiper from "../../components/lazy-swiper/LazySwiper";
+import FallbackImage from "../../../components/fallback-image/FallbackImage";
+import LazySwiper from "../../../components/lazy-swiper/LazySwiper";
 import "./castList.scss";
 
 const CastList = ({ cast = [] }) => {
@@ -20,24 +21,20 @@ const CastList = ({ cast = [] }) => {
       >
         {cast.map((item) => (
           <SwiperSlide key={item._id}>
-            <div className="cast-item-container">
-              <FallbackImage
-                fallback={<DefaultProfileImage name={item.name} />}
-                image={
-                  <img
-                    loading="lazy"
-                    src={item.avatarUrl}
-                    // className="swiper-lazy"
-                    // data-src={item.avatarUrl}
-                    alt={item.name}
-                  />
-                }
-              />
-              <div className="cast-description">
-                <p className="cast-name">{item.name}</p>
-                <p className="cast-character">{item.character}</p>
+            <Link to={`/person/${item._id}`}>
+              <div className="cast-item-container">
+                <FallbackImage
+                  fallback={<DefaultProfileImage name={item.name} />}
+                  image={
+                    <img loading="lazy" src={item.avatarUrl} alt={item.name} />
+                  }
+                />
+                <div className="cast-description">
+                  <p className="cast-name">{item.name}</p>
+                  <p className="cast-character">{item.character}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
         ))}
       </LazySwiper>

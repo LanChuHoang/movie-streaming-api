@@ -1,7 +1,35 @@
-@use "../../scss/" as *;
+@use "../../../scss/" as *;
 
-.video-list-container {
-  .video-item-container {
+.media-list-container {
+  .media-swiper-container {
+    position: relative;
+    --swiper-navigation-color: white;
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      @include mobile {
+        display: none;
+      }
+
+      &::after {
+        font-size: 1.8rem;
+      }
+    }
+
+    .swiper-button-prev {
+      left: -2.5rem;
+    }
+
+    .swiper-button-next {
+      right: -2.5rem;
+    }
+
+    .swiper-button-disabled {
+      display: none;
+    }
+  }
+
+  .media-item-container {
     .thumbnail-container {
       position: relative;
       aspect-ratio: 16 / 9;
@@ -15,13 +43,13 @@
       }
     }
 
-    .video-title {
+    .media-title {
       color: whitesmoke;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
     }
 
     &:hover {

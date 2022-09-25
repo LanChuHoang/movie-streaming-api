@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import { SwiperSlide } from "swiper/react";
-import PlayButton from "../../components/buttons/play-button/PlayButton";
-import LazySwiper from "../../components/lazy-swiper/LazySwiper";
-import TrailerModal from "../../components/modals/trailer-modal/TrailerModal";
-import Overlay from "../../components/overlay/Overlay";
+import PlayButton from "../../../components/buttons/play-button/PlayButton";
+import LazySwiper from "../../../components/lazy-swiper/LazySwiper";
+import TrailerModal from "../../../components/modals/trailer-modal/TrailerModal";
+import Overlay from "../../../components/overlay/Overlay";
 import "./videoList.scss";
 
 const VideoList = ({ videos = [] }) => {

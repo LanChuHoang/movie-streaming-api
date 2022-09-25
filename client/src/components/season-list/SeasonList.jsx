@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SwiperSlide } from "swiper/react";
-import { Navigation, Lazy, Mousewheel } from "swiper";
+import { Navigation, Mousewheel } from "swiper";
 import SeasonCell from "./season-cell/SeasonCell";
 import "swiper/swiper-bundle.css";
 import "./SeasonList.scss";
@@ -56,7 +56,7 @@ const SeasonList = ({ seasons = [] }) => {
             prevEl: ".swiper-button-prev",
             nextEl: ".swiper-button-next",
           }}
-          modules={[Navigation, Lazy, Mousewheel]}
+          modules={[Navigation, Mousewheel]}
         >
           {seasons[selectedIndex]?.episodes
             ?.filter(episodeReleased)

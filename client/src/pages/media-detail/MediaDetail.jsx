@@ -3,10 +3,10 @@ import { useParams } from "react-router";
 import useBackendApi from "../../hooks/useBackendApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import "./detail.scss";
+import "./mediaDetail.scss";
 import Button, { OutlineButton } from "../../components/button/Button";
-import CastList from "./CastList";
-import VideoList from "./VideoList";
+import CastList from "./cast-list/CastList";
+import VideoList from "./video-list/VideoList";
 import MovieList from "../../components/movie-list/MovieList";
 import SeasonList from "../../components/season-list/SeasonList";
 import MediaApi from "../../api/backendApi/class/MediaApi";
@@ -14,7 +14,7 @@ import youtubeApi from "../../api/youtube/youtubeApi";
 import GenreList from "./genre-list/GenreList";
 import { toYoutubeVideoUrl } from "../../api/backendApi/helper";
 
-const Detail = ({ itemType }) => {
+const MediaDetail = ({ itemType }) => {
   const { id } = useParams();
   const [item, setItem] = useState();
   const [credits, setCredits] = useState();
@@ -162,4 +162,4 @@ const toVideoModel = (v) => ({
   srcUrl: toYoutubeVideoUrl(v.id),
 });
 
-export default Detail;
+export default MediaDetail;

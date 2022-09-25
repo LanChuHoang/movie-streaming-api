@@ -1,0 +1,107 @@
+@use "../../scss/" as *;
+
+.person-detail-container {
+  color: whitesmoke;
+
+  .detail-section {
+    position: relative;
+    padding: 5rem 2rem;
+
+    .backdrop-container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: -1;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .backdrop-overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    }
+
+    .info-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 0;
+      display: flex;
+      align-items: center;
+
+      .MuiAvatar-root {
+        width: 170px;
+        height: 170px;
+        background-color: rgb(156, 161, 172);
+        font-family: $font-family;
+        font-size: 4rem;
+        font-weight: 500;
+
+        img {
+          object-position: 50% 30%;
+        }
+      }
+
+      .detail-container {
+        flex: 1;
+        margin-left: 2.5rem;
+
+        .person-name {
+          line-height: 1.2;
+        }
+
+        .biography {
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          font-size: 0.9rem;
+        }
+
+        .mini-info-container {
+          display: flex;
+          font-size: 0.8rem;
+          color: rgb(180, 179, 179);
+
+          & > * ~ * {
+            margin-left: 8px;
+          }
+
+          .mini-info-item {
+          }
+        }
+
+        @include mobile {
+          margin: 0px;
+        }
+      }
+    }
+  }
+
+  .joined-media-section {
+    margin-top: 2rem;
+  }
+}
+
+@include mobile {
+  .person-detail-container {
+    .info-container {
+      flex-direction: column;
+
+      .detail-container {
+        .person-name {
+          text-align: center;
+          margin: 1rem 0;
+        }
+      }
+    }
+  }
+}
