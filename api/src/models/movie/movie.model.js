@@ -145,6 +145,20 @@ async function getCredits(movieId) {
   return { ...docs, cast: docs.cast.map((p) => ({ ...p, ...p._id })) };
 }
 
+async function getJoinedMovies(personId) {
+  const [cast, director] = await Promise.all([
+    Movie.find(
+      { "cast._id": personId },
+      PROJECTION.CUSTOM.MEDIA_BRIEF_INFO
+    ).sort({ releaseDate: -1 }),
+    Movie.find(
+      { directors: personId },
+      PROJECTION.CUSTOM.MEDIA_BRIEF_INFO
+    ).sort({ releaseDate: -1 }),
+  ]);
+  return { cast, director };
+}
+
 // Update
 function updateMovie(id, updateData) {
   return Movie.findByIdAndUpdate(id, updateData, {
@@ -172,6 +186,7 @@ module.exports = {
   getMovieByID,
   getMovieByTitle,
   getCredits,
+  getJoinedMovies,
   updateMovie,
   deleteMovieByID,
 };

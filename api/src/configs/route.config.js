@@ -69,7 +69,11 @@ const PROJECTION = {
       createdAt: 0,
       updatedAt: 0,
     },
-    SHOW_BRIEF_SEASONS: {},
+    MEDIA_BRIEF_INFO: {
+      title: 1,
+      posterUrl: 1,
+      thumbnailUrl: 1,
+    },
     PERSON_BRIEF_INFO: {
       _id: 1,
       name: 1,

@@ -161,6 +161,19 @@ async function getCredits(showId) {
   return { ...docs, cast: docs.cast.map((p) => ({ ...p, ...p._id })) };
 }
 
+async function getJoinedShows(personId) {
+  const [cast, director] = await Promise.all([
+    Show.find(
+      { "cast._id": personId },
+      PROJECTION.CUSTOM.MEDIA_BRIEF_INFO
+    ).sort({ lastAirDate: -1 }),
+    Show.find({ directors: personId }, PROJECTION.CUSTOM.MEDIA_BRIEF_INFO).sort(
+      { lastAirDate: -1 }
+    ),
+  ]);
+  return { cast, director };
+}
+
 function getRandomShow() {
   return Show.aggregate([
     { $sample: { size: 1 } },
@@ -195,6 +208,7 @@ module.exports = {
   getShowByTitle,
   getSeasons,
   getCredits,
+  getJoinedShows,
   getRandomShow,
   updateShow,
   deleteShowByID,

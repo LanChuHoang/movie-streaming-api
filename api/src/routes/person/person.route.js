@@ -36,6 +36,13 @@ router.get(
 // GET /person/:id/ - get person detail
 router.get("/:id", routeValidator.validateIDParam, personController.getPerson);
 
+// GET /person/:id/credits - get person joined movies, shows
+router.get(
+  "/:id/credits",
+  routeValidator.validateIDParam,
+  personController.getCredits
+);
+
 // PATCH /person/:id - update person
 router.patch(
   "/:id",

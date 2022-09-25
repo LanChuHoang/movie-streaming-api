@@ -4,6 +4,8 @@ const {
   DEFAULT_PAGE_SIZE,
 } = require("../../configs/route.config");
 const personModel = require("../../models/person/person.model");
+const movieModel = require("../../models/movie/movie.model");
+const showModel = require("../../models/show/show.model");
 
 async function postNewPerson(req, res, next) {
   try {
@@ -64,6 +66,24 @@ async function getPerson(req, res, next) {
   }
 }
 
+async function getCredits(req, res, next) {
+  try {
+    const { id } = req.params;
+    const [movieCredits, showCredits] = await Promise.all([
+      movieModel.getJoinedMovies(id),
+      showModel.getJoinedShows(id),
+    ]);
+    const response = {
+      _id: id,
+      movie: movieCredits,
+      show: showCredits,
+    };
+    return res.send(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function updatePerson(req, res, next) {
   try {
     const person = await personModel.updatePerson(req.params.id, req.body);
@@ -107,6 +127,7 @@ module.exports = {
   getPeople,
   searchPeople,
   getPerson,
+  getCredits,
   updatePerson,
   deletePerson,
   updatePersonErrorHandler,
