@@ -12,6 +12,10 @@ const PersonDetail = () => {
   const backendApi = useBackendApi().person;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const loadPersonDetail = async (id) => {
       const { data } = await backendApi.getItem(id);
       setPerson(data);
@@ -100,7 +104,6 @@ const formatDate = (dateString) =>
         year: "numeric",
       })
     : "";
-
 const formatBiography = (biography) => biography || "";
 
 export default PersonDetail;

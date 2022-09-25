@@ -21,6 +21,7 @@ const HeroSlide = () => {
         const movies = (await backendApi.getRandomMovies(3)).data;
         console.log(movies.map((m) => m.title));
         setMovieItems(movies);
+        window.scrollTo(0, 0);
       } catch (error) {
         console.log(error);
       }

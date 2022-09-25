@@ -17,6 +17,10 @@ const MovieGrid = ({ itemType, browseType }) => {
   const [params] = useSearchParams();
   const backendApi = useBackendApi()[itemType];
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [itemType]);
+
   const fetchItems = useCallback(
     async (browseType, params) => {
       try {

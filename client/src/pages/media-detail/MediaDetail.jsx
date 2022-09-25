@@ -53,7 +53,7 @@ const MediaDetail = ({ itemType }) => {
     const getSeasons = async () => {
       try {
         const { data } = await backendApi.getSeasons(id);
-        setSeasons(data);
+        setSeasons(data.filter((s) => s.episodes.length > 0));
       } catch (error) {
         console.log(error);
       }
@@ -82,7 +82,7 @@ const MediaDetail = ({ itemType }) => {
         console.log(error);
       }
     };
-    item?.trailers?.length > 0 && getTrailers(item.trailers);
+    item?.trailers?.length > 0 ? getTrailers(item.trailers) : setTrailers([]);
   }, [item, id]);
 
   return (
