@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import useAuth from "./useAuth";
 import useRefreshToken from "./useRefreshToken";
-import backendApi from "../api/backendApi";
+import backendApi from "../api/backendApi/backendApi";
 
 const useBackendApi = () => {
   const { auth } = useAuth();
@@ -21,13 +21,14 @@ const useBackendApi = () => {
       (response) => response,
       async (error) => {
         if (error.response?.status === 403) {
+          console.log("Failed 403");
           const newToken = await refresh();
           const prevConfig = error.config;
           prevConfig.headers["Authorization"] = `Bearer ${newToken}`;
           // resent prev request
           return backendApi.axiosPrivateClient(prevConfig);
         }
-        Promise.reject(error);
+        return Promise.reject(error);
       }
     );
 

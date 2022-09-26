@@ -12,13 +12,8 @@ const PersistLogin = () => {
   useEffect(() => {
     const reLogin = async () => {
       console.log("Relogin");
-      try {
-        await refresh(true);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
+      await refresh(true);
+      setIsLoading(false);
     };
     if (!auth?.accessToken && isFirstTime.current) reLogin();
     else if (auth?.accessToken) setIsLoading(false);
@@ -26,11 +21,7 @@ const PersistLogin = () => {
     return () => {
       isFirstTime.current = false;
     };
-  }, []);
-
-  // useEffect(() => {
-  //   console.log("Persist login render", isLoading, isFirstTime, auth);
-  // }, [isLoading]);
+  }, [auth?.accessToken, refresh]);
 
   return isLoading ? <p>Loading</p> : <Outlet />;
 };

@@ -1,0 +1,27 @@
+@use "../../../scss/" as *;
+
+.auth-header-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 2rem;
+  height: 128px;
+
+  img {
+    height: 50px;
+    width: 50px;
+  }
+
+  .logo-link {
+    font-size: 2.5rem;
+    font-weight: 600;
+    font-family: $logo-font;
+    color: white;
+    text-decoration: none;
+    padding-left: 10px;
+  }
+
+  .logo-link:hover {
+    color: red;
+  }
+}

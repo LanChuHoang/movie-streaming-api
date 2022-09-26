@@ -1,0 +1,35 @@
+@use "../../../scss/" as *;
+
+.action-button {
+  padding: 0.25rem 0.5rem;
+  background-color: $hover-color;
+  border: 1px solid $main-color;
+  border-radius: 0.25rem;
+  // Text
+  color: $main-color;
+  font-family: $font-family;
+  font-size: 0.8rem;
+  font-weight: 500;
+  // Animation
+  transition: background-color 0.3s, transform 0.3s;
+
+  &:hover {
+    background-color: $main-color;
+    color: white;
+  }
+
+  &:active {
+    transform: scale(1.2, 1.2);
+  }
+}
+
+.delete-action-button {
+  background-color: rgba(255, 0, 0, 0.05);
+  border: 1px solid crimson;
+  color: crimson;
+
+  &:hover {
+    background-color: crimson;
+    color: white;
+  }
+}

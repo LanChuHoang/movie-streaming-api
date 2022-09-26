@@ -1,0 +1,85 @@
+@use "../../scss/" as *;
+
+.admin-person-grid-toolbar-container {
+  background-color: #f9fbfc;
+  padding: 0.5rem 0.5rem 0 0.5rem;
+
+  .toolbar-buttons-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+
+    .toolbar-button {
+      &:not(.Mui-disabled) {
+        color: $main-color;
+        border-color: $main-color;
+      }
+    }
+
+    .left-button {
+      margin-right: auto;
+    }
+
+    .status {
+      margin-right: 20px;
+      font-size: 0.875rem;
+
+      &.done {
+        color: #3c7f66;
+      }
+
+      &.warning {
+        color: goldenrod;
+      }
+    }
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .add-row-inputs {
+    margin-top: 0.5rem;
+
+    .input-source-select {
+      margin-right: 1rem;
+
+      fieldset {
+        border: none;
+      }
+    }
+
+    label {
+      &:not(label.Mui-error).Mui-focused {
+        color: $main-color;
+      }
+    }
+
+    .MuiOutlinedInput-root {
+      &:not(.MuiOutlinedInput-root.Mui-error) {
+        &:hover {
+          fieldset {
+            border-color: rgba($color: $main-color, $alpha: 0.6);
+          }
+        }
+
+        &.Mui-focused {
+          fieldset {
+            border-color: rgba($color: $main-color, $alpha: 0.6);
+          }
+        }
+      }
+    }
+
+    .buttons-wrapper {
+      display: inline-block;
+      margin-left: 0.5rem;
+
+      .cancel-button {
+        color: lightgrey;
+      }
+    }
+  }
+}

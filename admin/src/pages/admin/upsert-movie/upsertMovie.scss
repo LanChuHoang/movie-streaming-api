@@ -1,0 +1,62 @@
+@use "../../../scss/" as *;
+
+.upsert-movie-container {
+  padding: 1rem;
+
+  .upsert-movie-inputs-wrapper {
+    padding: 2rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+
+    .group-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .top-container {
+      height: 80%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 3.5rem;
+
+      .top-right-container,
+      .top-left-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .top-right-container {
+        .two-column-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          column-gap: 0.75rem;
+        }
+      }
+    }
+  }
+
+  .upsert-movie-footer {
+    float: right;
+    padding: 0 2.5rem 3rem;
+
+    .submit-button {
+      padding: 0.5rem 3rem;
+
+      &:not(.Mui-disabled) {
+        background-color: $logo-color;
+      }
+    }
+  }
+
+  .MuiBackdrop-root {
+    z-index: 1000;
+  }
+
+  .MuiCircularProgress-root {
+    color: $main-color;
+  }
+}

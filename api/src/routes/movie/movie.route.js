@@ -5,7 +5,10 @@ const authorizerService = require("../../services/authorizer.service");
 
 const router = express.Router();
 
-// router.use(authorizerService.verifyAccessToken);
+router.use(
+  authorizerService.verifyAccessToken,
+  routeValidator.parseDefaultProjection
+);
 
 // POST /movie - post new movie
 // input: {title: required, optionals}
@@ -15,26 +18,21 @@ router.post(
   movieController.updateMovieErrorHandler
 );
 
-// GET /movie?genres & country & year  & sort & page
+// GET /movie?genres & country & year & upcoming & sort & page & limit & fields
 router.get(
   "/",
-  routeValidator.validatePageParam,
-  movieController.validateGetMovieParams,
+  routeValidator.parseGetItemsParams,
+  movieController.parseGetMoviesParams,
+  movieController.parseUpcomingParam,
   movieController.getMovies
 );
 
-// GET /movie/search?query&page
+// GET /movie/search?query & upcoming & page & limit & fields
 router.get(
   "/search",
-  routeValidator.validateSearchParams,
+  routeValidator.parseSearchItemsParams,
+  movieController.parseUpcomingParam,
   movieController.searchMovies
-);
-
-// GET /movie/upcoming?page - get upcoming movies
-router.get(
-  "/upcoming",
-  routeValidator.validatePageParam,
-  movieController.getUpcomingMovies
 );
 
 // GET /movie/similar
@@ -45,10 +43,20 @@ router.get(
 );
 
 // GET /movie/random - get random movie
-router.get("/random", movieController.getRandomMovie);
+router.get(
+  "/random",
+  routeValidator.parseLimitParam,
+  movieController.getRandomMovie
+);
 
 // GET /movie/:id/ - get movie detail
 router.get("/:id", routeValidator.validateIDParam, movieController.getMovie);
+
+router.get(
+  "/:id/credits",
+  routeValidator.validateIDParam,
+  movieController.getCredits
+);
 
 // PATCH /movie/:id - update movie
 router.patch(

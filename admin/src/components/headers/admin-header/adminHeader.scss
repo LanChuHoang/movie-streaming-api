@@ -1,0 +1,74 @@
+@use "../../../scss/" as *;
+
+.admin-header-container {
+  position: fixed;
+  top: 0;
+  left: $sidebar-desktop-width;
+  right: 0;
+  z-index: 100;
+  height: $header-height;
+  padding: 1rem 2rem;
+  backdrop-filter: blur(10px);
+  background: $transparent-background;
+  border-bottom: $divider-border;
+  display: flex;
+  flex-direction: row;
+
+  .admin-header-mobile-logo {
+    display: none;
+  }
+
+  .profile {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    color: #b2b1b9;
+
+    .circular-avatar {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    .username {
+      padding: 0 1.5rem 0 0.75rem;
+      color: $main-color;
+      font-size: 1.2rem;
+    }
+
+    svg {
+      padding: 0.5rem;
+      border-radius: 5px;
+      transition: all 0.2s;
+
+      &:hover {
+        background-color: rgba(255, 0, 0, 0.05);
+        color: #eb1d36;
+      }
+
+      &:active {
+        background-color: rgba(255, 0, 0, 0.15);
+        color: #eb1d36;
+      }
+    }
+  }
+}
+
+@include tablet {
+  .admin-header-container {
+    left: $sidebar-tablet-width;
+
+    .admin-header-mobile-logo {
+      display: block;
+    }
+  }
+}
+
+@include mobile {
+  .admin-header-container {
+    left: 0;
+
+    .admin-header-mobile-logo {
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+@use "../../../scss/" as *;
+
+.MuiDataGrid-actionsCell {
+  .MuiIconButton-root {
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    color: #90949e;
+
+    &,
+    &:active,
+    &:focus {
+      span {
+        border-radius: 8px;
+      }
+    }
+
+    &.delete-action-button {
+      &:hover {
+        background-color: rgba(255, 0, 0, 0.05);
+        color: crimson;
+      }
+    }
+
+    &.edit-action-button {
+      &:hover {
+        background-color: $hover-color;
+        color: $main-color;
+      }
+    }
+  }
+}

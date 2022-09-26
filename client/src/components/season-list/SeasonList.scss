@@ -1,42 +1,56 @@
-@use "../../scss/breakpoint" as *;
+@use "../../scss/" as *;
 
 .season-select {
-  // Transparent
-  border: none;
-  background-color: transparent;
+  .MuiSelect-select {
+    border-radius: 0.3px;
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: whitesmoke;
+    font-family: $font-family;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: normal;
+  }
 
-  // Text
-  color: white;
-  font-family: "Montserrat", sans-serif;
-  font-size: 1.5rem;
-  font-weight: bold;
+  .MuiSvgIcon-root {
+    color: whitesmoke;
+  }
 
-  // Size
-  padding-right: 30px;
-
-  // Arrow icon
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='35' viewBox='0 0 24 24' width='35' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
-
-  background-repeat: no-repeat;
-  background-position-x: 100%;
-  background-position-y: 50%;
+  &,
+  &:hover,
+  &:active,
+  &.Mui-focused {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: transparent;
+    }
+  }
 }
 
 .season-list {
+  position: relative;
   --swiper-navigation-color: white;
 
-  .swiper-slide {
-    width: 25%;
-
-    @include tablet {
-      width: 30%;
-    }
-
+  .swiper-button-next,
+  .swiper-button-prev {
     @include mobile {
-      width: 40%;
+      display: none;
     }
+
+    &::after {
+      font-size: 1.8rem;
+    }
+  }
+
+  .swiper-button-prev {
+    left: -2.5rem;
+  }
+
+  .swiper-button-next {
+    right: -2.5rem;
+  }
+
+  .swiper-button-disabled {
+    display: none;
   }
 }

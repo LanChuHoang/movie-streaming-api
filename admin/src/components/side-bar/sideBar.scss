@@ -1,0 +1,221 @@
+@use "../../scss/" as *;
+
+.sidebar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: $sidebar-desktop-width;
+  height: 100vh;
+  border-right: $divider-border;
+  backdrop-filter: blur(10px);
+  background: $transparent-background;
+
+  .logo-section {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: $divider-border;
+  }
+
+  .main-section {
+    padding: 0 0.5em;
+
+    ul {
+      .group-header {
+        padding-left: 0.5em;
+        margin-top: 1.25em;
+        margin-bottom: 0.3em;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: $header-color;
+      }
+
+      li {
+        padding: 7px;
+        padding-left: 25px;
+        display: flex;
+        align-items: center;
+        border-radius: 7px;
+        cursor: pointer;
+        // text
+        font-size: 0.9rem;
+        font-weight: 500;
+        // animation
+        transition: background-color 0.2s;
+
+        &.selected {
+          background-color: $main-color;
+          color: white;
+
+          &:hover {
+            background-color: $main-color;
+            color: white;
+          }
+
+          svg {
+            color: white;
+          }
+        }
+
+        &:hover {
+          background-color: $hover-color;
+          color: $text-color;
+        }
+
+        &:active {
+          background-color: rgba($color: $main-color, $alpha: 0.2);
+          color: $text-color;
+        }
+
+        svg {
+          margin-right: 10px;
+          width: 1em;
+          color: $main-color;
+          font-size: 1rem;
+        }
+      }
+    }
+
+    a:hover {
+      color: $text-color;
+    }
+  }
+}
+
+@include tablet {
+  .sidebar-container {
+    width: $sidebar-tablet-width;
+
+    .logo-section {
+      display: none;
+    }
+
+    .main-section {
+      margin-top: $header-height;
+      height: 100%;
+      padding: 0;
+
+      .group-header {
+        display: none;
+      }
+
+      ul {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 0;
+
+        li {
+          margin-bottom: 0.5rem;
+          display: block;
+          padding: 0.5rem 0;
+          text-align: center;
+
+          svg {
+            margin: 0;
+            font-size: 1.2rem;
+            color: $text-color;
+          }
+
+          .sidebar-item-name {
+            font-size: 0.75rem;
+          }
+
+          &.selected {
+            background-color: transparent;
+            color: $main-color;
+
+            &:hover {
+              background-color: transparent;
+              color: $main-color;
+            }
+
+            svg {
+              color: $main-color;
+            }
+          }
+
+          &:active {
+            background-color: transparent;
+            color: $main-color;
+
+            svg {
+              color: $main-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include mobile {
+  .sidebar-container {
+    top: auto;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: $sidebar-mobile-height;
+    border-right: none;
+    border-top: $divider-border;
+
+    .logo-section {
+      display: none;
+    }
+
+    .main-section {
+      height: 100%;
+      padding: 0;
+
+      .group-header {
+        display: none;
+      }
+
+      ul {
+        height: 100%;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        column-gap: 1rem;
+        padding: 0.5rem 1.5rem;
+
+        li {
+          display: block;
+          padding: 0;
+          text-align: center;
+          height: 100%;
+          line-height: 0;
+
+          svg {
+            margin: 4px 0 0;
+            font-size: 1.2rem;
+            color: $text-color;
+          }
+
+          .sidebar-item-name {
+            margin-top: 8px;
+            font-size: 1rem;
+            line-height: 0;
+          }
+
+          &.selected {
+            background-color: transparent;
+            color: $main-color;
+
+            svg {
+              color: $main-color;
+            }
+          }
+
+          &:active {
+            background-color: transparent;
+            color: $main-color;
+          }
+        }
+      }
+    }
+  }
+}

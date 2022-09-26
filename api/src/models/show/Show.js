@@ -31,13 +31,19 @@ const seasonSchema = new mongoose.Schema(
 const showSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
-    tagLine: { type: String },
+    tagline: { type: String },
     overview: { type: String },
     adult: { type: Boolean },
     imdbID: { type: String },
+    tmdbID: { type: Number },
     genres: { type: [String], enum: SHOW_GENRES },
     countries: { type: [String], enum: COUNTRIES },
-    cast: { type: [mongoose.Schema.Types.ObjectId], ref: "Person" },
+    cast: [
+      {
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: "Person" },
+        character: { type: "String", required: true },
+      },
+    ],
     directors: { type: [mongoose.Schema.Types.ObjectId], ref: "Person" },
     trailers: { type: [String] },
     posterUrl: { type: String },

@@ -77,10 +77,35 @@ iframe {
   margin-bottom: 2rem;
 }
 
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
 .section {
-  padding: 0 2rem;
+  padding: 0 3rem;
 }
 
 .section__header {
   @include flex(center, space-between);
+}
+
+.apple-light-blur,
+.apple-light-blur-2,
+.apple-dark-blur {
+  backdrop-filter: blur(23px);
+  box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
+}
+
+.apple-light-blur,
+.apple-light-blur-2 {
+  background-color: rgba($color: white, $alpha: 0.3);
+}
+
+.apple-light-blur-2 {
+  mix-blend-mode: lighten;
+}
+
+.apple-dark-blur {
+  background: #423c5a80;
+  box-shadow: 0 10px 15px rgb(0 0 0 / 30%);
 }

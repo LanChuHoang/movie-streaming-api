@@ -1,0 +1,48 @@
+@use "../../../scss/" as *;
+
+.cast-list-container {
+  width: 100%;
+  margin-top: 0.5rem;
+
+  .cast-item-container {
+    .fallback-image-container {
+      border-radius: 50%;
+    }
+
+    img,
+    .default-profile-image {
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      height: 100%;
+    }
+
+    img {
+      object-fit: cover;
+      object-position: 50% 30%;
+    }
+
+    .default-profile-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgb(156, 161, 172);
+
+      p {
+        font-size: 2.5rem;
+        font-weight: 500;
+      }
+    }
+
+    .cast-description {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      text-align: center;
+
+      color: rgb(220, 220, 220);
+
+      .cast-character {
+        color: rgb(147, 145, 147);
+      }
+    }
+  }
+}

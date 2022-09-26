@@ -1,0 +1,88 @@
+@use "../../../scss/" as *;
+
+.summary-widget-container {
+  position: relative;
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 30%;
+  padding: 2rem;
+
+  .header-container {
+    flex: 0 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    svg {
+      font-size: 1.1rem;
+      transition: color 0.2s, transform 0.4s;
+
+      &:hover {
+        color: $main-color;
+        transform: rotate(270deg);
+      }
+    }
+  }
+
+  .content-container {
+    flex: 1 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+
+    .total-users-amount {
+      height: 40%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      p,
+      .MuiCircularProgress-root {
+        color: $main-color;
+        font-size: 3.5rem;
+        font-weight: 600;
+      }
+    }
+
+    .summary-items-container {
+      width: 100%;
+      display: grid;
+      grid-auto-columns: 1fr 1fr 1fr;
+      grid-auto-flow: column;
+      column-gap: 0.5rem;
+      margin-top: 2rem;
+
+      .summary-item {
+        svg {
+          margin-right: 0.25rem;
+        }
+
+        &.title-item {
+          font-size: 1rem;
+          font-weight: 700;
+          margin-bottom: 0.5rem;
+        }
+
+        &.increased-amount {
+          color: lightgreen;
+        }
+
+        &.decreased-amount {
+          color: lightcoral;
+        }
+      }
+    }
+  }
+
+  .summary-widget-backdrop {
+    position: absolute;
+    z-index: 100;
+    border-radius: 1rem;
+    background-color: rgba($color: #000000, $alpha: 0.03);
+  }
+}

@@ -1,0 +1,43 @@
+@use "../../scss/" as *;
+
+.admin-import-bar-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 1rem 0;
+
+  .admin-import-bar-title-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: $main-color;
+
+    button,
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1;
+      color: $main-color;
+    }
+
+    button {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.25rem;
+      border: none;
+      background-color: transparent;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+
+      &:active {
+        background-color: rgba($color: $main-color, $alpha: 0.3);
+      }
+    }
+
+    h1 {
+      margin-left: 0.5rem;
+    }
+  }
+}

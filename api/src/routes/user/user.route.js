@@ -5,54 +5,49 @@ const routeValidator = require("../../validators/route.validator");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken);
-
-// GET All Users: GET /user
-// by Admin
-// Output user infor except password, __v, createdAt, updateAt
-router.get(
-  "/",
-  // authorizerService.authorizeAdmin,
-  userController.getAllUsers
+router.use(
+  authorizerService.verifyAccessToken,
+  routeValidator.parseDefaultProjection
 );
 
-// GET Single User: GET /user/:id
-// by Admin or Owner User
-// Output user infor except password, __v, createdAt, updateAt
+// GET /user
+router.get(
+  "/",
+  authorizerService.authorizeAdmin,
+  routeValidator.parseGetItemsParams,
+  userController.getUsers
+);
+
+// GET /user/search
+router.get(
+  "/search",
+  authorizerService.authorizeAdmin,
+  routeValidator.parseSearchItemsParams,
+  userController.searchUsers
+);
+
+// GET /user/:id
 router.get(
   "/:id",
   routeValidator.validateIDParam,
-  // authorizerService.authorizeUserOrAdmin,
+  authorizerService.authorizeUserOrAdmin,
   userController.getUser
 );
 
-// UPDATE User Profile: PUT /user/:id
-// by Admin or Owner User
-// Output updated user infor except password, __v, createdAt, updateAt
+// PATCH /user/:id
 router.patch(
   "/:id",
   routeValidator.validateIDParam,
-  // authorizerService.authorizeUserOrAdmin,
+  authorizerService.authorizeUserOrAdmin,
   userController.updateUser
 );
 
-// DELETE Single User: DELETE /user/:id
-// by Admin or Owner User
-// Output deleted user infor except password, __v, createdAt, updateAt
+// DELETE /user/:id
 router.delete(
   "/:id",
   routeValidator.validateIDParam,
-  // authorizerService.authorizeUserOrAdmin,
+  authorizerService.authorizeUserOrAdmin,
   userController.deleteUser
-);
-
-// GET Number of user per month: GET /user/stats/
-// by Admin
-// Output user infor except password, __v, createdAt, updateAt
-router.get(
-  "/stats/",
-  authorizerService.authorizeAdmin,
-  userController.getNumUserPerMonth
 );
 
 module.exports = router;

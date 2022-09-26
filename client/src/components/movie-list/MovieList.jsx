@@ -1,47 +1,52 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./movie-list.scss";
-import { SwiperSlide, Swiper } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import useBackendApi from "../../hooks/useBackendApi";
 import MovieCard from "../movie-card/MovieCard";
-import { listType } from "../../api/backendApi";
+import MediaApi from "../../api/backendApi/class/MediaApi";
+import LazySwiper from "../lazy-swiper/LazySwiper";
 
-const MovieList = (props) => {
+const MovieList = ({ id, itemType, listType }) => {
   const [items, setItems] = useState([]);
-  const backendApi = useBackendApi();
+  const backendApi = useBackendApi()[itemType];
 
   useEffect(() => {
     const getList = async () => {
       try {
-        if (props.listType !== listType.similar) {
-          const { data } = await backendApi.getList(
-            props.itemType,
-            props.listType
-          );
-          setItems(data.docs);
-        } else {
-          const { data } = await backendApi.getSimilarItems(
-            props.itemType,
-            props.id
-          );
+        if (listType === MediaApi.listType.similar) {
+          const { data } = await backendApi.getSimilarItems(id);
           setItems(data);
+        } else {
+          const { data } = await backendApi.getList(listType);
+          setItems(data.docs);
         }
       } catch (error) {
         console.log(error);
       }
     };
     getList();
-  }, [props.itemType, props.listType, props?.id]);
+  }, [itemType, listType, id, backendApi]);
 
   return (
     <div className="movie-list">
-      <Swiper grabCursor={true} spaceBetween={10} slidesPerView={"auto"}>
-        {items.map((item, i) => (
-          <SwiperSlide key={i}>
-            <MovieCard item={item} itemType={props.itemType} />
+      <LazySwiper
+        slidesPerView={2.5}
+        breakpoints={{
+          600: {
+            slidesPerView: 5,
+          },
+          1024: {
+            slidesPerView: 6.67,
+          },
+        }}
+      >
+        {items.map((item) => (
+          <SwiperSlide key={`${item._id}`}>
+            <MovieCard item={item} itemType={itemType} />
           </SwiperSlide>
         ))}
-      </Swiper>
+      </LazySwiper>
     </div>
   );
 };

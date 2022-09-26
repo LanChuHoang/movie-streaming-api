@@ -1,0 +1,39 @@
+@use "../../../scss/" as *;
+
+.upsert-input {
+  width: 100%;
+  margin-top: 1rem;
+
+  & label.Mui-focused {
+    color: $main-color;
+  }
+
+  // & .MuiInput-underline:after {
+  //   border-bottom-color: $main-color;
+  // }
+
+  & .MuiOutlinedInput-root {
+    &:hover fieldset {
+      border-color: rgba($color: $main-color, $alpha: 0.6);
+    }
+
+    &.Mui-focused fieldset {
+      border-color: rgba($color: $main-color, $alpha: 0.6);
+    }
+  }
+}
+
+// .css-b7k0tb-MuiAutocomplete-listbox {
+//   .MuiAutocomplete-option {
+//     margin: 0 0.5rem;
+//     border-radius: 0.25rem;
+
+//     &[aria-selected="true"] {
+//       background-color: $hover-color;
+
+//       &.Mui-focused {
+//         background-color: $hover-color;
+//       }
+//     }
+//   }
+// }

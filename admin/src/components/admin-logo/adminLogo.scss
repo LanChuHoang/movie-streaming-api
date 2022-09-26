@@ -1,0 +1,13 @@
+@use "../../scss/" as *;
+
+.admin-logo {
+  font-family: $logo-font;
+  font-size: 2em;
+  font-weight: bold;
+  color: $logo-color;
+
+  &.small-logo {
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+}

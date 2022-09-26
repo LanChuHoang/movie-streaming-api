@@ -1,0 +1,64 @@
+@use "../../scss/" as *;
+
+.admin-search-field {
+  .css-8j6b76-MuiInputBase-root-MuiOutlinedInput-root {
+    font-family: $font-family;
+  }
+
+  .MuiInputBase-root {
+    padding: 0.5rem 0.8rem;
+    background-color: #f3f3f4;
+    border-radius: 0.5rem;
+
+    .MuiInputAdornment-root {
+      font-size: 1.1rem;
+      color: #9e9ea7;
+    }
+
+    .MuiInputBase-input {
+      padding: 0;
+      font-size: 0.9rem;
+      color: #0d0c22;
+
+      &::placeholder {
+        color: #9e9ea7;
+      }
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+      border: 1px solid transparent;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    &:hover {
+      .MuiOutlinedInput-notchedOutline {
+        border-color: rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 0 3px rgba($color: $main-color, $alpha: 0.2);
+      }
+    }
+
+    &:active {
+      .MuiOutlinedInput-notchedOutline {
+        border-color: #e7e7e9;
+        box-shadow: none;
+      }
+    }
+
+    &:not(:active).Mui-focused {
+      .MuiOutlinedInput-notchedOutline {
+        border-color: rgba($color: $main-color, $alpha: 0.6);
+        box-shadow: 0 0 0 3px rgba($color: $main-color, $alpha: 0.2);
+      }
+    }
+  }
+}
+
+.MuiAutocomplete-paper {
+  margin-top: 10px;
+}
+
+.MuiAutocomplete-popper
+  .MuiAutocomplete-option[role="option"][aria-selected="false"]:hover {
+  background: rgba($color: black, $alpha: 0.03);
+}

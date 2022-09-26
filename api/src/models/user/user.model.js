@@ -1,11 +1,41 @@
+const { PROJECTION } = require("../../configs/route.config");
+const { USERS_DEFAULT_PAGE_SIZE } = require("../../configs/route.config.user");
 const User = require("./User");
 
-const DEFAULT_PROJECTION = {
-  __v: 0,
-  createdAt: 0,
-  updatedAt: 0,
-  password: 0,
-};
+async function getPaginatedUsers(filter = null, sort, page, limit, projection) {
+  try {
+    const docsPipeline = [
+      { $skip: limit * (page - 1) },
+      { $limit: limit },
+      { $project: projection },
+    ];
+    if (sort) docsPipeline.unshift({ $sort: sort });
+    console.log(docsPipeline);
+    const [result] = await User.aggregate([
+      { $match: filter },
+      {
+        $facet: {
+          docs: docsPipeline,
+          meta: [{ $count: "total_documents" }],
+        },
+      },
+      { $unwind: "$meta" },
+    ]);
+
+    const totalDocs = result?.meta.total_documents || 0;
+    const output = {
+      docs: result?.docs || [],
+      page: page,
+      pageSize: limit,
+      totalPages: Math.ceil(totalDocs / limit),
+      totalDocuments: totalDocs,
+    };
+
+    return output;
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function exists(username, email) {
   return (
@@ -18,84 +48,109 @@ async function exists(username, email) {
 async function addUser(user) {
   try {
     const createdUser = await User.create(user);
-    const { __v, createdAt, updatedAt, password, ...output } =
-      createdUser.toObject();
+    const { __v, updatedAt, password, ...output } = createdUser.toObject();
     return output;
   } catch (error) {
     throw error;
   }
 }
 
-function findUserByID(id, projection = DEFAULT_PROJECTION) {
+function getUsers(
+  page = 1,
+  limit = USERS_DEFAULT_PAGE_SIZE,
+  sort = null,
+  projection = PROJECTION.USER.DEFAULT.USER
+) {
+  return User.find({}, projection)
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit);
+}
+
+function searchUsers({
+  query,
+  page = 1,
+  limit = USERS_DEFAULT_PAGE_SIZE,
+  projection = PROJECTION.ADMIN.DEFAULT.USER,
+}) {
+  const regExp = new RegExp(query, "gi");
+  const filter = { $or: [{ username: regExp }, { email: regExp }] };
+  return getPaginatedUsers(filter, null, page, limit, projection);
+}
+
+function getUserById(id, projection) {
   return User.findById(id, projection);
 }
 
-function findUserByEmail(email, projection = DEFAULT_PROJECTION) {
+function getUserByEmail(email, projection = PROJECTION.USER.DEFAULT.USER) {
   return User.findOne({ email: email }, projection);
 }
 
-async function getAllUsers(
-  afterID = null,
-  limit = 10,
-  sort = null,
-  projection = DEFAULT_PROJECTION
-) {
-  try {
-    let filter = {};
-    if (afterID && sort) {
-      const firstSortField = Object.keys(sort)[0];
-      const pivot = (await User.findById(afterID))[firstSortField];
-      filter[firstSortField] = { $gt: pivot };
-    } else if (afterID) {
-      filter = { _id: { $gt: afterID } };
-    }
-    return await User.find(filter, projection).sort(sort).limit(limit);
-  } catch (error) {
-    throw error;
-  }
-}
-
-function getNewUsers(amount, projection = DEFAULT_PROJECTION) {
-  return User.find({}, projection).sort({ _id: -1 }).limit(amount);
-}
-
-function updateUser(id, updateData, projection = DEFAULT_PROJECTION) {
+function updateUser(id, updateData, projection = PROJECTION.USER.DEFAULT.USER) {
   return User.findByIdAndUpdate(id, updateData, {
     returnDocument: "after",
     projection: projection,
   });
 }
 
-function deleteUserByID(id, projection = DEFAULT_PROJECTION) {
-  return User.findByIdAndDelete(id, { projection: projection });
+function deleteUserByID(id) {
+  return User.findByIdAndDelete(id, {
+    projection: PROJECTION.ADMIN.DEFAULT.USER,
+  });
 }
 
-function getNumUserPerMonth() {
+// Statistics
+function getTotalUsers() {
+  return User.estimatedDocumentCount();
+}
+
+function countUsers(startDate = null, endDate = null) {
+  const filter = {};
+  if (startDate && endDate)
+    filter.createdAt = { $gte: startDate, $lte: endDate };
+  return User.find(filter).count();
+}
+
+function countUsersDaily(startDate, endDate) {
   return User.aggregate([
+    { $match: { createdAt: { $gte: startDate, $lte: endDate } } },
     {
       $group: {
-        _id: { $month: "$createdAt" },
-        numUsers: { $sum: 1 },
+        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        totalUsers: { $sum: 1 },
       },
     },
+    { $project: { _id: 0, date: "$_id", totalUsers: 1 } },
+    { $sort: { date: 1 } },
+  ]);
+}
+
+function countUsersMonthly(startDate, endDate) {
+  return User.aggregate([
+    { $match: { createdAt: { $gte: startDate, $lte: endDate } } },
     {
-      $project: {
-        month: "$_id",
-        numUsers: 1,
-        _id: 0,
+      $group: {
+        _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+        totalUsers: { $sum: 1 },
       },
     },
+    { $project: { _id: 0, month: "$_id", totalUsers: 1 } },
+    { $sort: { month: 1 } },
   ]);
 }
 
 module.exports = {
+  USERS_DEFAULT_PAGE_SIZE,
   exists,
   addUser,
-  findUserByID,
-  findUserByEmail,
-  getAllUsers,
-  getNewUsers,
+  getUsers,
+  searchUsers,
+  getUserById,
+  getUserByEmail,
   updateUser,
   deleteUserByID,
-  getNumUserPerMonth,
+  getTotalUsers,
+  countUsers,
+  countUsersDaily,
+  countUsersMonthly,
 };

@@ -1,0 +1,75 @@
+@use "../../scss/" as *;
+
+.admin-layout-container {
+  position: relative;
+  font-family: $font-family;
+  color: $text-color;
+
+  .admin-layout-content-container {
+    margin-top: $header-height;
+    margin-left: $sidebar-desktop-width;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@include tablet {
+  .admin-layout-container {
+    .admin-layout-content-container {
+      margin-left: $sidebar-tablet-width;
+    }
+  }
+}
+
+@include mobile {
+  .admin-layout-container {
+    .admin-layout-content-container {
+      margin-bottom: $sidebar-mobile-height;
+      margin-left: 0;
+    }
+  }
+}
+
+.widget {
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 1rem;
+}
+
+.admin-menu {
+  .MuiPaper-root {
+    border-radius: 0.25rem;
+    margin-top: 0.25rem;
+
+    .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+      margin: 0 0.5rem;
+      border-radius: 0.25rem;
+      font-family: $font-family;
+      color: $text-color;
+      font-weight: 600;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+    }
+
+    .Mui-selected {
+      background-color: $main-color;
+      color: white;
+
+      &:hover {
+        background-color: $main-color;
+        opacity: 0.8;
+      }
+
+      &:active {
+        background-color: $main-color;
+      }
+    }
+
+    .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
+      background-color: $main-color;
+    }
+  }
+}

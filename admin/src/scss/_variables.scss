@@ -1,0 +1,26 @@
+$body-background-color: white;
+$font-family: "Nunito", sans-serif;
+$logo-font: "Nunito", sans-serif;
+
+$logo-color: #6439ff;
+$main-color: #7451f8;
+$hover-color: #ece8ff;
+$header-color: #aaa;
+$text-color: #888;
+$divider-color: rgb(230, 227, 227);
+
+$box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+$divider-border: 0.5px solid rgb(230, 227, 227);
+$transparent-background: rgba(
+    $color: white,
+    $alpha: 0.7,
+  )
+  none repeat scroll 0% 0%;
+
+$sidebar-desktop-width: 14rem;
+$sidebar-tablet-width: 4rem;
+$sidebar-mobile-height: 4rem;
+$header-height: 4rem;
+
+$mobile-width: 600px;
+$tablet-width: 1024px;

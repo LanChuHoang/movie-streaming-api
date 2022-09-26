@@ -1,0 +1,150 @@
+@use "../../scss/" as *;
+
+.modal {
+  @include flex(center, center);
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  background-color: rgba($color: $black, $alpha: 0.4);
+  opacity: 0;
+  visibility: hidden;
+
+  &.modal-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal-content {
+    padding: 2rem;
+    background-color: white;
+    width: 50%;
+    opacity: 0;
+    transform: translateY(-250px);
+    transition: transform 0.6s ease, opacity 0.6s ease;
+    position: relative;
+
+    @include tablet {
+      width: 80%;
+    }
+
+    .modal-close-button {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      font-size: 1.5rem;
+      cursor: pointer;
+
+      &:hover {
+        color: $main-color;
+      }
+    }
+  }
+
+  &.modal-active &-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    color: $text-color;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.2, 1.2);
+    }
+
+    &:active {
+      transform: scale(1, 1);
+    }
+  }
+}
+
+// .confirm-modal-container {
+//   .confirm-modal {
+//     width: 25%;
+//     background-color: white;
+//     border-radius: 0.5rem;
+//     text-align: center;
+
+//     @include tablet {
+//       width: 30%;
+//     }
+
+//     @include mobile {
+//       width: 50%;
+//     }
+
+//     .confirm-buttons {
+//       margin-top: 1rem;
+
+//       button {
+//         padding: 0.5rem 0.75rem;
+//         border-radius: 0.25rem;
+//       }
+
+//       .cancel-button {
+//         background-color: rgba(211, 211, 211, 0.441);
+//         color: $header-color;
+//         margin-right: 1rem;
+//       }
+
+//       .confirm-button {
+//         background-color: rgba(252, 19, 19, 0.817);
+//         color: white;
+//       }
+//     }
+//   }
+// }
+
+.message-modal-container {
+  .message-modal {
+    width: 25%;
+    background-color: white;
+    border-radius: 0.5rem;
+    text-align: center;
+
+    @include tablet {
+      width: 30%;
+    }
+
+    @include mobile {
+      width: 50%;
+    }
+
+    .message-buttons {
+      margin-top: 1rem;
+
+      button {
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.25rem;
+        background-color: $main-color;
+        color: white;
+      }
+    }
+  }
+}
+
+.modal-container {
+  @include flex(center, center);
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  background-color: rgba($color: $black, $alpha: 0.4);
+  opacity: 0;
+  visibility: hidden;
+
+  &.modal-active {
+    opacity: 1;
+    visibility: visible;
+  }
+}

@@ -21,47 +21,48 @@
   display: flex;
   flex-direction: row;
 
-  .filter-bar {
+  .filter-bar-container {
     width: 70%;
+    display: flex;
+    flex-direction: row;
 
-    .filter-field {
-      display: inline-block;
+    .filter-field-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 180px;
+      width: 25%;
       margin-right: 0.8rem;
 
       label {
         font-size: 1.2rem;
         font-weight: 600;
+        margin-bottom: 5px;
       }
 
-      select {
-        margin-top: 5px;
-        display: block;
+      .movie-grid-select {
+        .MuiSelect-select {
+          width: 100%;
+          border-radius: 0.3rem;
+          padding: 10px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          line-height: normal;
+          color: whitesmoke;
+          background-color: #212121;
+        }
 
-        // Size
-        width: 12em;
-        padding: 12px 10px;
+        .MuiSvgIcon-root {
+          color: whitesmoke;
+        }
 
-        // Background
-        background-color: #212121;
-
-        // Border
-        border: none;
-        border-radius: 0.3rem;
-
-        // Text
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: whitesmoke;
-
-        // Arrow icon
-        -moz-appearance: none;
-        -webkit-appearance: none;
-        appearance: none;
-        background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='25' viewBox='0 0 24 24' width='35' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
-
-        background-repeat: no-repeat;
-        background-position-x: 100%;
-        background-position-y: 50%;
+        &,
+        &:hover,
+        &:active,
+        &.Mui-focused {
+          .MuiOutlinedInput-notchedOutline {
+            border-color: transparent;
+          }
+        }
       }
     }
   }
@@ -89,12 +90,33 @@
       position: absolute;
       padding-top: 10px;
       padding-bottom: 10px;
-      // bottom: 2px;
       right: 0;
+      bottom: 0;
+    }
+  }
+}
 
-      @include mobile {
-        right: 1px;
-        bottom: 1px;
+@include mobile {
+  .search-filter-bar {
+    display: flex;
+    flex-direction: column;
+
+    .filter-bar-container,
+    .movie-search {
+      width: 100%;
+      max-width: unset;
+    }
+
+    .filter-field-container:last-child {
+      margin-right: 0;
+    }
+
+    .movie-search {
+      margin-top: 2rem;
+
+      input,
+      form {
+        width: 100%;
       }
     }
   }

@@ -1,0 +1,11 @@
+@use "../../../scss/" as *;
+
+.admin-cell {
+  color: goldenrod;
+  background-color: rgba(189, 189, 3, 0.103);
+}
+
+.user-cell {
+  background-color: $hover-color;
+  color: $main-color;
+}

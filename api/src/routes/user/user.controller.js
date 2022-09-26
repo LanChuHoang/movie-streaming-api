@@ -3,24 +3,23 @@ const { errorResponse } = require("../../configs/route.config");
 const userModel = require("../../models/user/user.model");
 const aesService = require("../../services/aes.service");
 
-// GET /user?after_id:0&limit=10&sort_by=_id:desc
-async function getAllUsers(req, res) {
-  const { after_id: afterID, limit, sort_by: sortOptions } = req.query;
-  const sort = sortOptions ? {} : null;
-  sortOptions?.split(",").forEach((option) => {
-    [field, order] = option.split(":");
-    sort[field] = order;
-  });
-
+async function getUsers(req, res, next) {
   try {
-    const users = await userModel.getAllUsers(afterID, limit, sort);
+    const { page, limit, sort, projection } = req.query;
+    const [users, totalUsers] = await Promise.all([
+      userModel.getUsers(page, limit, sort, projection),
+      userModel.getTotalUsers(),
+    ]);
+    const pageSize = limit || userModel.USERS_DEFAULT_PAGE_SIZE;
     const responseData = {
       docs: users,
-      afterID: afterID ? afterID : null,
-      limit: limit ? limit : 10,
-      sort: sort,
+      page: page || 1,
+      pageSize,
+      totalPages: Math.ceil(totalUsers / pageSize),
+      totalDocuments: totalUsers,
+      sort,
     };
-    return res.status(200).json(responseData);
+    return res.send(responseData);
   } catch (error) {
     console.log(error);
     if (
@@ -29,17 +28,31 @@ async function getAllUsers(req, res) {
     ) {
       return res.status(400).send(errorResponse.INVALID_QUERY);
     }
-    return res.status(500).send(errorResponse.DEFAULT_500_ERROR);
+    next(error);
+  }
+}
+
+async function searchUsers(req, res, next) {
+  try {
+    const { query, page, limit, projection } = req.query;
+    const options = { query, page, limit, projection };
+    const response = await userModel.searchUsers(options);
+    return res.send(response);
+  } catch (error) {
+    next(error);
   }
 }
 
 async function getUser(req, res, next) {
   try {
-    const user = await userModel.findUserByID(req.params.id);
+    const user = await userModel.getUserById(
+      req.params.id,
+      req.query.defaultProjection
+    );
     if (!user) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
-    return res.status(200).json(user);
+    return res.send(user);
   } catch (error) {
     next(error);
   }
@@ -50,11 +63,15 @@ async function updateUser(req, res, next) {
     if (req.body.password) {
       req.body.password = aesService.encrypt(req.body.password);
     }
-    const updatedUser = await userModel.updateUser(req.params.id, req.body);
+    const updatedUser = await userModel.updateUser(
+      req.params.id,
+      req.body,
+      req.query.defaultProjection
+    );
     if (!updatedUser) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
-    return res.status(200).json(updatedUser);
+    return res.send(updatedUser);
   } catch (error) {
     next(error);
   }
@@ -66,25 +83,16 @@ async function deleteUser(req, res, next) {
     if (!deletedUser) {
       return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
     }
-    return res.status(200).json(deletedUser);
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function getNumUserPerMonth(req, res, next) {
-  try {
-    const data = await userModel.getNumUserPerMonth();
-    return res.status(200).json(data);
+    return res.send(deletedUser);
   } catch (error) {
     next(error);
   }
 }
 
 module.exports = {
-  getAllUsers,
+  getUsers,
   getUser,
+  searchUsers,
   updateUser,
   deleteUser,
-  getNumUserPerMonth,
 };

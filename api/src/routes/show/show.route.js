@@ -5,7 +5,10 @@ const authorizerService = require("../../services/authorizer.service");
 
 const router = express.Router();
 
-router.use(authorizerService.verifyAccessToken);
+router.use(
+  authorizerService.verifyAccessToken,
+  routeValidator.parseDefaultProjection
+);
 
 // POST /show - post new show
 // input: {title: required, optionals}
@@ -18,15 +21,15 @@ router.post(
 // GET /show?genres & country & year  & sort & page
 router.get(
   "/",
-  routeValidator.validatePageParam,
-  showController.validateGetShowParams,
+  routeValidator.parseGetItemsParams,
+  showController.parseGetShowsParams,
   showController.getShows
 );
 
 // GET /show/search?query&page
 router.get(
   "/search",
-  routeValidator.validateSearchParams,
+  routeValidator.parseSearchItemsParams,
   showController.searchShows
 );
 
@@ -42,6 +45,18 @@ router.get(
 
 // GET /show/:id/ - get show detail
 router.get("/:id", routeValidator.validateIDParam, showController.getShow);
+
+router.get(
+  "/:id/seasons",
+  routeValidator.validateIDParam,
+  showController.getSeasons
+);
+
+router.get(
+  "/:id/credits",
+  routeValidator.validateIDParam,
+  showController.getCredits
+);
 
 // PATCH /show/:id - update show
 router.patch(

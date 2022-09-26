@@ -1,11 +1,11 @@
-import backendApi from "../api/backendApi";
+import backendApi from "../api/backendApi/backendApi";
 import useAuth from "./useAuth";
 
 const useLogout = () => {
   const { setAuth } = useAuth();
   const logout = async () => {
     try {
-      await backendApi.logoutUser();
+      await backendApi.user.logoutUser();
       setAuth({});
     } catch (error) {
       console.log(error);
