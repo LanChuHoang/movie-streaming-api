@@ -14,9 +14,9 @@ const models = {
 async function update() {
   try {
     await mongoService.connect();
-    const api = models.movie;
+    const api = models.show;
     await api.updateMany({
-      updateCallback: api.updateBaseData,
+      updateCallback: api.updateTrailers,
     });
   } catch (error) {
     console.log(error);
