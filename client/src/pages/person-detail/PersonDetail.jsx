@@ -42,7 +42,7 @@ const PersonDetail = () => {
         </div>
         <div className="info-container">
           <Avatar
-            src={person?.avatarUrl.replace("w185", "w300")}
+            src={person?.avatarUrl?.replace("w185", "w300")}
             alt={person?.name}
           >
             {person?.name[0].toUpperCase()}
