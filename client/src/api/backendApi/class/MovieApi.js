@@ -23,6 +23,14 @@ class MovieApi extends MediaApi {
     const upcoming = true;
     return this.getBriefInfoItems({ ...params, upcoming });
   };
+
+  getVideoUrl = async (id) => {
+    try {
+      return (await this.getItem(id)).data.videoUrl;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 const endpoint = {
