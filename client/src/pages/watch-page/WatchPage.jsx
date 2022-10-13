@@ -28,7 +28,7 @@ const WatchPage = ({ itemType }) => {
                 Number(seasonNumber),
                 Number(episodeNumber)
               );
-        setVideoUrl("http://localhost:8000/the_witcher/The_Witcher_S01E07.mpd");
+        setVideoUrl(url);
       } catch (error) {
         console.log(error);
       }

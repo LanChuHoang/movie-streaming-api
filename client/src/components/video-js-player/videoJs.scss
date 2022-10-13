@@ -272,21 +272,21 @@ $icon-shadow: 0em 0em 1em white;
     .vjs-http-source-selector {
       margin: 0 $control-icon-space;
 
-      .vjs-menu-button {
-        transition: transform 0.2s;
-
-        &:hover {
+      &.vjs-hover {
+        .vjs-icon-cog::before {
           text-shadow: $icon-shadow;
-        }
-
-        &[aria-expanded="true"] {
-          transform: rotate(30deg);
         }
       }
 
       .vjs-icon-cog {
+        transition: transform 0.2s;
+
         &::before {
           font-size: calc(0.9 * $control-icon-size);
+        }
+
+        &[aria-expanded="true"] {
+          transform: rotate(30deg);
         }
 
         .vjs-icon-placeholder {

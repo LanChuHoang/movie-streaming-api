@@ -29,6 +29,7 @@ const VideoJs = ({ src }) => {
       ));
       player.httpSourceSelector();
       player.spriteThumbnails();
+      setupUI();
     } else {
       const player = playerRef.current;
       player.src([{ src, type: "application/dash+xml" }]);
@@ -61,18 +62,17 @@ const DEFAULT_OPTIONS = {
   autoplay: false,
   controls: true,
   responsive: true,
-  // fluid: true,
   preload: "auto",
   tracks: [
     {
-      src: "http://localhost:8000/the_witcher/sub_vi.vtt",
+      src: "https://dz9lsde6so2tm.cloudfront.net/dash/the_witcher/sub_vi.vtt",
       kind: "subtitles",
       srclang: "vi",
       label: "Vietnamese",
       default: true,
     },
     {
-      src: "http://localhost:8000/the_witcher/sub_en.vtt",
+      src: "https://dz9lsde6so2tm.cloudfront.net/dash/the_witcher/sub_en.vtt",
       kind: "subtitles",
       srclang: "en",
       label: "English",
@@ -93,7 +93,7 @@ const DEFAULT_OPTIONS = {
     },
     spriteThumbnails: {
       interval: 60,
-      url: "http://localhost:8000/the_witcher/the_witcher_s01e07_sprite.png",
+      url: "https://dz9lsde6so2tm.cloudfront.net/dash/the_witcher/the_witcher_s01e07_sprite.png",
       width: 100 * 1.5,
       height: 56 * 1.5,
       responsive: 0,
@@ -105,5 +105,14 @@ const DEFAULT_OPTIONS = {
     },
   },
 };
+
+function setupUI() {
+  const buttons = document.querySelectorAll("button.vjs-button");
+  buttons.forEach((b) =>
+    b.addEventListener("click", function () {
+      this.blur();
+    })
+  );
+}
 
 export default VideoJs;
