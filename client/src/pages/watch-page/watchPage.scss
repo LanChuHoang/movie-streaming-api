@@ -1,0 +1,11 @@
+@use "../../scss/" as *;
+
+.watch-page-container {
+  margin-top: $header-shrink-height;
+}
+
+.forced-shrink {
+  height: $header-shrink-height !important;
+  background-color: rgba($color: $body-bg, $alpha: 0.8);
+  backdrop-filter: blur(33px);
+}

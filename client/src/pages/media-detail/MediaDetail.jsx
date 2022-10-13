@@ -13,6 +13,7 @@ import MediaApi from "../../api/backendApi/class/MediaApi";
 import youtubeApi from "../../api/youtube/youtubeApi";
 import GenreList from "./genre-list/GenreList";
 import { toYoutubeVideoUrl } from "../../api/backendApi/helper";
+import { useNavigate } from "react-router";
 
 const MediaDetail = ({ itemType }) => {
   const { id } = useParams();
@@ -22,6 +23,7 @@ const MediaDetail = ({ itemType }) => {
   const [trailers, setTrailers] = useState();
   const trailersRef = useRef();
   const seasonsRef = useRef();
+  const navigate = useNavigate();
   const backendApi = useBackendApi()[itemType];
 
   useEffect(() => {
@@ -63,7 +65,7 @@ const MediaDetail = ({ itemType }) => {
 
   const handlePlay = () => {
     itemType === MediaApi.itemType.movie
-      ? (window.location.href = item.videoUrl || "/")
+      ? navigate(`/watch/movie/${id}`)
       : scrollToRef(seasonsRef);
   };
 
@@ -130,7 +132,7 @@ const MediaDetail = ({ itemType }) => {
         </div>
       </div>
       <div className="container" ref={seasonsRef}>
-        {itemType === "show" && <SeasonList seasons={seasons} />}
+        {itemType === "show" && <SeasonList seasons={seasons} showId={id} />}
         <div className="section mb-3" ref={trailersRef}>
           <div className="section__header mb-1">
             <h2>Trailers</h2>

@@ -19,5 +19,12 @@
   "bugs": {
     "url": "https://github.com/LanChuHoang/movie.streaming.mern/issues"
   },
-  "homepage": "https://github.com/LanChuHoang/movie.streaming.mern#readme"
+  "homepage": "https://github.com/LanChuHoang/movie.streaming.mern#readme",
+  "dependencies": {
+    "video.js": "^7.20.3",
+    "videojs-contrib-quality-levels": "^2.2.0",
+    "videojs-hotkeys": "^0.2.28",
+    "videojs-http-source-selector": "^1.1.6",
+    "videojs-sprite-thumbnails": "^0.6.0"
+  }
 }

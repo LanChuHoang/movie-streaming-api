@@ -7,9 +7,11 @@ import "./SeasonList.scss";
 import { episodeReleased } from "../../api/tmdb/tmdbApi.helper";
 import LazySwiper from "../lazy-swiper/LazySwiper";
 import { FormControl, MenuItem, Select } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const SeasonList = ({ seasons = [] }) => {
+const SeasonList = ({ seasons = [], showId }) => {
   const [selectedIndex, setSelectedIndex] = useState(endIndex(seasons));
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSelectedIndex(endIndex(seasons));
@@ -62,7 +64,14 @@ const SeasonList = ({ seasons = [] }) => {
             ?.filter(episodeReleased)
             .map((ep) => (
               <SwiperSlide key={ep.episodeNumber}>
-                <SeasonCell item={ep} />
+                <SeasonCell
+                  item={ep}
+                  onClick={() => {
+                    navigate(
+                      `/watch/show/${showId}/season/${seasons[selectedIndex]?.seasonNumber}/episode/${ep.episodeNumber}`
+                    );
+                  }}
+                />
               </SwiperSlide>
             ))}
         </LazySwiper>

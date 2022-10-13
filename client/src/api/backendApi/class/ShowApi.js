@@ -42,6 +42,19 @@ class ShowApi extends MediaApi {
   getSeasons = (id) => {
     return this.client.get(`${this.endpoint.base}/${id}/seasons`);
   };
+
+  getVideoUrl = async (showId, seasonNumber, episodeNumber) => {
+    try {
+      const { data: seasons } = await this.getSeasons(showId);
+      const season = seasons?.find((s) => s.seasonNumber === seasonNumber);
+      const episode = season?.episodes?.find(
+        (e) => e.episodeNumber === episodeNumber
+      );
+      return episode?.videoUrl;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default ShowApi;

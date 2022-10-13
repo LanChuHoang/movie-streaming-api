@@ -1,0 +1,411 @@
+@use "../../scss/" as *;
+
+$played-color: rgb(255, 255, 255);
+$buffer-color: rgba(255, 255, 255, 0.3);
+$base-bar-color: rgba(255, 255, 255, 0.2);
+
+$thumbnail-height: 84px;
+$menu-background-color: rgba(35, 35, 35, 0.7);
+$thumbnail-border-height: 20px;
+$thumbnail-pointer-height: 7px;
+
+$control-bar-height: 4.5em;
+$control-bar-top-margin: 0.5em;
+$control-bar-side-margin: 1em;
+$control-button-width: 4em;
+$control-icon-size: 2.7em;
+$control-icon-space: 1em;
+$control-volume-bar-width: 8em;
+$control-time-text-size: 1rem;
+
+$icon-shadow: 0em 0em 1em white;
+
+.custom-video-js-skin {
+  // aspect-ratio: 21 / 9 !important;
+  height: calc(100vw / 21 * 9) !important;
+  width: 100vw !important;
+  // height: 450px;
+  // width: 1050px;
+  overflow: hidden !important;
+
+  .vjs-tech {
+    object-fit: cover !important;
+  }
+
+  .vjs-text-track-display {
+    bottom: calc($control-bar-height + 2 * $control-bar-top-margin);
+
+    // Substitle settings
+    & > div > div > div {
+      background: transparent !important;
+      font-size: 1.25em;
+      text-shadow: #222 0 0 4px, #222 0 0 4px, #222 0 0 4px, #222 0 0 4px;
+    }
+  }
+
+  .vjs-big-play-button {
+    margin: 0 !important;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1 / 1;
+    width: auto !important;
+    height: auto !important;
+    border: none !important;
+    background-color: transparent !important;
+
+    &:hover,
+    &:focus {
+      text-shadow: $icon-shadow;
+    }
+
+    .vjs-icon-placeholder {
+      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &::before {
+        line-height: 0 !important;
+        position: static !important;
+        font-size: 3em !important;
+      }
+    }
+  }
+
+  .vjs-control-bar {
+    height: $control-bar-height !important;
+    margin: $control-bar-top-margin $control-bar-side-margin;
+    width: auto !important;
+    background-color: transparent !important;
+
+    // Display time duration instead of time remainding
+    .vjs-time-control,
+    .vjs-current-time,
+    .vjs-time-divider,
+    .vjs-duration {
+      display: flex !important;
+    }
+
+    .vjs-remaining-time {
+      display: none !important;
+    }
+
+    // Icons
+    .vjs-icon-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        text-shadow: $icon-shadow;
+      }
+    }
+
+    .vjs-button > .vjs-icon-placeholder::before {
+      position: static !important;
+      font-size: $control-icon-size;
+      width: fit-content !important;
+      height: fit-content !important;
+    }
+
+    // .vjs-play-control {
+    //   // margin-right: $control-icon-space;
+    // }
+
+    .vjs-volume-panel {
+      margin-left: $control-icon-space;
+      margin-right: calc(1.8 * $control-icon-space);
+
+      &.vjs-volume-panel-horizontal:hover {
+        width: calc(
+          $control-button-width + $control-volume-bar-width
+        ) !important;
+
+        .vjs-volume-control {
+          align-items: center;
+          width: $control-volume-bar-width !important;
+        }
+      }
+
+      .vjs-mute-control {
+        .vjs-icon-placeholder::before {
+          font-size: calc(0.9 * $control-icon-size);
+        }
+      }
+
+      .vjs-volume-control {
+        align-items: center;
+        height: 100% !important;
+        margin-right: 0 !important;
+
+        .vjs-volume-bar {
+          width: 100% !important;
+        }
+      }
+    }
+
+    .vjs-time-control {
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: $control-time-text-size;
+    }
+
+    .vjs-time-divider {
+      width: 20px !important;
+      min-width: 20px !important;
+    }
+
+    .vjs-progress-control {
+      position: absolute !important;
+      align-items: flex-end !important;
+      top: calc(-2em - $control-bar-top-margin);
+      left: 0;
+      height: 2em !important;
+      width: 100% !important;
+
+      &:hover {
+        .vjs-play-progress {
+          .vjs-time-tooltip {
+            display: none !important;
+          }
+        }
+      }
+
+      .vjs-progress-holder {
+        transition: height 0.2s, width 0.2s, text-shadow 0.2s, left 0.2s !important;
+        background-color: $base-bar-color !important;
+
+        .vjs-play-progress {
+          transition: font-size 0.2s !important;
+          background-color: $played-color !important;
+          color: $played-color !important;
+        }
+
+        .vjs-load-progress,
+        .vjs-load-progress div {
+          transition: font-size 0.2s !important;
+          background-color: $buffer-color !important;
+          color: $buffer-color !important;
+        }
+
+        // Thumbnails
+        .vjs-mouse-display {
+          .vjs-time-tooltip {
+            top: calc(-35px - $thumbnail-height) !important;
+            font-size: 0.75rem !important;
+            border: none !important;
+            border-radius: 8px 8px 0 0 !important;
+
+            &::before {
+              content: "";
+              display: block;
+              position: absolute;
+              left: 50%;
+              bottom: -$thumbnail-pointer-height -$thumbnail-border-height;
+              height: 0;
+              width: 0;
+              z-index: -1 !important;
+              transform: translate(-50%);
+              // triangle shape
+              border-left: $thumbnail-pointer-height solid transparent;
+              border-right: $thumbnail-pointer-height solid transparent;
+              border-top: $thumbnail-pointer-height solid $menu-background-color;
+            }
+
+            &::after {
+              content: "";
+              display: block;
+              position: absolute;
+              left: 0;
+              bottom: -$thumbnail-border-height;
+              height: $thumbnail-border-height;
+              width: 100%;
+              z-index: -1 !important;
+              background-color: $menu-background-color;
+              border-radius: 0 0 8px 8px;
+            }
+          }
+        }
+      }
+    }
+
+    .vjs-subs-caps-button {
+      margin-left: auto;
+
+      .vjs-icon-placeholder::before {
+        font-size: calc(0.9 * $control-icon-size);
+      }
+
+      .vjs-menu {
+        padding-bottom: 1.5em;
+
+        .vjs-menu-content {
+          .vjs-texttrack-settings {
+            margin-bottom: 1em;
+            padding: 10px 0 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: underline;
+
+            &:hover {
+              opacity: 0.8;
+            }
+          }
+
+          .vjs-menu-item:not(.vjs-texttrack-settings) {
+            padding: 10px 80px 10px 35px !important;
+
+            &.vjs-selected {
+              padding-right: 80px !important;
+            }
+          }
+        }
+
+        .vjs-icon-placeholder {
+          width: auto;
+          height: auto;
+        }
+      }
+    }
+
+    .vjs-http-source-selector {
+      margin: 0 $control-icon-space;
+
+      &.vjs-hover {
+        .vjs-icon-cog::before {
+          text-shadow: $icon-shadow;
+        }
+      }
+
+      .vjs-icon-cog {
+        transition: transform 0.2s;
+
+        &::before {
+          font-size: calc(0.9 * $control-icon-size);
+        }
+
+        &[aria-expanded="true"] {
+          transform: rotate(30deg);
+        }
+
+        .vjs-icon-placeholder {
+          width: 0;
+          height: 0;
+        }
+      }
+
+      .vjs-menu {
+        .vjs-menu-content {
+          padding-bottom: 1em;
+
+          &::before {
+            content: "Quality";
+            cursor: default;
+            display: block;
+            padding: 10px 0;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          }
+          .vjs-menu-item {
+            padding: 10px 40px 10px 35px !important;
+
+            &.vjs-selected {
+              padding-right: 40px;
+            }
+          }
+        }
+      }
+    }
+
+    // Only display menu on click
+    .vjs-subs-caps-button,
+    .vjs-http-source-selector {
+      &:hover {
+        .vjs-menu {
+          display: none;
+        }
+      }
+    }
+
+    .vjs-menu {
+      top: -20px;
+      left: 50% !important;
+      bottom: unset !important;
+      transform: translate(-50%, -100%);
+      margin-bottom: 0 !important;
+      z-index: 1 !important;
+      width: auto !important;
+      height: fit-content !important;
+      padding: 0.5em 0;
+      border-radius: 6px;
+      background-color: $menu-background-color;
+
+      // prevent display thumbnail when mouse cross the bar
+      &.vjs-lock-showing::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        transform: translateY(100%);
+        width: 100%;
+        height: 30px;
+        display: block;
+        z-index: -2;
+      }
+
+      .vjs-menu-content {
+        position: static !important;
+        background-color: transparent !important;
+
+        .vjs-menu-item:not(.vjs-texttrack-settings) {
+          margin: 0 0.5em;
+          text-align: left !important;
+          border-radius: 4px;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+          }
+
+          &.vjs-selected {
+            // Check icon
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAyNCAyNCIgdmVyc2lvbj0iMS4xIj48cGF0aCBkPSJNOSAxNi4yTDQuOCAxMmwtMS40IDEuNEw5IDE5IDIxIDdsLTEuNC0xLjRMOSAxNi4yeiIgZmlsbD0iI2ZmZiIgLz48L3N2Zz4=);
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: left 10px center;
+            background-size: 18px 18px;
+            -moz-background-size: 18px 18px;
+            -webkit-background-size: 18px 18px;
+            // Text
+            color: white !important;
+            padding-left: 35px !important;
+            padding-right: 20px !important;
+          }
+        }
+
+        .vjs-menu-item-text {
+          text-transform: capitalize;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+.vjs-mouse-display {
+  .vjs-time-tooltip {
+    @include desktop {
+      line-height: 14.4;
+    }
+
+    @include tablet {
+      line-height: 18;
+    }
+
+    @include mobile {
+      line-height: 24;
+      transform: scale(0.8) translateY(20px);
+    }
+  }
+}

@@ -4,31 +4,29 @@ import FallbackImage from "../../fallback-image/FallbackImage";
 import Overlay from "../../overlay/Overlay";
 import "./SeasonCell.scss";
 
-const SeasonCell = ({ item = {} }) => {
+const SeasonCell = ({ item = {}, onClick }) => {
   return (
-    <Link to={item.videoUrl || "/"}>
-      <div className="season-cell-container">
-        <div className="thumbnail-container">
-          <FallbackImage
-            fallback={<DefaultThumbnail />}
-            image={
-              <img loading="lazy" src={item.thumbnailUrl} alt={item.title} />
-            }
-          />
-          <PlayButton />
-        </div>
-        <div className="season-info-container">
-          <div className="season-mini-info">
-            <div className="mini-info-item">{`EPISODE ${item.episodeNumber}`}</div>
-            <div className="mini-info-item">{formatRuntime(item.runtime)}</div>
-            <div className="mini-info-item">{formatAirDate(item.airDate)}</div>
-          </div>
-          <div className="season-title">{item.title}</div>
-          <div className="season-overview">{item.overview}</div>
-        </div>
-        <Overlay />
+    <div className="season-cell-container" onClick={onClick}>
+      <div className="thumbnail-container">
+        <FallbackImage
+          fallback={<DefaultThumbnail />}
+          image={
+            <img loading="lazy" src={item.thumbnailUrl} alt={item.title} />
+          }
+        />
+        <PlayButton />
       </div>
-    </Link>
+      <div className="season-info-container">
+        <div className="season-mini-info">
+          <div className="mini-info-item">{`EPISODE ${item.episodeNumber}`}</div>
+          <div className="mini-info-item">{formatRuntime(item.runtime)}</div>
+          <div className="mini-info-item">{formatAirDate(item.airDate)}</div>
+        </div>
+        <div className="season-title">{item.title}</div>
+        <div className="season-overview">{item.overview}</div>
+      </div>
+      <Overlay />
+    </div>
   );
 };
 

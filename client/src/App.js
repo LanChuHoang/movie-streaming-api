@@ -13,6 +13,7 @@ import RequireAuth from "./components/auth/RequireAuth";
 import PersistLogin from "./components/auth/PersistLogin";
 import RequireUnauth from "./components/auth/RequireUnauth";
 import PersonDetail from "./pages/person-detail/PersonDetail";
+import WatchPage from "./pages/watch-page/WatchPage";
 
 function App() {
   return (
@@ -51,6 +52,16 @@ function App() {
             </Route>
             <Route path="person">
               <Route path=":id" element={<PersonDetail />} />
+            </Route>
+            <Route path="watch">
+              <Route
+                path="movie/:id"
+                element={<WatchPage itemType="movie" />}
+              />
+              <Route
+                path="show/:id/season/:seasonNumber/episode/:episodeNumber"
+                element={<WatchPage itemType="show" />}
+              />
             </Route>
           </Route>
         </Route>
