@@ -39,6 +39,11 @@ function isPositiveInteger(str) {
   return Number.isInteger(n) && n > 0;
 }
 
+function isNaturalNumber(str) {
+  const n = Number(str);
+  return Number.isInteger(n) && n >= 0;
+}
+
 module.exports = {
   TIMES_IN_DAY,
   getStartOfDay,
@@ -47,4 +52,5 @@ module.exports = {
   isShortISOFormat,
   getItemTypeOfEndpoint,
   isPositiveInteger,
+  isNaturalNumber,
 };

@@ -3,6 +3,7 @@ const { errorResponse } = require("../../configs/route.config");
 const showModel = require("../../models/show/show.model");
 const { SHOW_GENRES } = require("../../models/enum");
 const routeValidator = require("../../validators/route.validator");
+const { isNaturalNumber } = require("../../helpers/helper");
 
 function validateGenre(req, res, next) {
   const { genre } = req.query;
@@ -90,6 +91,37 @@ async function getSeasons(req, res, next) {
   }
 }
 
+async function getSeason(req, res, next) {
+  try {
+    const { id, seasonNumber } = req.params;
+    if (!isNaturalNumber(seasonNumber))
+      return res.status(400).send(errorResponse.INVALID_QUERY);
+    console.log(id, seasonNumber);
+    const season = await showModel.getSeason(id, +seasonNumber);
+    if (!season) return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.send(season);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getEpisode(req, res, next) {
+  try {
+    const { id, seasonNumber, episodeNumber } = req.params;
+    if (!isNaturalNumber(seasonNumber) || !isNaturalNumber(episodeNumber))
+      return res.status(400).send(errorResponse.INVALID_QUERY);
+    const episode = await showModel.getEpisode(
+      id,
+      +seasonNumber,
+      +episodeNumber
+    );
+    if (!episode) return res.status(404).send(errorResponse.DEFAULT_404_ERROR);
+    return res.send(episode);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getCredits(req, res, next) {
   try {
     const credits = await showModel.getCredits(req.params.id);
@@ -167,6 +199,8 @@ module.exports = {
   getSimilarShows,
   getShow,
   getSeasons,
+  getSeason,
+  getEpisode,
   getCredits,
   getRandomShow,
   updateShow,
