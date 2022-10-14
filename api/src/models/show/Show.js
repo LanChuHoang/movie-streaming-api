@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
-const idvalidator = require("mongoose-id-validator");
 const { SHOW_GENRES, COUNTRIES } = require("../enum");
 
 const episodeSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
-    episodeNumber: { type: Number },
+    episodeNumber: { type: Number, min: 0, required: true, unique: true },
     airDate: { type: Date },
     runtime: { type: Number },
     overview: { type: String },
@@ -18,7 +17,7 @@ const episodeSchema = new mongoose.Schema(
 const seasonSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
-    seasonNumber: { type: Number },
+    seasonNumber: { type: Number, min: 0, required: true, unique: true },
     overview: { type: String },
     releaseDate: { type: Date },
     posterUrl: { type: String },

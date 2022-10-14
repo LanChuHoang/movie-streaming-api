@@ -53,6 +53,18 @@ router.get(
 );
 
 router.get(
+  "/:id/season/:seasonNumber",
+  routeValidator.validateIDParam,
+  showController.getSeason
+);
+
+router.get(
+  "/:id/season/:seasonNumber/episode/:episodeNumber",
+  routeValidator.validateIDParam,
+  showController.getEpisode
+);
+
+router.get(
   "/:id/credits",
   routeValidator.validateIDParam,
   showController.getCredits

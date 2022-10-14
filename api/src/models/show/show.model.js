@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, Mongoose } = require("mongoose");
 const { DEFAULT_PAGE_SIZE, PROJECTION } = require("../../configs/route.config");
 const Show = require("./Show");
 
@@ -152,6 +152,50 @@ async function getSeasons(showId) {
   return seasons;
 }
 
+async function getSeason(showId, seasonNumber) {
+  const {
+    seasons: [season],
+  } = await Show.findById(showId, {
+    seasons: { $elemMatch: { seasonNumber } },
+  });
+  return season;
+}
+
+async function getEpisode(showId, seasonNumber, episodeNumber) {
+  const [response] = await Show.aggregate([
+    {
+      $match: { _id: mongoose.Types.ObjectId(showId) },
+    },
+    {
+      $project: {
+        season: {
+          $first: {
+            $filter: {
+              input: "$seasons",
+              as: "season",
+              cond: { $eq: ["$$season.seasonNumber", seasonNumber] },
+            },
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        episode: {
+          $first: {
+            $filter: {
+              input: "$season.episodes",
+              as: "episode",
+              cond: { $eq: ["$$episode.episodeNumber", episodeNumber] },
+            },
+          },
+        },
+      },
+    },
+  ]);
+  return response?.episode;
+}
+
 async function getCredits(showId) {
   const docs = (
     await Show.findById(showId, { cast: 1, directors: 1, _id: 0 })
@@ -207,6 +251,8 @@ module.exports = {
   getShowByID,
   getShowByTitle,
   getSeasons,
+  getSeason,
+  getEpisode,
   getCredits,
   getJoinedShows,
   getRandomShow,
