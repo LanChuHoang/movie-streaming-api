@@ -17,11 +17,6 @@
 
 <img width="1437" alt="home page" src="https://user-images.githubusercontent.com/60309530/196147631-d4b07521-b68f-44df-af34-770dd53c84ac.png">
 
-<img width="1437" alt="detail page" src="https://user-images.githubusercontent.com/60309530/196148109-ba54107b-77c7-405d-862b-c321a6a38fac.jpeg">
+<img width="1437" alt="detail page" src="https://user-images.githubusercontent.com/60309530/196149475-c334d156-23c5-4ef4-98a8-9f1581b330c1.jpg">
 
-<img width="1437" alt="player page" src="https://user-images.githubusercontent.com/60309530/196147852-58c038df-2e02-4c0a-a7be-51de092d4ad1.png">
-
-
-
-
-
+<img width="1435" alt="player page" src="https://user-images.githubusercontent.com/60309530/196149493-2ee0900d-6f2a-4f03-9f40-a28defc9c740.png">
