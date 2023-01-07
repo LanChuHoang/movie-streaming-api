@@ -1,4 +1,5 @@
 node_modules/
+globalConfig.json
 
 .env
 .DS_STORE
