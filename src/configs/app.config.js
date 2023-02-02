@@ -1,6 +1,10 @@
 const MAX_BODY_SIZE = "16mb";
 
-const WHITE_LIST = ["http://localhost:3000", "https://gr1-client.netlify.app"];
+const WHITE_LIST = [
+  "http://localhost:3000",
+  "https://gr1-client.netlify.app",
+  "https://gr1-api.netlify.app",
+];
 
 const CORS_OPTIONS = {
   origin: WHITE_LIST,
