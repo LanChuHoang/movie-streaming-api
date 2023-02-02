@@ -2,14 +2,14 @@
 
 FROM node:18
 
-ENV NODE_ENV=production
-
 WORKDIR /app
 
-COPY ["./api/package.json", "./api/package-lock.json", "./"] 
+COPY ["./package.json", "./"] 
 
-RUN npm install --production
+RUN npm install --verbose --production
 
-COPY api .
+COPY . .
+
+ENV NODE_ENV=production
 
 CMD [ "npm", "start" ]
