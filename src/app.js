@@ -14,7 +14,7 @@ const app = express();
 app.use(cors(CORS_OPTIONS));
 app.use(express.json({ limit: MAX_BODY_SIZE }));
 
-app.get("/", (req, res) => {return res.send("v3")});
+app.get("/", (req, res) => {return res.send("v4")});
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
