@@ -37,6 +37,6 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
-        script: cd host && docker compose up --quiet-pull -d
+        script: cd host && docker compose pull api && docker compose up -d
     
 
