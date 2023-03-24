@@ -27,16 +27,16 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/movie-streaming-api:latest, ${{ secrets.DOCKERHUB_USERNAME }}/movie-streaming-api:${{ github.sha }}
-#   deploy:
-#     needs: build
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Deploy via SSH
-#       uses: appleboy/ssh-action@v0.1.8
-#       with:
-#         host: ${{ secrets.SSH_HOST }}
-#         username: ${{ secrets.SSH_USERNAME }}
-#         key: ${{ secrets.SSH_KEY }}
-#         script: 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: cd host && docker compose up --quiet-pull -d
     
 
