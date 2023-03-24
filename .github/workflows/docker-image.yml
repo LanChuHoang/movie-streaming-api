@@ -26,6 +26,6 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/movie-streaming-api:latest, ${{ secrets.DOCKERHUB_USERNAME }}/movie-streaming-api:$(git rev-parse --short HEAD)
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/movie-streaming-api:latest, ${{ secrets.DOCKERHUB_USERNAME }}/movie-streaming-api:${{ github.sha }}
 
 
