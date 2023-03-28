@@ -3,7 +3,6 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
   UseGuards,
 } from "@nestjs/common";
 import { AccessTokenAuthGuard } from "src/auth/guards/access-token-auth.guard";
@@ -15,8 +14,8 @@ export class UsersController {
 
   @UseGuards(AccessTokenAuthGuard)
   @Get(":id")
-  async getUser(@Param("id", ParseIntPipe) userId: number) {
-    const user = await this.usersService.findById(userId);
+  async getUser(@Param("id") id: string) {
+    const user = await this.usersService.getUserById(id);
     if (!user) throw new NotFoundException();
     return user;
   }

@@ -32,17 +32,21 @@ export class AuthService {
     return { accessToken, refreshToken, user: createdUser };
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.id };
+  async login(id: string, username: string) {
+    const payload = { username: username, sub: id };
     const accessToken = this.tokenService.generateAccessToken(payload);
     const response = { access_token: accessToken };
     return response;
   }
 
-  async refreshToken(user: any) {
-    const payload = { username: user.username, sub: user.id };
+  async refreshToken(id: string, username: string) {
+    const payload = { username: username, sub: id };
     const accessToken = this.tokenService.generateAccessToken(payload);
     const response = { access_token: accessToken };
     return response;
+  }
+
+  async logout(id: string) {
+    this.usersService.updateUser(id, { refreshToken: "" });
   }
 }
