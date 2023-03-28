@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import { UsersService } from 'src/users/users.service';
-import { TokenService } from '../token/token.service';
+import { Injectable } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
+import { CreateUserDto } from "src/auth/dto/create-user.dto";
+import { UsersService } from "src/users/users.service";
+import { TokenService } from "../token/token.service";
 
 @Injectable()
 export class AuthService {
@@ -11,32 +12,35 @@ export class AuthService {
   ) {}
 
   async authenticateUser(email: string, password: string) {
-    const user = await this.usersService.findByEmail(email);
-    if (user && user.password === password) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
+    const user = await this.usersService.getUserByEmail(email);
+    if (!user) return null;
+    const isValid = await bcrypt.compare(password, user?.password);
+    if (!isValid) return null;
+    return user;
   }
 
-  async register(createUserDTO: CreateUserDto) {
-    const hash = '';
-    const createdUser = { id: 1 };
-    const payload = { username: createUserDTO.username, sub: createdUser.id };
+  async register(createUserDto: CreateUserDto) {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const createdUser = await this.usersService.createUser({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+    const payload = { username: createdUser.username, sub: createdUser.id };
     const accessToken = this.tokenService.generateAccessToken(payload);
     const refreshToken = this.tokenService.generateRefreshToken(payload);
-    return { accessToken, refreshToken };
+    await this.usersService.updateUser(createdUser.id, { refreshToken });
+    return { accessToken, refreshToken, user: createdUser };
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { username: user.username, sub: user.id };
     const accessToken = this.tokenService.generateAccessToken(payload);
     const response = { access_token: accessToken };
     return response;
   }
 
   async refreshToken(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { username: user.username, sub: user.id };
     const accessToken = this.tokenService.generateAccessToken(payload);
     const response = { access_token: accessToken };
     return response;

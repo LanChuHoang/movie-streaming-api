@@ -1,6 +1,6 @@
-import { CookieOptions } from 'express';
+import { CookieOptions } from "express";
 
-export const authConfigPath = 'auth';
+export const authConfigPath = "auth";
 
 export interface AuthConfig {
   token: {
@@ -19,18 +19,18 @@ export default () => ({
     token: {
       accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
       accessTokenExpirationTime:
-        parseInt(process.env.ACCESS_TOKEN_EXPIRATION_TIME || '') || 900, // 15 mins
+        parseInt(process.env.ACCESS_TOKEN_EXPIRATION_TIME || "") || 900, // 15 mins
       refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
       refreshTokenExpirationTime:
-        parseInt(process.env.REFRESH_TOKEN_EXPIRATION_TIME || '') || 604800, // 7 days}
+        parseInt(process.env.REFRESH_TOKEN_EXPIRATION_TIME || "") || 604800, // 7 days}
     },
     cookie: {
       refreshToken: {
         httpOnly: true,
         // secure: true,
-        sameSite: 'none',
+        sameSite: "none",
         maxAge:
-          (parseInt(process.env.REFRESH_TOKEN_EXPIRATION_TIME || '') ||
+          (parseInt(process.env.REFRESH_TOKEN_EXPIRATION_TIME || "") ||
             604800) * 1000,
       },
     },
