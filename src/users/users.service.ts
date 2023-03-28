@@ -8,6 +8,12 @@ import { User, UserDocument } from "./schemas/user.schema";
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
+  async exists(username: string, email: string) {
+    return this.userModel.exists({
+      $or: [{ username: username }, { email: email }],
+    });
+  }
+
   async createUser(createUserDto: CreateUserDto) {
     return this.userModel.create(createUserDto);
   }

@@ -6,7 +6,7 @@ const PASSWORD_REGEX = /^[^\s]{8,}$/;
 export class CreateUserDto {
   @Matches(USERNAME_REGEX, {
     message:
-      "username must be 6-14 characters long and can only contain letters and numbers",
+      "Username must be 6-14 characters long and can only contain letters and numbers",
   })
   @IsString()
   @IsNotEmpty()
@@ -18,7 +18,7 @@ export class CreateUserDto {
 
   @Matches(PASSWORD_REGEX, {
     message:
-      "password must have at least 8 characters and cannot contain spaces",
+      "Password must have at least 8 characters and cannot contain spaces",
   })
   @IsString()
   @IsNotEmpty()

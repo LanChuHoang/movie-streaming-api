@@ -7,6 +7,7 @@ import {
   Req,
   Res,
   UseGuards,
+  UsePipes,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Request, Response } from "express";
@@ -14,6 +15,7 @@ import { AuthConfig, authConfigPath } from "../config/auth.config";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { LocalAuthGuard } from "../guards/local-auth.guard";
 import { RefreshTokenAuthGuard } from "../guards/refresh-token-auth.guard";
+import { CheckDuplicateUserValidator } from "../pipes/check-duplicate-user.pipe";
 import { AuthService } from "../services/auth/auth.service";
 import { ExtractedUser } from "../types/token.types";
 
@@ -27,6 +29,7 @@ export class AuthController {
     this.config = this.configService.get<AuthConfig>(authConfigPath)!;
   }
 
+  @UsePipes(CheckDuplicateUserValidator)
   @Post("register")
   async register(
     @Body() createUserDto: CreateUserDto,
@@ -36,15 +39,20 @@ export class AuthController {
       createUserDto,
     );
     res.cookie("refresh_token", refreshToken, this.config.cookie.refreshToken);
-    return { accese_token: accessToken, user };
+    return { accessToken, ...user.toObject() };
   }
 
   @UseGuards(LocalAuthGuard)
   @HttpCode(200)
   @Post("login")
-  async login(@Req() req: Request) {
+  async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const { username, id } = req.user as ExtractedUser;
-    return this.authService.login(username, id);
+    const { accessToken, refreshToken, user } = await this.authService.login(
+      id,
+      username,
+    );
+    res.cookie("refresh_token", refreshToken, this.config.cookie.refreshToken);
+    return { accessToken, ...user?.toObject() };
   }
 
   @UseGuards(RefreshTokenAuthGuard)
