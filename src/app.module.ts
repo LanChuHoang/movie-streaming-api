@@ -6,8 +6,10 @@ import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
 import authConfig from "./auth/config/auth.config";
 import appConfig from "./configs/app.config";
+import { MoviesModule } from "./movies/movies.module";
+import { ShowsModule } from "./shows/shows.module";
 import { UsersModule } from "./users/users.module";
-import { MoviesModule } from './movies/movies.module';
+import { PeopleModule } from './people/people.module';
 
 @Module({
   controllers: [AppController],
@@ -28,6 +30,8 @@ import { MoviesModule } from './movies/movies.module';
       inject: [ConfigService],
     }),
     MoviesModule,
+    ShowsModule,
+    PeopleModule,
   ],
 })
 export class AppModule {}

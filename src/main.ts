@@ -13,6 +13,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       forbidUnknownValues: true,
       stopAtFirstError: true,
+      transform: true,
     }),
   );
   const config = app.get<ConfigService>(ConfigService);
