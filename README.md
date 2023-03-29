@@ -4,7 +4,7 @@
 
 ## Description
 
-- A OTT video streaming website using ReactJS, NodeJS+NestJS, and MongoDB.
+- An OTT video streaming website using ReactJS, NodeJS+NestJS, and MongoDB.
 - Main features:
   - Browse movies, shows and cast.
   - [Adaptive bitrates streaming](https://en.wikipedia.org/wiki/Adaptive_bitrate_streaming) movies using the [MPEG-DASH](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP) protocol.
