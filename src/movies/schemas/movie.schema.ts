@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
-import { Media } from "src/database/schemas/media.schema";
+import { Media } from "src/media/schemas/media.schema";
 import { MOVIE_GENRES } from "../constants/movie.constant";
 
 export type MovieDocument = HydratedDocument<Movie>;

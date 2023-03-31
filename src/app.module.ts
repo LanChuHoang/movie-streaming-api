@@ -7,9 +7,9 @@ import { AuthModule } from "./auth/auth.module";
 import authConfig from "./auth/config/auth.config";
 import appConfig from "./configs/app.config";
 import { MoviesModule } from "./movies/movies.module";
+import { PeopleModule } from "./people/people.module";
 import { ShowsModule } from "./shows/shows.module";
 import { UsersModule } from "./users/users.module";
-import { PeopleModule } from './people/people.module';
 
 @Module({
   controllers: [AppController],

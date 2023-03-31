@@ -1,23 +1,22 @@
 import mongoose, { Model } from "mongoose";
-import { CreateMediaDto } from "src/database/dto/create-media.dto";
 import { BasePaginationDto } from "src/database/dto/pagination.dto";
-import { UpdateMediaDto } from "src/database/dto/update-media.dto";
-import { MediaDocument } from "src/database/schemas/media.schema";
-import { PaginationService } from "../pagination/pagination.service";
+import { PaginationService } from "src/database/services/pagination/pagination.service";
+import { MediaDocument } from "src/media/schemas/media.schema";
+import { CreateMediaDto } from "../dto/create-media.dto";
+import { UpdateMediaDto } from "../dto/update-media.dto";
 
-export class MediaService<
-  MediaType extends MediaDocument,
-> extends PaginationService<MediaType> {
+// prettier-ignore
+export class MediaService<MediaType extends MediaDocument> extends PaginationService<MediaType> {
   constructor(model: Model<MediaType>) {
     super(model);
   }
 
   create(createMediaDto: CreateMediaDto) {
-    return this.model?.create(createMediaDto);
+    return this.model.create(createMediaDto);
   }
 
   findOne(id: string) {
-    return this.model?.findById(id);
+    return this.model.findById(id);
   }
 
   findAll(basePaginationDto: BasePaginationDto) {
@@ -71,12 +70,12 @@ export class MediaService<
   }
 
   updateOne(id: string, updateMediaDto: UpdateMediaDto) {
-    return this.model?.findByIdAndUpdate(id, updateMediaDto, {
+    return this.model.findByIdAndUpdate(id, updateMediaDto, {
       returnDocument: "after",
     });
   }
 
   deleteOne(id: string) {
-    return this.model?.findByIdAndDelete(id, { returnDocument: "after" });
+    return this.model.findByIdAndDelete(id, { returnDocument: "after" });
   }
 }

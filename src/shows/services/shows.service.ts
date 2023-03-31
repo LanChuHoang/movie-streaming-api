@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { CreateShowDto } from './dto/create-show.dto';
-import { UpdateShowDto } from './dto/update-show.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateShowDto } from "../dto/create-show.dto";
+import { UpdateShowDto } from "../dto/update-show.dto";
 
 @Injectable()
 export class ShowsService {
   create(createShowDto: CreateShowDto) {
-    return 'This action adds a new show';
+    return "This action adds a new show";
   }
 
   findAll() {

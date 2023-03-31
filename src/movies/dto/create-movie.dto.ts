@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsPositive,
 } from "class-validator";
-import { CreateMediaDto } from "src/database/dto/create-media.dto";
+import { CreateMediaDto } from "src/media/dto/create-media.dto";
 
 export class CreateMovieDto extends CreateMediaDto {
   @IsPositive()
