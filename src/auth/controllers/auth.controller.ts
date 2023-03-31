@@ -7,7 +7,6 @@ import {
   Req,
   Res,
   UseGuards,
-  UsePipes,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Request, Response } from "express";
@@ -15,7 +14,6 @@ import { AuthConfig, authConfigPath } from "../config/auth.config";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { LocalAuthGuard } from "../guards/local-auth.guard";
 import { RefreshTokenAuthGuard } from "../guards/refresh-token-auth.guard";
-import { CheckDuplicateUserValidator } from "../pipes/check-duplicate-user.pipe";
 import { AuthService } from "../services/auth/auth.service";
 import { ExtractedUser } from "../types/token.types";
 
@@ -29,7 +27,6 @@ export class AuthController {
     this.config = this.configService.get<AuthConfig>(authConfigPath)!;
   }
 
-  @UsePipes(CheckDuplicateUserValidator)
   @Post("register")
   async register(
     @Body() createUserDto: CreateUserDto,

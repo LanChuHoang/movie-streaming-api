@@ -26,34 +26,34 @@ export class MediaController<
   constructor(private readonly mediaService: MediaService<MediaType>) {}
 
   @Post()
-  async createMedia(@Body() createMediaDto: CreateItemDto) {
+  createMedia(@Body() createMediaDto: CreateItemDto) {
     return this.mediaService.create(createMediaDto);
   }
 
   @Get("")
-  async getManyMedia(@Query() query: GetItemsDto) {
+  getManyMedia(@Query() query: GetItemsDto) {
     return this.mediaService.findAll(query);
   }
 
   @Get("search")
-  async searchMedia(@Query() query: SearchItemsDto) {
+  searchMedia(@Query() query: SearchItemsDto) {
     return this.mediaService.findAll(query);
   }
 
   @Get(":id/similar")
-  async getSimilarMedia(@Param("id") id: string) {
+  getSimilarMedia(@Param("id") id: string) {
     return this.mediaService.findSimilar(id);
   }
 
   @Get("random")
-  async getRandomMedia(
+  getRandomMedia(
     @Query("limit", new DefaultValuePipe(1), ParseIntPipe) limit: number,
   ) {
     return this.mediaService.getRandom(limit);
   }
 
   @Get(":id/credits")
-  async getCredits(@Param("id") id: string) {
+  getCredits(@Param("id") id: string) {
     return this.mediaService.getCredits(id);
   }
 

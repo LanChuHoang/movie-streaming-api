@@ -11,8 +11,8 @@ export class MediaService<MediaType extends MediaDocument> extends PaginationSer
     super(model);
   }
 
-  create(createMediaDto: CreateMediaDto) {
-    return this.model.create(createMediaDto);
+    create(createMediaDto: CreateMediaDto) {
+      return this.model.create(createMediaDto);
   }
 
   findOne(id: string) {
