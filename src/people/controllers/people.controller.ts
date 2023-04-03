@@ -7,7 +7,12 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
+import {
+  PaginationQueryDto,
+  SearchQueryDto,
+} from "src/database/dto/pagination.dto";
 import { CreatePersonDto } from "../dto/create-person.dto";
 import { UpdatePersonDto } from "../dto/update-person.dto";
 import { PeopleService } from "../services/people.service";
@@ -22,8 +27,18 @@ export class PeopleController {
   }
 
   @Get()
-  findAll() {
-    return this.peopleService.findAll();
+  getPeople(@Query() query: PaginationQueryDto) {
+    return this.peopleService.findAll(query);
+  }
+
+  @Get("/search")
+  searchPeople(@Query() query: SearchQueryDto) {
+    return this.peopleService.findAll(query);
+  }
+
+  @Get(":id/credits")
+  getCredits(@Param("id") id: string) {
+    return this.peopleService.getCredits(id);
   }
 
   @Get(":id")

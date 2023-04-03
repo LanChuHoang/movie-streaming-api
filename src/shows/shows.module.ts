@@ -10,5 +10,6 @@ import { ShowsService } from "./services/shows.service";
   ],
   controllers: [ShowsController],
   providers: [ShowsService],
+  exports: [ShowsService],
 })
 export class ShowsModule {}

@@ -5,14 +5,15 @@ import { MediaDocument } from "src/media/schemas/media.schema";
 import { CreateMediaDto } from "../dto/create-media.dto";
 import { UpdateMediaDto } from "../dto/update-media.dto";
 
-// prettier-ignore
-export class MediaService<MediaType extends MediaDocument> extends PaginationService<MediaType> {
+export class MediaService<
+  MediaType extends MediaDocument,
+> extends PaginationService<MediaType> {
   constructor(model: Model<MediaType>) {
     super(model);
   }
 
-    create(createMediaDto: CreateMediaDto) {
-      return this.model.create(createMediaDto);
+  create(createMediaDto: CreateMediaDto) {
+    return this.model.create(createMediaDto);
   }
 
   findOne(id: string) {

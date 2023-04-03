@@ -59,4 +59,12 @@ export class ShowsService extends MediaService<ShowDocument> {
     ]);
     return response?.episode;
   }
+
+  async getJoinedShows(personId: string) {
+    const [cast, director] = await Promise.all([
+      this.model.find({ cast: personId }, {}).sort({ lastAirDate: -1 }),
+      this.model.find({ directors: personId }, {}).sort({ lastAirDate: -1 }),
+    ]);
+    return { cast, director };
+  }
 }
