@@ -4,6 +4,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -17,7 +18,7 @@ import { ShowsService } from "../services/shows.service";
 
 @Controller("shows")
 export class ShowsController extends MediaController<ShowDocument> {
-  constructor(showsService: ShowsService) {
+  constructor(private readonly showsService: ShowsService) {
     super(showsService);
   }
 
@@ -39,5 +40,37 @@ export class ShowsController extends MediaController<ShowDocument> {
     const media = await this.mediaService.updateOne(id, updateMediaDto);
     if (!media) throw new NotFoundException();
     return media;
+  }
+
+  @Get("/:id/seasons")
+  async getSeasons(@Param("id") id: string) {
+    const seasons = await this.showsService.getSeasons(id);
+    if (!seasons) throw new NotFoundException();
+    return seasons;
+  }
+
+  @Get("/:id/season/:seasonNumber")
+  async getSeason(
+    @Param("id") id: string,
+    @Param("seasonNumber", ParseIntPipe) seasonNumber: number,
+  ) {
+    const season = await this.showsService.getSeason(id, seasonNumber);
+    if (!season) throw new NotFoundException();
+    return season;
+  }
+
+  @Get("/:id/season/:seasonNumber/episode/:episodeNumber")
+  async getEpisode(
+    @Param("id") id: string,
+    @Param("seasonNumber", ParseIntPipe) seasonNumber: number,
+    @Param("episodeNumber", ParseIntPipe) episodeNumber: number,
+  ) {
+    const episode = await this.showsService.getEpisode(
+      id,
+      seasonNumber,
+      episodeNumber,
+    );
+    if (!episode) throw new NotFoundException();
+    return episode;
   }
 }
