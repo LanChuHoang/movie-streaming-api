@@ -14,17 +14,17 @@ export class BasePaginationDto {
   @IsOptional()
   limit = 10;
 
-  @Transform(({ value }) =>
-    (value as string)
-      .split(",")
-      .reduce((prevResult, f) => ({ ...prevResult, [f]: 1 }), {}),
-  )
+  @Transform(({ value }) => (value as string).split(","))
   @IsOptional()
   fields: string[];
 
   toPaginationOptions() {
     const options: PaginationOptions = { page: this.page, limit: this.limit };
-    if (this.fields) options.projection = this.fields;
+    if (this.fields)
+      options.projection = this.fields.reduce(
+        (prevResult, f) => ({ ...prevResult, [f]: 1 }),
+        {},
+      );
     return options;
   }
 }
