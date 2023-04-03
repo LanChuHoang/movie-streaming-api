@@ -1,16 +1,16 @@
 import {
-  Body,
   DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
   ParseIntPipe,
-  Patch,
-  Post,
   Query,
 } from "@nestjs/common";
-import { BasePaginationDto } from "src/database/dto/pagination.dto";
+import {
+  BasePaginationDto,
+  SearchQueryDto,
+} from "src/database/dto/pagination.dto";
 import { MediaDocument } from "src/media/schemas/media.schema";
 import { CreateMediaDto } from "../dto/create-media.dto";
 import { UpdateMediaDto } from "../dto/update-media.dto";
@@ -23,20 +23,10 @@ export class MediaController<
   GetItemsDto extends BasePaginationDto,
   SearchItemsDto extends BasePaginationDto,
 > {
-  constructor(private readonly mediaService: MediaService<MediaType>) {}
-
-  @Post()
-  createMedia(@Body() createMediaDto: CreateItemDto) {
-    return this.mediaService.create(createMediaDto);
-  }
-
-  @Get("")
-  getManyMedia(@Query() query: GetItemsDto) {
-    return this.mediaService.findAll(query);
-  }
+  constructor(protected readonly mediaService: MediaService<MediaType>) {}
 
   @Get("search")
-  searchMedia(@Query() query: SearchItemsDto) {
+  searchMedia(@Query() query: SearchQueryDto) {
     return this.mediaService.findAll(query);
   }
 
@@ -60,16 +50,6 @@ export class MediaController<
   @Get(":id")
   async getOneMedia(@Param("id") id: string) {
     const media = await this.mediaService.findOne(id);
-    if (!media) throw new NotFoundException();
-    return media;
-  }
-
-  @Patch(":id")
-  async updateMedia(
-    @Param("id") id: string,
-    @Body() updateMediaDto: UpdateItemDto,
-  ) {
-    const media = await this.mediaService.updateOne(id, updateMediaDto);
     if (!media) throw new NotFoundException();
     return media;
   }

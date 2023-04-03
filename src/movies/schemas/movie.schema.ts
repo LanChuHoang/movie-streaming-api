@@ -18,6 +18,9 @@ export class Movie extends Media {
 
   @Prop({ required: true, default: false })
   isUpcoming: boolean;
+
+  @Prop()
+  videoUrl: string;
 }
 
 export const MovieSchema = SchemaFactory.createForClass(Movie);

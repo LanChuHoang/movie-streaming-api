@@ -37,12 +37,6 @@ export class PaginationQueryDto extends BasePaginationDto {
   })
   @IsOptional()
   sort: Record<string, 1 | -1 | Expression.Meta>;
-
-  toPaginationOptions() {
-    const options: PaginationOptions = super.toPaginationOptions();
-    if (this.sort) options.sort = this.sort || { releaseDate: -1 };
-    return options;
-  }
 }
 
 export class SearchQueryDto extends BasePaginationDto {

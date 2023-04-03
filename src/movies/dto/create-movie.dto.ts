@@ -5,6 +5,7 @@ import {
   IsDate,
   IsOptional,
   IsPositive,
+  IsUrl,
 } from "class-validator";
 import { CreateMediaDto } from "src/media/dto/create-media.dto";
 
@@ -25,4 +26,8 @@ export class CreateMovieDto extends CreateMediaDto {
   @IsBoolean()
   @IsOptional()
   isUpcoming = false;
+
+  @IsUrl()
+  @IsOptional()
+  movieUrl: string;
 }

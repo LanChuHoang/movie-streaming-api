@@ -1,42 +1,49 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
+import { MediaController } from "src/media/controllers/media.controller";
 import { CreateShowDto } from "../dto/create-show.dto";
+import { GetShowsQueryDto } from "../dto/get-shows-query.dto";
 import { UpdateShowDto } from "../dto/update-show.dto";
+import { ShowDocument } from "../schemas/show.schema";
 import { ShowsService } from "../services/shows.service";
 
 @Controller("shows")
-export class ShowsController {
-  constructor(private readonly showsService: ShowsService) {}
+export class ShowsController extends MediaController<
+  ShowDocument,
+  CreateShowDto,
+  UpdateShowDto,
+  any,
+  any
+> {
+  constructor(showsService: ShowsService) {
+    super(showsService);
+  }
 
   @Post()
-  create(@Body() createShowDto: CreateShowDto) {
-    return this.showsService.create(createShowDto);
+  createMedia(@Body() createMediaDto: CreateShowDto) {
+    return this.mediaService.create(createMediaDto);
   }
 
-  @Get()
-  findAll() {
-    return this.showsService.findAll();
-  }
-
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.showsService.findOne(+id);
+  @Get("")
+  getManyMedia(@Query() query: GetShowsQueryDto) {
+    return this.mediaService.findAll(query);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateShowDto: UpdateShowDto) {
-    return this.showsService.update(+id, updateShowDto);
-  }
-
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.showsService.remove(+id);
+  async updateMedia(
+    @Param("id") id: string,
+    @Body() updateMediaDto: UpdateShowDto,
+  ) {
+    const media = await this.mediaService.updateOne(id, updateMediaDto);
+    if (!media) throw new NotFoundException();
+    return media;
   }
 }

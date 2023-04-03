@@ -1,26 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { CreateShowDto } from "../dto/create-show.dto";
-import { UpdateShowDto } from "../dto/update-show.dto";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { MediaService } from "src/media/services/media.service";
+import { Show, ShowDocument } from "../schemas/show.schema";
 
 @Injectable()
-export class ShowsService {
-  create(createShowDto: CreateShowDto) {
-    return "This action adds a new show";
-  }
-
-  findAll() {
-    return `This action returns all shows`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} show`;
-  }
-
-  update(id: number, updateShowDto: UpdateShowDto) {
-    return `This action updates a #${id} show`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} show`;
+export class ShowsService extends MediaService<ShowDocument> {
+  constructor(@InjectModel(Show.name) movieModel: Model<ShowDocument>) {
+    super(movieModel);
   }
 }
