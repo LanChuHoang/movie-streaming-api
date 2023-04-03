@@ -12,16 +12,16 @@ import { CreateMediaDto } from "src/media/dto/create-media.dto";
 export class CreateMovieDto extends CreateMediaDto {
   @IsPositive()
   @IsOptional()
-  runtime: number;
+  runtime?: number;
 
   @IsDate()
   @Type(() => Date)
   @IsOptional()
-  releaseDate: Date;
+  releaseDate?: Date;
 
   @IsArray()
   @IsOptional()
-  genres: string[];
+  genres?: string[];
 
   @IsBoolean()
   @IsOptional()
@@ -29,5 +29,5 @@ export class CreateMovieDto extends CreateMediaDto {
 
   @IsUrl()
   @IsOptional()
-  movieUrl: string;
+  movieUrl?: string;
 }

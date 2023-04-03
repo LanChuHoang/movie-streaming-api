@@ -16,13 +16,7 @@ import { ShowDocument } from "../schemas/show.schema";
 import { ShowsService } from "../services/shows.service";
 
 @Controller("shows")
-export class ShowsController extends MediaController<
-  ShowDocument,
-  CreateShowDto,
-  UpdateShowDto,
-  any,
-  any
-> {
+export class ShowsController extends MediaController<ShowDocument> {
   constructor(showsService: ShowsService) {
     super(showsService);
   }

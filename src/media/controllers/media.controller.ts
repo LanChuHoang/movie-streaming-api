@@ -7,22 +7,11 @@ import {
   ParseIntPipe,
   Query,
 } from "@nestjs/common";
-import {
-  BasePaginationDto,
-  SearchQueryDto,
-} from "src/database/dto/pagination.dto";
+import { SearchQueryDto } from "src/database/dto/pagination.dto";
 import { MediaDocument } from "src/media/schemas/media.schema";
-import { CreateMediaDto } from "../dto/create-media.dto";
-import { UpdateMediaDto } from "../dto/update-media.dto";
 import { MediaService } from "../services/media.service";
 
-export class MediaController<
-  MediaType extends MediaDocument,
-  CreateItemDto extends CreateMediaDto,
-  UpdateItemDto extends UpdateMediaDto,
-  GetItemsDto extends BasePaginationDto,
-  SearchItemsDto extends BasePaginationDto,
-> {
+export class MediaController<MediaType extends MediaDocument> {
   constructor(protected readonly mediaService: MediaService<MediaType>) {}
 
   @Get("search")

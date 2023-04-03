@@ -41,6 +41,7 @@ export class GetMoviesQueryDto extends PaginationQueryDto {
         $gte: new Date(`${this.year}-01-01`),
         $lte: new Date(`${this.year}-12-31`),
       };
+    options.sort = this.sort || { releaseDate: -1 };
     return options;
   }
 }
