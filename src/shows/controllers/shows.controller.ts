@@ -8,7 +8,10 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
+import { AccessTokenAuthGuard } from "src/auth/guards/access-token-auth.guard";
+import { AdminGuard } from "src/auth/guards/admin.guard";
 import { MediaController } from "src/media/controllers/media.controller";
 import { CreateShowDto } from "../dto/create-show.dto";
 import { GetShowsQueryDto } from "../dto/get-shows-query.dto";
@@ -16,12 +19,14 @@ import { UpdateShowDto } from "../dto/update-show.dto";
 import { ShowDocument } from "../schemas/show.schema";
 import { ShowsService } from "../services/shows.service";
 
+@UseGuards(AccessTokenAuthGuard)
 @Controller("shows")
 export class ShowsController extends MediaController<ShowDocument> {
   constructor(private readonly showsService: ShowsService) {
     super(showsService);
   }
 
+  @UseGuards(AdminGuard)
   @Post()
   createMedia(@Body() createMediaDto: CreateShowDto) {
     return this.mediaService.create(createMediaDto);
@@ -32,6 +37,7 @@ export class ShowsController extends MediaController<ShowDocument> {
     return this.mediaService.findAll(query);
   }
 
+  @UseGuards(AdminGuard)
   @Patch(":id")
   async updateMedia(
     @Param("id") id: string,

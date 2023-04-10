@@ -14,8 +14,6 @@ export class MongoErrorsInterceptor implements NestInterceptor {
     return next.handle().pipe(
       catchError((err) => {
         if (err.name === "MongoServerError" && err.code === 11000) {
-          console.log(err);
-
           return throwError(
             () => new ConflictException("Resource already exists"),
           );

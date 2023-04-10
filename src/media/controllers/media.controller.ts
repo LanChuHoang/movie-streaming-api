@@ -6,7 +6,9 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from "@nestjs/common";
+import { AdminGuard } from "src/auth/guards/admin.guard";
 import { SearchQueryDto } from "src/database/dto/pagination.dto";
 import { MediaDocument } from "src/media/schemas/media.schema";
 import { MediaService } from "../services/media.service";
@@ -43,6 +45,7 @@ export class MediaController<MediaType extends MediaDocument> {
     return media;
   }
 
+  @UseGuards(AdminGuard)
   @Delete(":id")
   async deleleMedia(@Param("id") id: string) {
     const media = await this.mediaService.deleteOne(id);

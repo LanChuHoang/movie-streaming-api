@@ -8,7 +8,10 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
+import { AccessTokenAuthGuard } from "src/auth/guards/access-token-auth.guard";
+import { AdminGuard } from "src/auth/guards/admin.guard";
 import {
   PaginationQueryDto,
   SearchQueryDto,
@@ -17,10 +20,12 @@ import { CreatePersonDto } from "../dto/create-person.dto";
 import { UpdatePersonDto } from "../dto/update-person.dto";
 import { PeopleService } from "../services/people.service";
 
+@UseGuards(AccessTokenAuthGuard)
 @Controller("people")
 export class PeopleController {
   constructor(private readonly peopleService: PeopleService) {}
 
+  @UseGuards(AdminGuard)
   @Post()
   create(@Body() createPersonDto: CreatePersonDto) {
     return this.peopleService.create(createPersonDto);
@@ -48,6 +53,7 @@ export class PeopleController {
     return person;
   }
 
+  @UseGuards(AdminGuard)
   @Patch(":id")
   async update(
     @Param("id") id: string,
@@ -58,6 +64,7 @@ export class PeopleController {
     return person;
   }
 
+  @UseGuards(AdminGuard)
   @Delete(":id")
   async remove(@Param("id") id: string) {
     const person = await this.peopleService.remove(id);
