@@ -9,6 +9,7 @@ import {
 } from "@nestjs/common";
 import { AccessTokenAuthGuard } from "src/auth/guards/access-token-auth.guard";
 import { AdminGuard } from "src/auth/guards/admin.guard";
+import { OwnerGuard } from "src/auth/guards/owner.guard";
 import { GetUsersQueryDto } from "../dto/get-users-query.dto";
 import { SearchUsersQueryDto } from "../dto/search-users-query.dto";
 import { UsersService } from "../services/users.service";
@@ -30,6 +31,7 @@ export class UsersController {
     return this.usersService.getUsers(query);
   }
 
+  @UseGuards(OwnerGuard)
   @Get(":id")
   async getUser(@Param("id") id: string) {
     const user = await this.usersService.getUserById(id);
