@@ -43,4 +43,9 @@ export class UsersService extends PaginationService<UserDocument> {
   remove(id: string) {
     return this.model.findByIdAndDelete(id, { returnDocument: "after" });
   }
+
+  async getRefreshToken(userId: string) {
+    return (await this.model.findById(userId, { refreshToken: 1 }))
+      ?.refreshToken;
+  }
 }

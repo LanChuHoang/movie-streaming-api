@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { CreateUserDto } from "src/auth/dto/create-user.dto";
+import { TokenPayload } from "src/auth/types/token.types";
 import { UsersService } from "src/users/services/users.service";
 import { TokenService } from "../token/token.service";
 
@@ -13,9 +14,9 @@ export class AuthService {
 
   async authenticateUser(email: string, password: string) {
     const user = await this.usersService.getUserByEmail(email);
-    if (!user) return null;
+    if (!user) return undefined;
     const isValid = await bcrypt.compare(password, user?.password);
-    if (!isValid) return null;
+    if (!isValid) return undefined;
     return user;
   }
 
@@ -25,29 +26,40 @@ export class AuthService {
       ...createUserDto,
       password: hashedPassword,
     });
-    const payload = { username: createdUser.username, sub: createdUser.id };
-    const accessToken = this.tokenService.generateAccessToken(payload);
-    const refreshToken = this.tokenService.generateRefreshToken(payload);
+    const payload: TokenPayload = {
+      username: createdUser.username,
+      sub: createdUser.id,
+      isAdmin: createdUser.isAdmin,
+    };
+    const { accessToken, refreshToken } =
+      await this.tokenService.generateTokens(payload);
     await this.usersService.updateUser(createdUser.id, { refreshToken });
     return { accessToken, refreshToken, user: createdUser };
   }
 
-  async login(id: string, username: string) {
-    const payload = { username: username, sub: id };
-    const accessToken = this.tokenService.generateAccessToken(payload);
-    const refreshToken = this.tokenService.generateRefreshToken(payload);
-    const user = await this.usersService.updateUser(id, { refreshToken });
+  async login(payload: TokenPayload) {
+    const { accessToken, refreshToken } =
+      await this.tokenService.generateTokens(payload);
+    const user = await this.usersService.updateUser(payload.sub, {
+      refreshToken,
+    });
     return { accessToken, refreshToken, user };
   }
 
-  async refreshToken(id: string, username: string) {
-    const payload = { username: username, sub: id };
-    const accessToken = this.tokenService.generateAccessToken(payload);
+  async refreshToken(payload: TokenPayload) {
+    const accessToken = await this.tokenService.generateAccessToken(payload);
     const response = { access_token: accessToken };
     return response;
   }
 
   async logout(id: string) {
-    this.usersService.updateUser(id, { refreshToken: "" });
+    await this.usersService.updateUser(id, { refreshToken: "" });
+  }
+
+  async refreshTokenMatched(id: string, refreshToken: string) {
+    return (
+      refreshToken &&
+      (await this.usersService.getRefreshToken(id)) === refreshToken
+    );
   }
 }

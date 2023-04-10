@@ -2,10 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { AuthConfig, authConfigPath } from "src/auth/config/auth.config";
-import {
-  AccessTokenPayload,
-  RefreshTokenPayload,
-} from "src/auth/types/token.types";
+import { TokenPayload } from "src/auth/types/token.types";
 
 @Injectable()
 export class TokenService {
@@ -18,17 +15,25 @@ export class TokenService {
     this.config = this.configService.get<AuthConfig>(authConfigPath)!;
   }
 
-  generateAccessToken(payload: AccessTokenPayload) {
-    return this.jwtService.sign(payload, {
+  generateAccessToken(payload: TokenPayload) {
+    return this.jwtService.signAsync(payload, {
       secret: this.config.token.accessTokenSecret,
       expiresIn: this.config.token.accessTokenExpirationTime,
     });
   }
 
-  generateRefreshToken(payload: RefreshTokenPayload) {
-    return this.jwtService.sign(payload, {
+  generateRefreshToken(payload: TokenPayload) {
+    return this.jwtService.signAsync(payload, {
       secret: this.config.token.refreshTokenSecret,
       expiresIn: this.config.token.refreshTokenExpirationTime,
     });
+  }
+
+  async generateTokens(payload: TokenPayload) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.generateAccessToken(payload),
+      this.generateRefreshToken(payload),
+    ]);
+    return { accessToken, refreshToken };
   }
 }

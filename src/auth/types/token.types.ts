@@ -1,14 +1,10 @@
-export interface ExtractedUser {
+export interface TokenPayload {
+  sub: string;
   username: string;
-  id: string;
+  isAdmin: boolean;
 }
 
-export type AccessTokenPayload = {
-  username: string;
-  sub: string;
-};
-
-export type RefreshTokenPayload = {
-  username: string;
-  sub: string;
-};
+export interface FullTokenPayload extends TokenPayload {
+  iat: number;
+  exp: number;
+}
