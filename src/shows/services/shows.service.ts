@@ -10,8 +10,9 @@ export class ShowsService extends MediaService<ShowDocument> {
     super(movieModel);
   }
 
-  getSeasons(id: string) {
-    return this.model.findById(id, { seasons: 1 });
+  async getSeasons(id: string) {
+    const show = await this.model.findById(id, { seasons: 1 });
+    return show ? show.seasons : undefined;
   }
 
   async getSeason(showId: string, seasonNumber: number) {
@@ -62,7 +63,7 @@ export class ShowsService extends MediaService<ShowDocument> {
 
   async getJoinedShows(personId: string) {
     const [cast, director] = await Promise.all([
-      this.model.find({ cast: personId }, {}).sort({ lastAirDate: -1 }),
+      this.model.find({ "cast._id": personId }, {}).sort({ lastAirDate: -1 }),
       this.model.find({ directors: personId }, {}).sort({ lastAirDate: -1 }),
     ]);
     return { cast, director };

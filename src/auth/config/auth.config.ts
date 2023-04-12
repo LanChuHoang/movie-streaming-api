@@ -27,7 +27,7 @@ export default () => ({
     cookie: {
       refreshToken: {
         httpOnly: true,
-        // secure: true,
+        secure: true,
         sameSite: "none",
         maxAge:
           (parseInt(process.env.REFRESH_TOKEN_EXPIRATION_TIME || "") ||

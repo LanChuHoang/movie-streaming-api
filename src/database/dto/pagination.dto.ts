@@ -12,7 +12,7 @@ export class BasePaginationDto {
   @IsPositive()
   @Type(() => Number)
   @IsOptional()
-  limit = 10;
+  limit = 30;
 
   @Transform(({ value }) => (value as string).split(","))
   @IsOptional()

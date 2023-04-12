@@ -12,7 +12,7 @@ export class MoviesService extends MediaService<MovieDocument> {
 
   async getJoinedMovies(personId: string) {
     const [cast, director] = await Promise.all([
-      this.model.find({ cast: personId }).sort({ releaseDate: -1 }),
+      this.model.find({ "cast._id": personId }).sort({ releaseDate: -1 }),
       this.model.find({ directors: personId }).sort({ releaseDate: -1 }),
     ]);
     return { cast, director };

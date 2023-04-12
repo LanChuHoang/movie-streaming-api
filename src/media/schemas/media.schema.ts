@@ -5,6 +5,10 @@ import { Person } from "src/people/schemas/person.schema";
 
 export type MediaDocument = HydratedDocument<Media>;
 
+interface Credit extends Person {
+  character: string;
+}
+
 @Schema({ timestamps: true })
 export class Media {
   @Prop({ required: true, unique: true })
@@ -32,9 +36,14 @@ export class Media {
   countries: string[];
 
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Person" }],
+    type: [
+      {
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: "Person" },
+        character: { type: "String", required: true },
+      },
+    ],
   })
-  cast: Person[];
+  cast: Credit[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Person" }] })
   directors: Person[];

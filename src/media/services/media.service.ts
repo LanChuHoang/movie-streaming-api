@@ -58,16 +58,20 @@ export class MediaService<
   }
 
   async getCredits(id: string) {
-    const docs = await this.model
+    const docs = (await this.model
       .findById(id, {
         cast: 1,
         directors: 1,
         _id: 0,
       })
-      .populate("cast", { name: 1, avatarUrl: 1 })
-      .populate("directors", { name: 1, avatarUrl: 1 });
-    return docs;
-    // return { ...docs, cast: docs.cast.map((p) => ({ ...p, ...p._id })) };
+      .populate("cast._id", { name: 1, avatarUrl: 1 })
+      .populate("directors", { name: 1, avatarUrl: 1 })) as any | null;
+    if (!docs) return undefined;
+    const objDocs = docs.toObject();
+    return {
+      ...objDocs,
+      cast: objDocs.cast.map((p: any) => ({ ...p, ...p._id })),
+    };
   }
 
   updateOne(id: string, updateMediaDto: UpdateMediaDto) {

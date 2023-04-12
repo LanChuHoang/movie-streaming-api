@@ -48,7 +48,7 @@ export class AuthService {
 
   async refreshToken(payload: TokenPayload) {
     const accessToken = await this.tokenService.generateAccessToken(payload);
-    const response = { access_token: accessToken };
+    const response = { accessToken };
     return response;
   }
 

@@ -25,7 +25,8 @@ export class GetShowsQueryDto extends PaginationQueryDto {
         $gte: new Date(`${this.year}-01-01`),
         $lte: new Date(`${this.year}-12-31`),
       };
-    if (filter.genre || filter.country || filter.year) options.filter = filter;
+    if (filter.genres || filter.countries || filter.year)
+      options.filter = filter;
     options.sort = this.sort || { lastAirDate: -1 };
     return options;
   }
