@@ -44,7 +44,7 @@ export class ReviewService {
     );
     result.totalReviews = result.positiveCount + result.negativeCount;
     result.positivePercentage =
-      Math.round((result.positiveCount / result.totalReviews) * 100) / 100;
+      Math.round((result.positiveCount / result.totalReviews) * 10000) / 100;
     result.negativePercentage = 100 - result.positivePercentage;
     return result;
   }
