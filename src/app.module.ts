@@ -12,6 +12,7 @@ import { PeopleModule } from "./people/people.module";
 import { ReviewsModule } from "./reviews/reviews.module";
 import { ShowsModule } from "./shows/shows.module";
 import { UsersModule } from "./users/users.module";
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
   controllers: [AppController],
@@ -48,6 +49,7 @@ import { UsersModule } from "./users/users.module";
     ShowsModule,
     PeopleModule,
     ReviewsModule,
+    StatisticModule,
   ],
 })
 export class AppModule {}
