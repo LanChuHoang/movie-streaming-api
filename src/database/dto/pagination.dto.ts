@@ -53,6 +53,7 @@ export class SearchQueryDto extends BasePaginationDto {
   toPaginationOptions(): PaginationOptions {
     return {
       filter: { $text: { $search: this.query } },
+      sort: { score: { $meta: "textScore" }, name: 1 },
       ...super.toPaginationOptions(),
     };
   }

@@ -37,7 +37,7 @@ export class PaginationService<MediaType> {
       { $limit: limit },
     ];
     if (sort) mainPipeline.unshift({ $sort: sort });
-    if (projection) mainPipeline.unshift({ $project: projection });
+    if (projection) mainPipeline.push({ $project: projection });
     const metadataPipeline: PipelineStage[] = [{ $count: "total_documents" }];
     const combinedPipeline: PipelineStage[] = [
       {

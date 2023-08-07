@@ -64,8 +64,8 @@ export class MediaService<
         directors: 1,
         _id: 0,
       })
-      .populate("cast._id", { name: 1, avatarUrl: 1 })
-      .populate("directors", { name: 1, avatarUrl: 1 })) as any | null;
+      .populate("cast._id")
+      .populate("directors")) as any | null;
     if (!docs) return undefined;
     const objDocs = docs.toObject();
     return {
