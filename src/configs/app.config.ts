@@ -5,7 +5,7 @@ export default () => ({
       "http://localhost:3000",
       "http://localhost:3001",
       "https://gr1-client.netlify.app",
-      "https://gr1-api.netlify.app",
+      "https://gr1-admin.netlify.app",
     ],
     credentials: true,
   },
