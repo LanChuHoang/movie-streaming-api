@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY ["./package.json", "./"] 
 
-RUN npm install --verbose --production
+RUN npm install --verbose
 
 COPY . .
 
